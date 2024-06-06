@@ -1,0 +1,19 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit or integration tests.
+
+actor: UnitTester
+bootstrap: bootstrap.php
+modules:
+  enabled:
+    - Asserts
+step_decorators: ~
+coverage:
+  enabled: true
+  remote: false
+  show_uncovered: true
+  whitelist:
+    include:
+      - app/repositories/*
+      - app/services/*
+
