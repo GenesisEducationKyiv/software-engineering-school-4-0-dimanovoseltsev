@@ -36,9 +36,9 @@ class ImportService implements ImportServiceInterface
         foreach ($rates as $code => $rate) {
             $model = $this->currenciesService->findByCode($code);
             if ($model === null) {
-                $currencies[] = $this->currenciesService->create( new CreateDto($code, $rate));
+                $currencies[] = $this->currenciesService->create(new CreateDto($code, $rate));
             } else {
-                $currencies[] = $this->currenciesService->update($model,  new UpdateDto($rate));
+                $currencies[] = $this->currenciesService->update($model, new UpdateDto($rate));
             }
         }
         return $currencies;

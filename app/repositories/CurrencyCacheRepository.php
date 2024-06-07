@@ -7,7 +7,6 @@ use app\dto\currency\UpdateDto;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use yii\caching\CacheInterface;
-use yii\db\Exception;
 
 class CurrencyCacheRepository implements CurrencyRepositoryInterface
 {
@@ -79,7 +78,6 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
      * @param UpdateDto $dto
      * @return Currency
      * @throws EntityException
-     * @throws Exception
      */
     public function update(Currency $model, UpdateDto $dto): Currency
     {

@@ -2,8 +2,8 @@
 
 namespace app\repositories;
 
+use app\dto\subscription\CreateDto;
 use app\exceptions\EntityException;
-use app\models\Currency;
 use app\models\query\SubscriptionQuery;
 use app\models\Subscription;
 use Throwable;
@@ -43,14 +43,14 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Subscription
      * @throws EntityException
      */
-    public function create(array $data): Subscription
+    public function create(CreateDto $dto): Subscription
     {
-        /** @var Subscription */
-        $model = $this->subscriptionQuery->createModel($data);
+        $model = $this->subscriptionQuery->createModel();
+        $model->email = $dto->getEmail();
         return $this->save($model);
     }
 

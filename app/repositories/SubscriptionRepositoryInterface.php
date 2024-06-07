@@ -2,6 +2,7 @@
 
 namespace app\repositories;
 
+use app\dto\subscription\CreateDto;
 use app\models\Subscription;
 
 interface SubscriptionRepositoryInterface
@@ -13,10 +14,10 @@ interface SubscriptionRepositoryInterface
     public function getByEmail(string $email): ?Subscription;
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Subscription
      */
-    public function create(array $data): Subscription;
+    public function create(CreateDto $dto): Subscription;
 
     /**
      * @param string $email

@@ -10,7 +10,7 @@ use app\models\Subscription;
  * @package app\models\query
  *
  * @method SubscriptionQuery clear()
- * @method Subscription createModel(array $data = [], string $formName = '')
+ * @method Subscription createModel()
  */
 class SubscriptionQuery extends ActiveQuery
 {

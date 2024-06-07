@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
 class Subscription extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * @return string
      */
     public static function tableName(): string
     {
@@ -40,6 +40,7 @@ class Subscription extends ActiveRecord
 
     /**
      * @inheritdoc
+     * @phpstan-ignore-next-line
      */
     public function rules(): array
     {

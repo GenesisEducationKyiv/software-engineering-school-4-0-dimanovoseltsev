@@ -10,7 +10,7 @@ use app\models\Currency;
  * @package app\models\query
  *
  * @method CurrencyQuery clear()
- * @method Currency createModel(array $data = [], string $formName = '')
+ * @method Currency createModel()
  */
 class CurrencyQuery extends ActiveQuery
 {

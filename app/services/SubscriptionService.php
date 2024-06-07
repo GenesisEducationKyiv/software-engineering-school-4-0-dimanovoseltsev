@@ -2,8 +2,7 @@
 
 namespace app\services;
 
-use app\forms\SubscribeFrom;
-use app\models\Currency;
+use app\dto\subscription\CreateDto;
 use app\models\Subscription;
 use app\repositories\SubscriptionRepositoryInterface;
 
@@ -33,12 +32,12 @@ class SubscriptionService implements SubscriptionServiceInterface
     }
 
     /**
-     * @param SubscribeFrom $from
+     * @param CreateDto $dto
      * @return Subscription
      */
-    public function create(SubscribeFrom $from): Subscription
+    public function create(CreateDto $dto): Subscription
     {
-        return $this->subscriptionRepository->create(['email' => $from->email]);
+        return $this->subscriptionRepository->create($dto);
     }
 
 

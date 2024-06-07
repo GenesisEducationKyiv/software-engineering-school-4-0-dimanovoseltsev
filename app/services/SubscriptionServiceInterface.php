@@ -2,7 +2,7 @@
 
 namespace app\services;
 
-use app\forms\SubscribeFrom;
+use app\dto\subscription\CreateDto;
 use app\models\Subscription;
 
 /**
@@ -19,10 +19,10 @@ interface SubscriptionServiceInterface
     public function findByEmail(string $email): ?Subscription;
 
     /**
-     * @param SubscribeFrom $from
+     * @param CreateDto $dto
      * @return Subscription
      */
-    public function create(SubscribeFrom $from): Subscription;
+    public function create(CreateDto $dto): Subscription;
 
     /**
      * @param Subscription $model

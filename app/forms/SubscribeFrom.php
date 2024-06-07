@@ -10,6 +10,7 @@ class SubscribeFrom extends Model
 
     /**
      * @return array
+     * @phpstan-ignore-next-line
      */
     public function rules(): array
     {
@@ -23,7 +24,7 @@ class SubscribeFrom extends Model
     /**
      * @return string[]
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'email',

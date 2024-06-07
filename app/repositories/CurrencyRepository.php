@@ -50,7 +50,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function create(CreateDto $dto): Currency
     {
-        $model = $this->currencyQuery->createModel([]);
+        $model = $this->currencyQuery->createModel();
         $model->iso3 = $dto->getIso3();
         $model->rate = $dto->getRate();
         return $this->save($model);
