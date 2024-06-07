@@ -29,5 +29,4 @@ readonly class CreateDto
     {
         return $this->rate;
     }
-
 }
