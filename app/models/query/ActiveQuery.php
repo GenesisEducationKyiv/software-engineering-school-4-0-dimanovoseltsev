@@ -33,5 +33,4 @@ class ActiveQuery extends \yii\db\ActiveQuery
 
         return $this;
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace app\services;
 
-
 use app\models\Currency;
 use app\models\Subscription;
 use yii\symfonymailer\Mailer;
