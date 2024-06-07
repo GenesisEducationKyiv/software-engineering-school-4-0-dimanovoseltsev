@@ -67,7 +67,7 @@ class ExchangerateApiProvider implements ProviderInterface
         if ($statusCode !== 200) {
             throw new RemoteServiceException('Status code not successfully');
         }
-        $body = json_decode((string)$response->getBody(), true);
+        $body = (array)json_decode((string)$response->getBody(), true);
 
         $result = $body['result'] ?? null;
         if ($result !== "success") {
