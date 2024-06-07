@@ -2,6 +2,8 @@
 
 namespace app\services;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\models\Currency;
 use app\services\providers\ProviderInterface;
 use yii\base\InvalidCallException;
@@ -34,9 +36,9 @@ class ImportService implements ImportServiceInterface
         foreach ($rates as $code => $rate) {
             $model = $this->currenciesService->findByCode($code);
             if ($model === null) {
-                $currencies[] = $this->currenciesService->create(['iso3' => $code, 'rate' => $rate]);
+                $currencies[] = $this->currenciesService->create( new CreateDto($code, $rate));
             } else {
-                $currencies[] = $this->currenciesService->update($model, ['rate' => $rate]);
+                $currencies[] = $this->currenciesService->update($model,  new UpdateDto($rate));
             }
         }
         return $currencies;

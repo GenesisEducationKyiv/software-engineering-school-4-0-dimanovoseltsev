@@ -2,6 +2,8 @@
 
 namespace app\services;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\models\Currency;
 
 /**
@@ -18,15 +20,15 @@ interface CurrenciesServiceInterface
     public function findByCode(string $code): ?Currency;
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
      */
-    public function create(array $data = []): Currency;
+    public function create(CreateDto $dto): Currency;
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      */
-    public function update(Currency $model, array $data = []): Currency;
+    public function update(Currency $model, UpdateDto $dto): Currency;
 }

@@ -2,11 +2,12 @@
 
 namespace app\repositories;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use app\models\query\CurrencyQuery;
 use Throwable;
-use yii\db\Exception;
 
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
@@ -43,26 +44,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
-     * @throws EntityException|Exception
+     * @throws EntityException
      */
-    public function create(array $data = []): Currency
+    public function create(CreateDto $dto): Currency
     {
-        $model = $this->currencyQuery->createModel($data);
+        $model = $this->currencyQuery->createModel([]);
+        $model->iso3 = $dto->getIso3();
+        $model->rate = $dto->getRate();
         return $this->save($model);
     }
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      * @throws EntityException
-     * @throws Exception
      */
-    public function update(Currency $model, array $data = []): Currency
+    public function update(Currency $model, UpdateDto $dto): Currency
     {
-        $model->load($data, '');
+        $model->rate = $dto->getRate();
         return $this->save($model);
     }
 }

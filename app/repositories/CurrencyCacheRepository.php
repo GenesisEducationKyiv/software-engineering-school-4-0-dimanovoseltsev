@@ -2,9 +2,12 @@
 
 namespace app\repositories;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use yii\caching\CacheInterface;
+use yii\db\Exception;
 
 class CurrencyCacheRepository implements CurrencyRepositoryInterface
 {
@@ -60,26 +63,27 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
      * @throws EntityException
      */
-    public function create(array $data = []): Currency
+    public function create(CreateDto $dto): Currency
     {
-        $model = $this->currencyRepository->create($data);
+        $model = $this->currencyRepository->create($dto);
         $this->saveToCache($model);
         return $model;
     }
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      * @throws EntityException
+     * @throws Exception
      */
-    public function update(Currency $model, array $data = []): Currency
+    public function update(Currency $model, UpdateDto $dto): Currency
     {
-        $model = $this->currencyRepository->update($model, $data);
+        $model = $this->currencyRepository->update($model, $dto);
         $this->saveToCache($model);
         return $model;
     }
