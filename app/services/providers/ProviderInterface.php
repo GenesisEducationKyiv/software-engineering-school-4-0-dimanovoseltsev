@@ -5,7 +5,7 @@ namespace app\services\providers;
 interface ProviderInterface
 {
     /**
-     * @return array
+     * @return array<string, float>
      */
     public function getActualRates(): array;
 }

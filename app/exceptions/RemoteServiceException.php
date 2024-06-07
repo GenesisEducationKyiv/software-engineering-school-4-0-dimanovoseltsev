@@ -2,17 +2,21 @@
 
 namespace app\exceptions;
 
+use Exception;
+
 /**
  * Class RemoteServiceException.
  *
  * @package app\exceptions
  */
-class RemoteServiceException extends \Exception
+class RemoteServiceException extends Exception
 {
     /**
-     * @inheritdoc
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
      */
-    public function __construct($message = "", $code = 503, \Exception $previous = null)
+    public function __construct(string $message = "", int $code = 503, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

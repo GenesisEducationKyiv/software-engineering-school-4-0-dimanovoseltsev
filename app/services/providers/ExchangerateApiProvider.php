@@ -33,7 +33,7 @@ class ExchangerateApiProvider implements ProviderInterface
 
 
     /**
-     * @return array
+     * @return array<string, float>
      * @throws RemoteServiceException
      * @see https://www.exchangerate-api.com/docs/pair-conversion-requests
      */
@@ -58,7 +58,7 @@ class ExchangerateApiProvider implements ProviderInterface
 
     /**
      * @param ResponseInterface $response
-     * @return array
+     * @return array<string, float>
      * @throws Exception
      */
     protected function processResponse(ResponseInterface $response): array
