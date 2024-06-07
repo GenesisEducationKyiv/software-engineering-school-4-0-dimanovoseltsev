@@ -8,6 +8,9 @@ use app\models\Currency;
  * Class CurrencyQuery.
  *
  * @package app\models\query
+ *
+ * @method CurrencyQuery clear()
+ * @method Currency createModel(array $data = [], string $formName = '')
  */
 class CurrencyQuery extends ActiveQuery
 {

@@ -5,6 +5,8 @@ namespace app\repositories;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use app\models\query\CurrencyQuery;
+use Throwable;
+use yii\db\Exception;
 
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
@@ -21,10 +23,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     private function save(Currency $model): Currency
     {
-        if (!$model->save()) {
-            throw new EntityException($model, 'Currency not saved');
+        try {
+            if (!$model->save()) {
+                throw new EntityException($model, 'Currency not saved');
+            }
+            return $model;
+        } catch (Throwable $exception) {
+            throw new EntityException($model, $exception->getMessage());
         }
-        return $model;
     }
 
     /**
@@ -39,11 +45,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param array $data
      * @return Currency
-     * @throws EntityException
+     * @throws EntityException|Exception
      */
     public function create(array $data = []): Currency
     {
-        /** @var Currency */
         $model = $this->currencyQuery->createModel($data);
         return $this->save($model);
     }
@@ -53,6 +58,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param array $data
      * @return Currency
      * @throws EntityException
+     * @throws Exception
      */
     public function update(Currency $model, array $data = []): Currency
     {
