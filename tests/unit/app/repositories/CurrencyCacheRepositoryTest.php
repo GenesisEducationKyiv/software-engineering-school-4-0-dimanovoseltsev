@@ -103,11 +103,11 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testCreateCurrency()
     {
-        $data = ['iso3' => 'USD', 'rate' => 1.0];
-        $currencyModel = $this->getCurrencyModelMock($data);
+        $dto = new CreateDto('USD', 1.0);
+        $currencyModel = $this->getCurrencyModelMock(['iso3' => $dto->getIso3(), 'rate' => $dto->getRate()]);
 
         $this->currencyRepository->expects(self::once())->method('create')
-            ->with($data)
+            ->with($dto)
             ->willReturn($currencyModel);
 
         $this->cache->expects($this->once())
@@ -115,7 +115,7 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
             ->with('currency-rate:USD', json_encode($currencyModel->getAttributes()), $this->ttl)
             ->willReturn(true);
 
-        $currency = $this->currencyCacheRepository->create($data);
+        $currency = $this->currencyCacheRepository->create($dto);
 
         $this->assertInstanceOf(Currency::class, $currency);
     }
@@ -137,11 +137,11 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testUpdateCurrency()
     {
-        $data = ['rate' => 1.1];
+        $dto = new UpdateDto(1.1);
         $currencyModel = $this->getCurrencyModelMock();
 
         $this->currencyRepository->expects(self::once())->method('update')
-            ->with($currencyModel, $data)
+            ->with($currencyModel, $dto)
             ->willReturn($currencyModel);
 
         $this->cache->expects($this->once())
@@ -149,7 +149,7 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
             ->with('currency-rate:' . $currencyModel->iso3, json_encode($currencyModel->getAttributes()), $this->ttl)
             ->willReturn(true);
 
-        $currency = $this->currencyCacheRepository->update($currencyModel, $data);
+        $currency = $this->currencyCacheRepository->update($currencyModel, $dto);
 
         $this->assertInstanceOf(Currency::class, $currency);
     }

@@ -57,13 +57,12 @@ class CurrencyRepositoryTest extends UnitTestCase
 
     public function testCreate()
     {
-        $data = ['iso3' => 'USD', 'rate' => 1.0];
-        $currencyModel = $this->getCurrencyModelMock($data);
-
-        $this->currencyQuery->expects(self::once())->method('createModel')->with($data)->willReturn($currencyModel);
+        $dto = new CreateDto('USD', 1.0);
+        $currencyModel = $this->getCurrencyModelMock(['iso3' => $dto->getIso3(), 'rate' => $dto->getRate()]);
+        $this->currencyQuery->expects(self::once())->method('createModel')->willReturn($currencyModel);
         $currencyModel->expects(self::once())->method('save')->willReturn(true);
 
-        $result = $this->currencyRepository->create($data);
+        $result = $this->currencyRepository->create($dto);
 
         $this->assertInstanceOf(Currency::class, $result);
     }
@@ -73,7 +72,8 @@ class CurrencyRepositoryTest extends UnitTestCase
         $dto = new CreateDto('USD', 1.0);
 
         $currencyModel = $this->getCurrencyModelMock([
-            'iso3' => $dto->getIso3(), 'rate' => $dto->getRate()
+            'iso3' => $dto->getIso3(),
+            'rate' => $dto->getRate()
         ]);
 
         $this->currencyQuery->expects(self::once())->method('createModel')->willReturn($currencyModel);
@@ -87,13 +87,12 @@ class CurrencyRepositoryTest extends UnitTestCase
 
     public function testUpdate()
     {
-        $data = ['rate' => 1.1];
-        $currencyModel = $this->getCurrencyModelMock($data);;
+        $dto = new UpdateDto(1.0);
+        $currencyModel = $this->getCurrencyModelMock(['rate' => $dto->getRate()]);
 
-        $currencyModel->expects(self::once())->method('load')->with($data, '')->willReturn(true);
         $currencyModel->expects(self::once())->method('save')->willReturn(true);
 
-        $result = $this->currencyRepository->update($currencyModel, $data);
+        $result = $this->currencyRepository->update($currencyModel, $dto);
 
         $this->assertInstanceOf(Currency::class, $result);
     }

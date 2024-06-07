@@ -2,6 +2,8 @@
 
 namespace tests\unit\app\services;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\models\Currency;
 use app\repositories\CurrencyRepository;
 use app\services\CurrenciesService;
@@ -50,27 +52,27 @@ class CurrenciesServiceTest extends UnitTestCase
 
     public function testCreate()
     {
-        $data = ['iso3' => 'USD', 'rate' => 12.1];
+        $dto = new CreateDto('USD', 12.1);
+
         $currency = $this->getCurrencyModelMock();
         $this->repository->expects($this->once())
             ->method('create')
-            ->with($data)
             ->willReturn($currency);
 
-        $result = $this->service->create($data);
+        $result = $this->service->create($dto);
         self::assertInstanceOf(Currency::class, $result);
     }
 
     public function testUpdate()
     {
-        $data = ['rate' => 3.2];
+        $dto = new UpdateDto( 3.2);
         $currency = $this->getCurrencyModelMock();
         $this->repository->expects($this->once())
             ->method('update')
-            ->with($currency, $data)
+            ->with($currency, $dto)
             ->willReturn($currency);
 
-        $result = $this->service->update($currency, $data);
+        $result = $this->service->update($currency, $dto);
         self::assertInstanceOf(Currency::class, $result);
     }
 }
