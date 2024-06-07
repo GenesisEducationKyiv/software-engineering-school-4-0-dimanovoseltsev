@@ -2,10 +2,12 @@
 
 namespace app\services;
 
+use app\models\Currency;
+
 interface ImportServiceInterface
 {
     /**
-     * @return array
+     * @return Currency[]
      */
     public function importRates(): array;
 }

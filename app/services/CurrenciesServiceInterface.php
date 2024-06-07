@@ -18,14 +18,14 @@ interface CurrenciesServiceInterface
     public function findByCode(string $code): ?Currency;
 
     /**
-     * @param array $data
+     * @param array{iso3: string, rate: float, created_at: int, updated_at: int} $data
      * @return Currency
      */
     public function create(array $data = []): Currency;
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param array{iso3: string, rate: float, created_at: int, updated_at: int} $data
      * @return Currency
      */
     public function update(Currency $model, array $data = []): Currency;

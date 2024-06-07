@@ -2,14 +2,13 @@
 
 namespace app\repositories;
 
-use app\models\Currency;
 use app\models\Subscription;
 
 interface SubscriptionRepositoryInterface
 {
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmail(string $email): ?Subscription;
 
@@ -21,7 +20,7 @@ interface SubscriptionRepositoryInterface
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmailAndNotSend(string $email): ?Subscription;
 

@@ -25,7 +25,7 @@ class SubscriptionService implements SubscriptionServiceInterface
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function findByEmail(string $email): ?Subscription
     {
@@ -53,7 +53,7 @@ class SubscriptionService implements SubscriptionServiceInterface
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function findByEmailAndNotSend(string $email): ?Subscription
     {
