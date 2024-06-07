@@ -49,13 +49,7 @@ jobs:
         run: composer install
 
       - name: Run Codeception Unit Tests
-        run: ./vendor/bin/codecept run unit --coverage --coverage-html --coverage-xml
-
-      - name: Show Coverage Percentage
-        run: |
-          COVERAGE=$(grep 'lines-' tests/_output/coverage/clover.xml | sed -E 's/.*lines-valid="([0-9]+)" lines-covered="([0-9]+)".*/\1 \2/' | awk '{ print ($2 / $1) * 100 }')
-          echo "Coverage is $COVERAGE%"
-          echo "##[set-output name=coverage;]$COVERAGE"
+        run: ./vendor/bin/codecept run unit --coverage --coverage-html
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
