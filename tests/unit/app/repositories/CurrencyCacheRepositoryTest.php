@@ -2,6 +2,8 @@
 
 namespace tests\unit\app\repositories;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use app\repositories\CurrencyCacheRepository;
@@ -120,16 +122,17 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testCreateCurrencyFailure()
     {
-        $data = ['iso3' => 'USD', 'rate' => 1.0];
+        $dto = new CreateDto('USD', 1.0);
 
-        $this->currencyRepository->expects(self::once())->method('create')
-            ->with($data)
+        $this->currencyRepository->expects(self::once())
+            ->method('create')
+            ->with($dto)
             ->willThrowException(new EntityException(new Currency(), 'Currency not saved'));
 
         $this->expectException(EntityException::class);
         $this->expectExceptionMessage('Currency not saved');
 
-        $this->currencyCacheRepository->create($data);
+        $this->currencyCacheRepository->create($dto);
     }
 
     public function testUpdateCurrency()
@@ -153,17 +156,18 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testUpdateCurrencyFailure()
     {
-        $data = ['rate' => 1.1];
+        $dto = new UpdateDto(1.1);
+
         $currencyModel = $this->getCurrencyModelMock();
 
         $this->currencyRepository->expects(self::once())->method('update')
-            ->with($currencyModel, $data)
+            ->with($currencyModel, $dto)
             ->willThrowException(new EntityException($currencyModel, 'Currency not saved'));
 
         $this->expectException(EntityException::class);
         $this->expectExceptionMessage('Currency not saved');
 
-        $this->currencyCacheRepository->update($currencyModel, $data);
+        $this->currencyCacheRepository->update($currencyModel, $dto);
     }
 }
 
