@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  phpstan:
-    name: PHPStan
+  linter:
+    name: Linter
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,9 @@ jobs:
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=256M
+
+      - name: Run PHPStan
+        run: vendor/bin/phpcs --standard=PSR12 app
 
   phpunit:
     name: PHPUnit
@@ -59,25 +62,3 @@ jobs:
           name: coverage-report
           path: tests/_output/coverage
 
-  phpcs:
-    name: PHP_CodeSniffer
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          tools: composer
-
-      - name: Validate PHP version
-        run: php -v
-
-      - name: Install dependencies
-        run: composer install
-
-      - name: Run PHP_CodeSniffer
-        run: vendor/bin/phpcs --standard=PSR12 app
