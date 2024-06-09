@@ -28,7 +28,7 @@ jobs:
         run: composer install
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=256M
+        run: vendor/bin/phpstan analyse -c phpstan.neon --error-format=github
 
       - name: Run PHPStan
         run: vendor/bin/phpcs --standard=PSR12 app
