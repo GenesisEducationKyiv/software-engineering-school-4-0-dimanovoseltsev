@@ -33,7 +33,7 @@ class Subscription extends ActiveRecord
      *
      * @return SubscriptionQuery
      */
-    public static function find()
+    public static function find(): SubscriptionQuery
     {
         return new SubscriptionQuery(get_called_class());
     }

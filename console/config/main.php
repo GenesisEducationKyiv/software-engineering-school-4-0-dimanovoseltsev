@@ -6,7 +6,7 @@ use app\repositories\CurrencyRepositoryInterface;
 use app\services\CurrenciesServiceInterface;
 use app\services\ImportService;
 use app\services\ImportServiceInterface;
-use app\services\providers\ExchangerateApiProvider;
+use app\services\providers\EuropeanCentralBankProvider;
 use app\services\providers\ProviderInterface;
 use console\workers\MailWorker;
 use yii\console\controllers\MigrateController;
@@ -91,7 +91,7 @@ return [
                 return new CurrencyRepository(Currency::find());
             },
             ProviderInterface::class => function (Container $container) {
-                return new ExchangerateApiProvider(
+                return new EuropeanCentralBankProvider(
                     new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
                     (string)getenv("EXCHANGE_RATE_API_LEY"),
                     (string)getenv("BASE_CURRENCY"),

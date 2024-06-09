@@ -10,11 +10,11 @@ use Throwable;
 use Yii;
 
 /**
- * Class EuropeanCentralBankProvider.
+ * Class EuropeanCentralBankProvider
  *
  * @package app\services
  */
-class ExchangerateApiProvider implements ProviderInterface
+class EuropeanCentralBankProvider implements ProviderInterface
 {
     /**
      * EuropeanCentralBankService constructor.

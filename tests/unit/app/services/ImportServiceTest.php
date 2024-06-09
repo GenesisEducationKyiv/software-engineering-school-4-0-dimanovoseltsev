@@ -5,7 +5,7 @@ namespace tests\unit\app\services;
 use app\models\Currency;
 use app\services\CurrenciesService;
 use app\services\ImportService;
-use app\services\providers\ExchangerateApiProvider;
+use app\services\providers\EuropeanCentralBankProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
@@ -14,7 +14,7 @@ use yii\base\InvalidCallException;
 class ImportServiceTest extends UnitTestCase
 {
     private ImportService $service;
-    private ExchangerateApiProvider|MockObject $currencyRateProvider;
+    private EuropeanCentralBankProvider|MockObject $currencyRateProvider;
     private CurrenciesService|MockObject $currenciesService;
 
     public function setUp(): void
@@ -29,11 +29,11 @@ class ImportServiceTest extends UnitTestCase
     }
 
     /**
-     * @return ExchangerateApiProvider|MockObject
+     * @return EuropeanCentralBankProvider|MockObject
      */
-    protected function getExchangerateApiProviderMock(): ExchangerateApiProvider|MockObject
+    protected function getExchangerateApiProviderMock(): EuropeanCentralBankProvider|MockObject
     {
-        return $this->getMockBuilder(ExchangerateApiProvider::class)
+        return $this->getMockBuilder(EuropeanCentralBankProvider::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'getActualRates',

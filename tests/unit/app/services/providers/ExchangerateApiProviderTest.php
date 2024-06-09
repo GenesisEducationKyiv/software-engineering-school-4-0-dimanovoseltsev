@@ -4,7 +4,7 @@ namespace tests\unit\app\services\providers;
 
 use app\exceptions\RemoteServiceException;
 use app\repositories\CurrencyRepository;
-use app\services\providers\ExchangerateApiProvider;
+use app\services\providers\EuropeanCentralBankProvider;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
@@ -13,7 +13,7 @@ use tests\unit\UnitTestCase;
 
 class ExchangerateApiProviderTest extends UnitTestCase
 {
-    private ExchangerateApiProvider $provider;
+    private EuropeanCentralBankProvider $provider;
     private Client|MockObject $httpClient;
 
     private string $apiKey = 'test-api-key';
@@ -24,7 +24,7 @@ class ExchangerateApiProviderTest extends UnitTestCase
     {
         parent::setUp();
         $this->httpClient = $this->getHttpClientMock();
-        $this->provider = new ExchangerateApiProvider(
+        $this->provider = new EuropeanCentralBankProvider(
             $this->httpClient,
             $this->apiKey,
             $this->baseCurrency,
