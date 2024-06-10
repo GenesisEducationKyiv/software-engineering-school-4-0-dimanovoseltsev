@@ -30,7 +30,7 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c phpstan.neon --error-format=github
 
-      - name: Run PHPStan
+      - name: Run PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 app
 
   phpunit:
