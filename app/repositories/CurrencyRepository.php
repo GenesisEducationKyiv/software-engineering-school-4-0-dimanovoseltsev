@@ -30,7 +30,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             }
             return $model;
         } catch (Throwable $exception) {
-            throw new EntityException($model, $exception->getMessage());
+            throw new EntityException($model, $exception->getMessage(), previous: $exception);
         }
     }
 

@@ -40,7 +40,7 @@ class Subscription extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @phpstan-ignore-next-line
+     * @return array<int, mixed>
      */
     public function rules(): array
     {

@@ -39,7 +39,7 @@ class Currency extends ActiveRecord
 
     /**
      * @return array
-     * @phpstan-ignore-next-line
+     * @return array<int, mixed>
      */
     public function rules(): array
     {
