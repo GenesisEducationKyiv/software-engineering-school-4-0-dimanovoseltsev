@@ -118,7 +118,6 @@ class AppController extends Controller
         try {
             $count = $this->sendEmailsScheduled->execute(
                 $this->retrieveCurrencyByCode->execute((string)getenv("IMPORTED_CURRENCY")),
-                (int)getenv("BREAK_BETWEEN_SENDING_EMAIL"),
             );
             Console::output("Send " . $count);
             return ExitCode::OK;

@@ -15,9 +15,11 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
 {
     /**
      * @param SubscriptionQuery $query
+     * @param int $breakBetweenSending
      */
     public function __construct(
         private readonly SubscriptionQuery $query,
+        private readonly int $breakBetweenSending
     ) {
     }
 
@@ -50,7 +52,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     public function getNotSent(SearchSubscribersForMailingDto $dto): array
     {
         $models = $this->query->clear()
-            ->prepareNotSent($dto->getBreakBetweenSending())
+            ->prepareNotSent($this->breakBetweenSending)
             ->andFilterWhere(['>', 'id', $dto->getLastId()])
             ->limit($dto->getLimit())
             ->orderBy(['id' => SORT_ASC])
@@ -63,5 +65,17 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
         }
 
         return $entities;
+    }
+
+    /**
+     * @param string $email
+     * @return Subscription|null
+     */
+    public function getByEmailAndNotSend(string $email): ?Subscription
+    {
+        $model = $this->query->clear()
+            ->prepareNotSent($this->breakBetweenSending)
+            ->findByEmail($email);
+        return $model === null ? null : Mapper::toEntity($model);
     }
 }

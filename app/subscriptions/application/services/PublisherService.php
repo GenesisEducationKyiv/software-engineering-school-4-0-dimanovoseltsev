@@ -19,7 +19,7 @@ class PublisherService implements PublisherServiceInterface
      * @param string $currency
      * @return void
      */
-    public function sendActualRate(string $email, string $currency): void
+    public function enqueueMessageForSending(string $email, string $currency): void
     {
         $this->sendMessageQueue->sendMessage(['email' => $email, 'currency' => $currency]);
     }

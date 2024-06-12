@@ -21,19 +21,18 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
 
     /**
      * @param Currency $currency
-     * @param int $breakBetweenSending
      * @return int
      */
-    public function execute(Currency $currency, int $breakBetweenSending): int
+    public function execute(Currency $currency): int
     {
         $currencyCode = $currency->getIso3()->value();
 
-        $lastId = 0;
+        $lastId = 2;
         $limit = 50;
         $count = 0;
         do {
             $subscriptions = $this->service->findNotSent(
-                new SearchSubscribersForMailingDto($breakBetweenSending, $lastId, $limit)
+                new SearchSubscribersForMailingDto($lastId, $limit)
             );
 
             if (empty($subscriptions)) {
@@ -41,7 +40,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
             }
 
             foreach ($subscriptions as $subscription) {
-                $this->publisherService->sendActualRate($subscription->getEmail()->value(), $currencyCode);
+                $this->publisherService->enqueueMessageForSending($subscription->getEmail()->value(), $currencyCode);
                 $lastId = $subscription->getId()->value();
                 $count++;
             }
