@@ -4,6 +4,7 @@ namespace tests\unit\app\services;
 
 use app\dto\currency\CreateDto;
 use app\dto\currency\UpdateDto;
+use app\enums\CurrencyIso;
 use app\models\Currency;
 use app\repositories\CurrencyRepository;
 use app\services\CurrenciesService;
@@ -52,7 +53,7 @@ class CurrenciesServiceTest extends UnitTestCase
 
     public function testCreate()
     {
-        $dto = new CreateDto('USD', 12.1);
+        $dto = new CreateDto(CurrencyIso::USD, 12.1);
 
         $currency = $this->getCurrencyModelMock();
         $this->repository->expects($this->once())

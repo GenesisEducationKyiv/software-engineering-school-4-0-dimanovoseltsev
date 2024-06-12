@@ -4,6 +4,7 @@ namespace tests\unit\app\repositories;
 
 use app\dto\currency\CreateDto;
 use app\dto\currency\UpdateDto;
+use app\enums\CurrencyIso;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use app\repositories\CurrencyCacheRepository;
@@ -103,8 +104,8 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testCreateCurrency()
     {
-        $dto = new CreateDto('USD', 1.0);
-        $currencyModel = $this->getCurrencyModelMock(['iso3' => $dto->getIso3(), 'rate' => $dto->getRate()]);
+        $dto = new CreateDto(CurrencyIso::USD, 1.0);
+        $currencyModel = $this->getCurrencyModelMock(['iso3' => $dto->getCurrencyCode(), 'rate' => $dto->getRate()]);
 
         $this->currencyRepository->expects(self::once())->method('create')
             ->with($dto)
@@ -122,7 +123,7 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
     public function testCreateCurrencyFailure()
     {
-        $dto = new CreateDto('USD', 1.0);
+        $dto = new CreateDto(CurrencyIso::USD, 1.0);
 
         $this->currencyRepository->expects(self::once())
             ->method('create')

@@ -18,7 +18,7 @@ class ExchangerateApiProviderTest extends UnitTestCase
 
     private string $apiKey = 'test-api-key';
     private string $baseCurrency = 'USD';
-    private string $importCurrency = 'EUR';
+    private string $importCurrency = 'UAH';
 
     public function setUp(): void
     {
@@ -130,6 +130,24 @@ class ExchangerateApiProviderTest extends UnitTestCase
         $this->expectExceptionMessage('Bad conversion rate');
 
         $this->provider->getActualRates();
+    }
+
+    public function testGetActualRatesBadJson()
+    {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Invalid JSON response');
+
+        $response = new Response(200, [], '');
+
+        $this->httpClient
+            ->expects(self::once())
+            ->method('get')
+            ->willReturn($response);
+
+        $expectedResult = [$this->importCurrency => 0.85000];
+
+        $actualResult = $this->provider->getActualRates();
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
 }

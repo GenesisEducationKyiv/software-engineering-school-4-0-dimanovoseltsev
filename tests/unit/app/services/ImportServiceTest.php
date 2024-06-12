@@ -2,6 +2,7 @@
 
 namespace tests\unit\app\services;
 
+use app\exceptions\NotSupportedException;
 use app\models\Currency;
 use app\services\CurrenciesService;
 use app\services\ImportService;
@@ -61,7 +62,7 @@ class ImportServiceTest extends UnitTestCase
      */
     public function testImportRatesSuccess()
     {
-        $rates = ['EUR' => 0.85, 'GBP' => 0.75];
+        $rates = ['USD' => 0.85, 'UAH' => 0.75];
         $this->currencyRateProvider
             ->expects(self::once())
             ->method('getActualRates')
@@ -105,7 +106,7 @@ class ImportServiceTest extends UnitTestCase
 
     public function testImportRatesWithNewAndExistingCurrency()
     {
-        $rates = ['EUR' => 0.85];
+        $rates = ['USD' => 0.85];
         $this->currencyRateProvider
             ->expects(self::once())
             ->method('getActualRates')
@@ -131,5 +132,22 @@ class ImportServiceTest extends UnitTestCase
         $this->assertSame($newCurrencyModel, $result[0]);
     }
 
+
+    /**
+     * @throws Exception|NotSupportedException
+     */
+    public function testImportRatesFail()
+    {
+        self::expectException(NotSupportedException::class);
+        self::expectExceptionMessage("Currency AAA is not supported");
+
+        $rates = ['AAA' => 0.85];
+        $this->currencyRateProvider
+            ->expects(self::once())
+            ->method('getActualRates')
+            ->willReturn($rates);
+
+        $this->service->importRates();
+    }
 }
 
