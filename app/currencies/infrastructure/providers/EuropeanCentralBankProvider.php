@@ -5,6 +5,7 @@ namespace app\currencies\infrastructure\providers;
 use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
+use app\shared\application\exceptions\UnexpectedValueException;
 use Exception;
 use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Util\InvalidJsonException;
@@ -73,13 +74,13 @@ class EuropeanCentralBankProvider implements ProviderInterface
         $body = (array)json_decode((string)$response->getBody(), true);
         $result = $body['result'] ?? null;
         if ($result !== "success") {
-            throw new RemoteServiceException('Result not success');
+            throw new UnexpectedValueException('Result not success');
         }
 
         $conversionRate = (float)($body['conversion_rate'] ?? 0);
 
         if (empty($conversionRate)) {
-            throw new RemoteServiceException('Bad conversion rate');
+            throw new UnexpectedValueException('Bad conversion rate');
         }
 
         return [
