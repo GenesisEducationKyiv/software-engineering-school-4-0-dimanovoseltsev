@@ -2,6 +2,7 @@
 
 namespace app\currencies\infrastructure\providers;
 
+use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
 use Exception;
@@ -29,7 +30,7 @@ class EuropeanCentralBankProvider implements ProviderInterface
 
 
     /**
-     * @return array<string, float>
+     * @return CurrencyProviderDto[]
      * @throws RemoteServiceException
      * @see https://www.exchangerate-api.com/docs/pair-conversion-requests
      */
@@ -54,7 +55,7 @@ class EuropeanCentralBankProvider implements ProviderInterface
 
     /**
      * @param ResponseInterface $response
-     * @return array<string, float>
+     * @return CurrencyProviderDto[]
      * @throws Exception
      */
     protected function processResponse(ResponseInterface $response): array
@@ -80,6 +81,8 @@ class EuropeanCentralBankProvider implements ProviderInterface
             throw new RemoteServiceException('Bad conversion rate');
         }
 
-        return [$this->importCurrency => round($conversionRate, 5)];
+        return [
+            new CurrencyProviderDto($this->importCurrency, round($conversionRate, 5))
+        ];
     }
 }
