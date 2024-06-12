@@ -47,7 +47,7 @@ class Currency extends ActiveRecord
             ['iso3', 'match', 'pattern' => '/^[a-z]+$/i'],
             [['iso3'], 'string', 'length' => [0, 3]],
             [['rate',], 'number'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['created_at', 'updated_at', 'id'], 'integer'],
         ];
     }
 

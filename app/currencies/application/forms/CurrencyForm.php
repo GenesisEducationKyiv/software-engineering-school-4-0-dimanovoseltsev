@@ -9,7 +9,7 @@ use app\shared\application\traits\TimestampTrait;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-class CreateCurrencyForm extends BaseForm implements FormInterface
+class CurrencyForm extends BaseForm implements FormInterface
 {
     use TimestampTrait;
 

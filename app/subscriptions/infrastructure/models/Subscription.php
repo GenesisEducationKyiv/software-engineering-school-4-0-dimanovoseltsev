@@ -45,7 +45,7 @@ class Subscription extends ActiveRecord
             [['email',], 'required'],
             ['email', 'unique'],
             ['email', 'email'],
-            [['created_at', 'updated_at', 'last_send_at'], 'integer'],
+            [['created_at', 'updated_at', 'last_send_at', 'id'], 'integer'],
         ];
     }
 
