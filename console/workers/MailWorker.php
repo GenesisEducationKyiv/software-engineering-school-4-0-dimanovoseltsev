@@ -2,11 +2,14 @@
 
 namespace console\workers;
 
+use app\currencies\application\actions\RetrieveCurrencyByCode;
+use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\models\Currency;
 use app\models\Subscription;
 use app\services\CurrenciesServiceInterface;
 use app\services\MailServiceInterface;
 use app\services\SubscriptionServiceInterface;
+use app\shared\application\exceptions\NotExistException;
 use Throwable;
 use Yii;
 use yii\helpers\Console;
@@ -27,6 +30,10 @@ class MailWorker extends BaseWorker
         private readonly MailServiceInterface $mailService,
         private readonly SubscriptionServiceInterface $subscriptionService,
         private readonly CurrenciesServiceInterface $currenciesService,
+
+        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+
+
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -47,9 +54,9 @@ class MailWorker extends BaseWorker
             return true;
         }
 
-        /** @var ?Currency $currency */
-        $currency = $this->currenciesService->findByCode((string)$data['currency']);
-        if ($currency === null) {
+        try {
+            $currency = $this->retrieveCurrencyByCode->execute((string)$data['currency']);
+        }catch (NotExistException $e){
             return true;
         }
 
@@ -59,7 +66,7 @@ class MailWorker extends BaseWorker
             return true;
         }
 
-        Console::output(sprintf("Send %s - %s", $currency->iso3, $subscription->email));
+        Console::output(sprintf("Send %s - %s", $currency->getIso3()->value(), $subscription->email));
 
         try {
             $state = $this->mailService->sendActualRate($currency, $subscription);

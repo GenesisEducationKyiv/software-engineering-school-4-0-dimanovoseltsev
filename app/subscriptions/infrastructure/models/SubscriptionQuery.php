@@ -36,4 +36,14 @@ class SubscriptionQuery extends BaseQuery
         /** @var Subscription */
         return $model;
     }
+
+    /**
+     * @param int $break
+     * @return SubscriptionQuery
+     */
+    public function prepareNotSent(int $break): SubscriptionQuery
+    {
+        return $this->andWhere(['<=', 'last_send_at', time() - $break])
+            ->orWhere(['IS', 'last_send_at', null]);
+    }
 }
