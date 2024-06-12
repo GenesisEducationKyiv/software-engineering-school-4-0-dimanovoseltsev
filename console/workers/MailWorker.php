@@ -3,11 +3,6 @@
 namespace console\workers;
 
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\models\Currency;
-use app\models\Subscription;
-use app\services\CurrenciesServiceInterface;
-use app\services\MailServiceInterface;
-use app\services\SubscriptionServiceInterface;
 use app\shared\application\exceptions\NotExistException;
 use app\subscriptions\application\actions\SendEmailInterface;
 use Throwable;
