@@ -7,6 +7,7 @@ use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
 use Exception;
 use GuzzleHttp\Client as HttpClient;
+use PHPUnit\Util\InvalidJsonException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 use Yii;
@@ -66,7 +67,7 @@ class EuropeanCentralBankProvider implements ProviderInterface
         }
 
         if (!json_validate((string)$response->getBody())) {
-            throw new RemoteServiceException('Invalid JSON response');
+            throw new InvalidJsonException('Invalid JSON response');
         }
 
         $body = (array)json_decode((string)$response->getBody(), true);
