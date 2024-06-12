@@ -132,35 +132,6 @@ return [
                     $container->get(MailServiceInterface::class),
                 );
             },
-
-
-//
-//            // repositories
-//            CurrencyRepositoryInterface::class => function (Container $container) {
-//                return new CurrencyCacheRepository(
-//                    new CurrencyRepository(Currency::find()),
-//                    Yii::$app->cache,
-//                    (int)getenv("RATE_CACHE_TTL")
-//                );
-//            },
-//            SubscriptionRepositoryInterface::class => function (Container $container) {
-//                return new SubscriptionRepository(Subscription::find());
-//            },
-//
-//            // services
-//            CurrenciesServiceInterface::class => function (Container $container) {
-//                return new CurrenciesService(
-//                    $container->get(CurrencyRepositoryInterface::class)
-//                );
-//            },
-//            SubscriptionServiceInterface::class => function (Container $container) {
-//                return new SubscriptionService(
-//                    $container->get(SubscriptionRepositoryInterface::class)
-//                );
-//            },
-//            MailServiceInterface::class => function (Container $container) {
-//                return new MailService(Yii::$app->mailer);
-//            },
         ]
     ],
 ];
