@@ -4,6 +4,7 @@ namespace app\repositories;
 
 use app\dto\currency\CreateDto;
 use app\dto\currency\UpdateDto;
+use app\enums\CurrencyIso;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use yii\caching\CacheInterface;
@@ -44,14 +45,15 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     /**
      * @param string $code
      * @return Currency|null
+     * @throws EntityException
      */
     public function getByCode(string $code): ?Currency
     {
         $cacheValue = $this->cache->get($this->getCacheKey($code));
-        if (!empty($cacheValue) && is_string($cacheValue)) {
-            $model = new Currency();
-            $model->load((array)json_decode($cacheValue, true), '');
-            return $model;
+        if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
+            $currency = CurrencyIso::from($code);
+            $cacheValue = json_decode($cacheValue, true);
+            return $this->currencyRepository->create(new CreateDto($currency, (float)($cacheValue['rate'] ?? 1)));
         }
         $model = $this->currencyRepository->getByCode($code);
 

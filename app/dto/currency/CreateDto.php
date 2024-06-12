@@ -2,14 +2,16 @@
 
 namespace app\dto\currency;
 
+use app\enums\CurrencyIso;
+
 readonly class CreateDto
 {
     /**
-     * @param string $iso3
+     * @param CurrencyIso $currency
      * @param float $rate
      */
     public function __construct(
-        private string $iso3,
+        private CurrencyIso $currency,
         private float $rate,
     ) {
     }
@@ -17,9 +19,9 @@ readonly class CreateDto
     /**
      * @return string
      */
-    public function getIso3(): string
+    public function getCurrencyCode(): string
     {
-        return $this->iso3;
+        return $this->currency->value;
     }
 
     /**
