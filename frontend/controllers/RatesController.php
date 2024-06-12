@@ -252,11 +252,7 @@ class RatesController extends ActiveController
     {
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
-            $this->subscribe->execute(
-                new SubscribeForm(
-                    $bodyParams['email'] ?? null
-                )
-            );
+            $this->subscribe->execute(new SubscribeForm($bodyParams['email'] ?? null));
             return null;
         } catch (Throwable $e) {
             return $this->processException($e);
