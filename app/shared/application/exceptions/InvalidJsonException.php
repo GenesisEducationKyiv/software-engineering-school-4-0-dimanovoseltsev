@@ -6,9 +6,7 @@ use Exception;
 
 /**
  * Class InvalidJsonException.
- *
  */
 class InvalidJsonException extends Exception
 {
-
 }

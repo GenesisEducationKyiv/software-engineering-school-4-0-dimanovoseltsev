@@ -2,11 +2,11 @@
 
 namespace app\subscriptions\infrastructure\mappers;
 
+use app\shared\domain\valueObjects\Id;
+use app\shared\domain\valueObjects\Timestamp;
 use app\subscriptions\domain\entities\Subscription as SubscriptionEntity;
 use app\subscriptions\domain\valueObjects\Email;
 use app\subscriptions\infrastructure\models\Subscription;
-use app\shared\domain\valueObjects\Id;
-use app\shared\domain\valueObjects\Timestamp;
 
 class Mapper
 {

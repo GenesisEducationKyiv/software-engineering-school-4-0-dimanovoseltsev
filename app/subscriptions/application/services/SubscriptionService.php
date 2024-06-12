@@ -2,13 +2,11 @@
 
 namespace app\subscriptions\application\services;
 
-use app\shared\application\exceptions\NotValidException;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\mappers\Mapper;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
-use yii\db\Exception;
 
 class SubscriptionService implements SubscriptionServiceInterface
 {
@@ -53,7 +51,7 @@ class SubscriptionService implements SubscriptionServiceInterface
      */
     public function findNotSent(SearchSubscribersForMailingDto $dto): array
     {
-        return  $this->repository->getNotSent($dto);
+        return $this->repository->getNotSent($dto);
     }
 
 
