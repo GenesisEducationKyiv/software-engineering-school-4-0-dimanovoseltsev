@@ -4,7 +4,7 @@ namespace tests\unit;
 
 
 use app\links\application\services\LinkService;
-use app\links\domain\entities\Link;
+use app\links\domain\entities\Currency;
 use app\links\infrastructure\mappers\Mapper;
 use app\links\infrastructure\repositories\LinkRepository;
 use app\models\Currency;

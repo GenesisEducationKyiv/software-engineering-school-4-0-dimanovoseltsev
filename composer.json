@@ -16,7 +16,8 @@
     "enqueue/amqp-lib": "^0.10.19",
     "light/yii2-swagger": "^3.0",
     "yiisoft/yii2-symfonymailer": "~3.0.0",
-    "guzzlehttp/guzzle": "^7.8"
+    "guzzlehttp/guzzle": "^7.8",
+    "webmozart/assert": "^1.11"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",

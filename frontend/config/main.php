@@ -25,7 +25,7 @@ return [
         ],
         'user' => [
             'class' => User::class,
-            'identityClass' => \app\models\User::class,
+            'identityClass' => \common\models\User::class,
             'enableSession' => false,
         ],
         'urlManager' => require 'urlManager.php',

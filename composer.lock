@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6947cf4b2cdeb6ac8f3065973690140",
+    "content-hash": "55f2297713a640cb0012ab5bbbac9a2b",
     "packages": [
         {
             "name": "bower-asset/swagger-ui",
-            "version": "v4.17.0",
+            "version": "v5.17.14",
             "source": {
                 "type": "git",
-                "url": "git@github.com:wordnik/swagger-ui.git",
-                "reference": "ea0ee85ee24e724bbd95d76a8f34d97778a045fe"
+                "url": "https://github.com/swagger-api/swagger-ui.git",
+                "reference": "74ed0adebfc9c8dd0de2bf8e81495b022a66c083"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wordnik/swagger-ui/zipball/ea0ee85ee24e724bbd95d76a8f34d97778a045fe",
-                "reference": "ea0ee85ee24e724bbd95d76a8f34d97778a045fe"
+                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/74ed0adebfc9c8dd0de2bf8e81495b022a66c083",
+                "reference": "74ed0adebfc9c8dd0de2bf8e81495b022a66c083"
             },
             "type": "bower-asset"
         },
@@ -852,20 +852,20 @@
         },
         {
             "name": "light/yii2-swagger",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lichunqiang/yii2-swagger.git",
-                "reference": "6231844d04172369e6c36e04c311d26b663ed7c8"
+                "reference": "550806596f376430e4a3bb31d95d79a16988131a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lichunqiang/yii2-swagger/zipball/6231844d04172369e6c36e04c311d26b663ed7c8",
-                "reference": "6231844d04172369e6c36e04c311d26b663ed7c8",
+                "url": "https://api.github.com/repos/lichunqiang/yii2-swagger/zipball/550806596f376430e4a3bb31d95d79a16988131a",
+                "reference": "550806596f376430e4a3bb31d95d79a16988131a",
                 "shasum": ""
             },
             "require": {
-                "bower-asset/swagger-ui": "^4.0",
+                "bower-asset/swagger-ui": "^5.0",
                 "yiisoft/yii2": "^2.0.0",
                 "zircote/swagger-php": "^4.0"
             },
@@ -900,9 +900,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lichunqiang/yii2-swagger/issues",
-                "source": "https://github.com/lichunqiang/yii2-swagger/tree/3.0.3"
+                "source": "https://github.com/lichunqiang/yii2-swagger/tree/3.0.4"
             },
-            "time": "2022-05-10T05:42:57+00:00"
+            "time": "2024-04-28T03:20:04+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -2966,6 +2966,64 @@
             "time": "2023-11-12T22:43:29+00:00"
         },
         {
+            "name": "webmozart/assert",
+            "version": "1.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozarts/assert.git",
+                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/11cb2199493b2f8a3b53e7f19068fc6aac760991",
+                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan": "<0.12.20",
+                "vimeo/psalm": "<4.6.1 || 4.6.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5.13"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.10-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "Assertions to validate method input/output with nice error messages.",
+            "keywords": [
+                "assert",
+                "check",
+                "validate"
+            ],
+            "support": {
+                "issues": "https://github.com/webmozarts/assert/issues",
+                "source": "https://github.com/webmozarts/assert/tree/1.11.0"
+            },
+            "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
             "name": "yiisoft/yii2",
             "version": "2.0.50",
             "source": {
@@ -4989,16 +5047,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.2.0",
+            "version": "11.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "705eba0190afe04bc057f565ad843267717cf109"
+                "reference": "1b8775732e9c401bda32df3ffbdf90dec7533ceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/705eba0190afe04bc057f565ad843267717cf109",
-                "reference": "705eba0190afe04bc057f565ad843267717cf109",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1b8775732e9c401bda32df3ffbdf90dec7533ceb",
+                "reference": "1b8775732e9c401bda32df3ffbdf90dec7533ceb",
                 "shasum": ""
             },
             "require": {
@@ -5069,7 +5127,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.2.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.2.1"
             },
             "funding": [
                 {
@@ -5085,20 +5143,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-07T04:48:50+00:00"
+            "time": "2024-06-11T07:30:35+00:00"
         },
         {
             "name": "psy/psysh",
-            "version": "v0.12.3",
+            "version": "v0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73"
+                "reference": "2fd717afa05341b4f8152547f142cd2f130f6818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73",
-                "reference": "b6b6cce7d3ee8fbf31843edce5e8f5a72eff4a73",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/2fd717afa05341b4f8152547f142cd2f130f6818",
+                "reference": "2fd717afa05341b4f8152547f142cd2f130f6818",
                 "shasum": ""
             },
             "require": {
@@ -5162,9 +5220,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.3"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.12.4"
             },
-            "time": "2024-04-02T15:57:53+00:00"
+            "time": "2024-06-10T01:18:23+00:00"
         },
         {
             "name": "sebastian/cli-parser",

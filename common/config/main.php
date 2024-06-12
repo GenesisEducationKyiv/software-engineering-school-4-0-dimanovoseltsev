@@ -1,19 +1,21 @@
 <?php
 
 
-use app\models\Currency;
-use app\models\Subscription;
-use app\repositories\CurrencyCacheRepository;
-use app\repositories\CurrencyRepository;
-use app\repositories\CurrencyRepositoryInterface;
-use app\repositories\SubscriptionRepository;
-use app\repositories\SubscriptionRepositoryInterface;
-use app\services\CurrenciesService;
-use app\services\CurrenciesServiceInterface;
-use app\services\MailService;
-use app\services\MailServiceInterface;
-use app\services\SubscriptionService;
-use app\services\SubscriptionServiceInterface;
+use app\currencies\application\actions\CreateOrUpdateCurrency;
+use app\currencies\application\actions\CreateOrUpdateCurrencyInterface;
+use app\currencies\application\actions\RetrieveCurrencyByCode;
+use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
+use app\currencies\application\services\CurrencyService;
+use app\currencies\application\services\CurrencyServiceInterface;
+use app\currencies\infrastructure\models\Currency;
+use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
+use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\subscriptions\application\actions\Subscribe;
+use app\subscriptions\application\actions\SubscribeInterface;
+use app\subscriptions\application\services\SubscriptionService;
+use app\subscriptions\application\services\SubscriptionServiceInterface;
+use app\subscriptions\infrastructure\models\Subscription;
+use app\subscriptions\infrastructure\repositories\SubscriptionRepository;
 use yii\di\Container;
 use yii\symfonymailer\Mailer;
 
@@ -53,32 +55,63 @@ return [
     ],
     'container' => [
         'definitions' => [
-            // repositories
-            CurrencyRepositoryInterface::class => function (Container $container) {
-                return new CurrencyCacheRepository(
-                    new CurrencyRepository(Currency::find()),
-                    Yii::$app->cache,
-                    (int)getenv("RATE_CACHE_TTL")
-                );
-            },
-            SubscriptionRepositoryInterface::class => function (Container $container) {
-                return new SubscriptionRepository(Subscription::find());
-            },
-
             // services
-            CurrenciesServiceInterface::class => function (Container $container) {
-                return new CurrenciesService(
-                    $container->get(CurrencyRepositoryInterface::class)
-                );
-            },
             SubscriptionServiceInterface::class => function (Container $container) {
                 return new SubscriptionService(
-                    $container->get(SubscriptionRepositoryInterface::class)
+                    new SubscriptionRepository(Subscription::find())
                 );
             },
-            MailServiceInterface::class => function (Container $container) {
-                return new MailService(Yii::$app->mailer);
+            CurrencyServiceInterface::class => function (Container $container) {
+                return new CurrencyService(
+                    new CurrencyCacheRepository(
+                        new CurrencyRepository(Currency::find()),
+                        Yii::$app->cache,
+                        (int)getenv("RATE_CACHE_TTL")
+                    )
+                );
             },
+
+            // actions currency
+            RetrieveCurrencyByCodeInterface::class => function (Container $container) {
+                return new RetrieveCurrencyByCode($container->get(CurrencyServiceInterface::class));
+            },
+            CreateOrUpdateCurrencyInterface::class => function (Container $container) {
+                return new CreateOrUpdateCurrency($container->get(CurrencyServiceInterface::class));
+            },
+
+
+            // actions sub
+            SubscribeInterface::class => function (Container $container) {
+                return new Subscribe($container->get(SubscriptionServiceInterface::class));
+            },
+
+//
+//            // repositories
+//            CurrencyRepositoryInterface::class => function (Container $container) {
+//                return new CurrencyCacheRepository(
+//                    new CurrencyRepository(Currency::find()),
+//                    Yii::$app->cache,
+//                    (int)getenv("RATE_CACHE_TTL")
+//                );
+//            },
+//            SubscriptionRepositoryInterface::class => function (Container $container) {
+//                return new SubscriptionRepository(Subscription::find());
+//            },
+//
+//            // services
+//            CurrenciesServiceInterface::class => function (Container $container) {
+//                return new CurrenciesService(
+//                    $container->get(CurrencyRepositoryInterface::class)
+//                );
+//            },
+//            SubscriptionServiceInterface::class => function (Container $container) {
+//                return new SubscriptionService(
+//                    $container->get(SubscriptionRepositoryInterface::class)
+//                );
+//            },
+//            MailServiceInterface::class => function (Container $container) {
+//                return new MailService(Yii::$app->mailer);
+//            },
         ]
     ],
 ];
