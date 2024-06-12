@@ -1,6 +1,5 @@
 <?php
 
-use api\modules\v1\Module;
 use yii\web\JsonParser;
 use yii\web\User;
 
