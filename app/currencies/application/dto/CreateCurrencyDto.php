@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\currencies\application\dto;
-
 
 readonly class CreateCurrencyDto
 {

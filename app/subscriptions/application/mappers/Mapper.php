@@ -10,7 +10,6 @@ use app\subscriptions\domain\valueObjects\Email;
 
 class Mapper
 {
-
     /**
      * @param CreateSubscriptionDto $dto
      * @return Subscription
@@ -23,7 +22,6 @@ class Mapper
             new Timestamp($dto->getCreatedAt()),
             new Timestamp(null),
             new Timestamp(null),
-
         );
     }
 }

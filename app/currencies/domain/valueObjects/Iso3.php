@@ -2,7 +2,6 @@
 
 namespace app\currencies\domain\valueObjects;
 
-
 use app\shared\domain\valueObjects\ValueObjectInterface;
 use Webmozart\Assert\Assert;
 

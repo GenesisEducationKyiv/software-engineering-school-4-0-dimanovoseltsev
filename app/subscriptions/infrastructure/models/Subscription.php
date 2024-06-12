@@ -62,5 +62,4 @@ class Subscription extends ActiveRecord
             'last_send_at',
         ];
     }
-
 }

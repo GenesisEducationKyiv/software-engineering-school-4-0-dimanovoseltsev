@@ -17,7 +17,6 @@ class SendEmail extends BaseAction implements SendEmailInterface
     public function __construct(
         private readonly SubscriptionServiceInterface $subscriptionService,
         private readonly MailServiceInterface $mailService,
-
     ) {
     }
 

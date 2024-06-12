@@ -7,7 +7,6 @@ use Throwable;
 
 class ForbiddenException extends Exception implements Throwable
 {
-
     /**
      * ForbiddenException constructor.
      * @param string $message

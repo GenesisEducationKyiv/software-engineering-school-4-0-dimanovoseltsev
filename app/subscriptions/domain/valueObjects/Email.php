@@ -2,7 +2,6 @@
 
 namespace app\subscriptions\domain\valueObjects;
 
-
 use app\shared\application\traits\ValidationRulesTrait;
 use app\shared\domain\valueObjects\ValueObjectInterface;
 

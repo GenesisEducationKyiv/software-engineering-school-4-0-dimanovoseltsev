@@ -9,7 +9,6 @@ use app\currencies\infrastructure\models\CurrencyQuery;
 use app\shared\application\exceptions\NotValidException;
 use yii\db\Exception;
 
-
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
     /**
