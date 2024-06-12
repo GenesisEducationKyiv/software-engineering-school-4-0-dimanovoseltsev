@@ -34,26 +34,25 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
 
     /**
      * @param Currency $model
-     * @return bool
+     * @return void
      */
-    private function saveToCache(Currency $model): bool
+    private function saveToCache(Currency $model): void
     {
         $cacheKey = $this->getCacheKey((string)$model->iso3);
-        return $this->cache->set($cacheKey, json_encode($model->getAttributes()), $this->ttl);
+        $this->cache->set($cacheKey, json_encode($model->getAttributes()), $this->ttl);
     }
 
     /**
      * @param string $code
      * @return Currency|null
-     * @throws EntityException
      */
     public function getByCode(string $code): ?Currency
     {
         $cacheValue = $this->cache->get($this->getCacheKey($code));
         if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
-            $currency = CurrencyIso::from($code);
-            $cacheValue = json_decode($cacheValue, true);
-            return $this->currencyRepository->create(new CreateDto($currency, (float)($cacheValue['rate'] ?? 1)));
+            $model = new Currency();
+            $model->load((array)json_decode($cacheValue, true), '');
+            return $model;
         }
         $model = $this->currencyRepository->getByCode($code);
 

@@ -72,7 +72,7 @@ class EuropeanCentralBankProvider implements ProviderInterface
             throw new RemoteServiceException('Invalid JSON response');
         }
 
-        $body = json_decode((string)$response->getBody(), true);
+        $body = (array)json_decode((string)$response->getBody(), true);
         $result = $body['result'] ?? null;
         if ($result !== "success") {
             throw new RemoteServiceException('Result not success');
