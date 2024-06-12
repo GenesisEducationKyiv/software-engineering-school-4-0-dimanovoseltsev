@@ -89,43 +89,43 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
       - TZ=America/New_York
 
-  worker-mails:
-    build: .
-    restart: always
-    networks:
-      - app-network
-    user: root
-    working_dir: /app
-    tty: true
-    stdin_open: true
-    command: /bin/bash -c "sleep 10;  ./yii send-email-queue-worker/listen"
-    depends_on:
-      - mysql
-      - rabbitmq
-      - memcached
-    volumes:
-      - .:/app
-    environment:
-      - TZ=America/New_York
-    deploy:
-      replicas: 2
-
-  cron:
-    build:
-      context: .
-      dockerfile: DockerfileCron
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./docker/cron/cron.log:/var/log/cron.log
-    networks:
-      - app-network
-    depends_on:
-      - mysql
-      - memcached
-      - rabbitmq
-    environment:
-      - TZ=America/New_York
+#  worker-mails:
+#    build: .
+#    restart: always
+#    networks:
+#      - app-network
+#    user: root
+#    working_dir: /app
+#    tty: true
+#    stdin_open: true
+#    command: /bin/bash -c "sleep 10;  ./yii send-email-queue-worker/listen"
+#    depends_on:
+#      - mysql
+#      - rabbitmq
+#      - memcached
+#    volumes:
+#      - .:/app
+#    environment:
+#      - TZ=America/New_York
+#    deploy:
+#      replicas: 2
+#
+#  cron:
+#    build:
+#      context: .
+#      dockerfile: DockerfileCron
+#    working_dir: /app
+#    volumes:
+#      - .:/app
+#      - ./docker/cron/cron.log:/var/log/cron.log
+#    networks:
+#      - app-network
+#    depends_on:
+#      - mysql
+#      - memcached
+#      - rabbitmq
+#    environment:
+#      - TZ=America/New_York
 
 networks:
   app-network:

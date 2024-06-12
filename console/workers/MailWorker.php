@@ -2,7 +2,6 @@
 
 namespace console\workers;
 
-use app\currencies\application\actions\RetrieveCurrencyByCode;
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\models\Currency;
 use app\models\Subscription;
@@ -10,30 +9,24 @@ use app\services\CurrenciesServiceInterface;
 use app\services\MailServiceInterface;
 use app\services\SubscriptionServiceInterface;
 use app\shared\application\exceptions\NotExistException;
+use app\subscriptions\application\actions\SendEmailInterface;
 use Throwable;
 use Yii;
-use yii\helpers\Console;
 
 class MailWorker extends BaseWorker
 {
     /**
      * @param $id
      * @param $module
-     * @param MailServiceInterface $mailService
-     * @param SubscriptionServiceInterface $subscriptionService
-     * @param CurrenciesServiceInterface $currenciesService
+     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param SendEmailInterface $sendEmail
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly MailServiceInterface $mailService,
-        private readonly SubscriptionServiceInterface $subscriptionService,
-        private readonly CurrenciesServiceInterface $currenciesService,
-
         private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
-
-
+        private readonly SendEmailInterface $sendEmail,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -54,26 +47,12 @@ class MailWorker extends BaseWorker
             return true;
         }
 
+
         try {
             $currency = $this->retrieveCurrencyByCode->execute((string)$data['currency']);
-        }catch (NotExistException $e){
+            return $this->sendEmail->execute($currency, (string)$data['email']);
+        } catch (NotExistException $e) {
             return true;
-        }
-
-        /** @var  ?Subscription $subscription */
-        $subscription = $this->subscriptionService->findByEmailAndNotSend((string)$data['email']);
-        if ($subscription === null) {
-            return true;
-        }
-
-        Console::output(sprintf("Send %s - %s", $currency->getIso3()->value(), $subscription->email));
-
-        try {
-            $state = $this->mailService->sendActualRate($currency, $subscription);
-            if ($state) {
-                $this->subscriptionService->updateLastSend($subscription);
-            }
-            return $state;
         } catch (Throwable $e) {
             return $this->moveToFailQueue(
                 Yii::$app->sendEmailFailQueue,

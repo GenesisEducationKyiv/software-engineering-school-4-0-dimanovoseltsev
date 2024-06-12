@@ -16,7 +16,7 @@ class SubscriptionService implements SubscriptionServiceInterface
      * @param SubscriptionRepositoryInterface $repository
      */
     public function __construct(
-        private readonly SubscriptionRepositoryInterface $repository
+        private readonly SubscriptionRepositoryInterface $repository,
     ) {
     }
 
@@ -54,5 +54,15 @@ class SubscriptionService implements SubscriptionServiceInterface
     public function findNotSent(SearchSubscribersForMailingDto $dto): array
     {
         return  $this->repository->getNotSent($dto);
+    }
+
+
+    /**
+     * @param string $email
+     * @return Subscription|null
+     */
+    public function findByEmailAndNotSend(string $email): ?Subscription
+    {
+        return $this->repository->getByEmailAndNotSend($email);
     }
 }

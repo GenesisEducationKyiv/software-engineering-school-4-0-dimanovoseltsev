@@ -31,4 +31,10 @@ interface SubscriptionServiceInterface
      * @return Subscription[]
      */
     public function findNotSent(SearchSubscribersForMailingDto $dto): array;
+
+    /**
+     * @param string $email
+     * @return Subscription|null
+     */
+    public function findByEmailAndNotSend(string $email): ?Subscription;
 }

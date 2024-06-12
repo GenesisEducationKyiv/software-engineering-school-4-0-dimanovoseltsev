@@ -4,11 +4,12 @@ namespace app\subscriptions\application\actions;
 
 use app\currencies\domain\entities\Currency;
 
-interface SendEmailsScheduledInterface
+interface SendEmailInterface
 {
     /**
      * @param Currency $currency
-     * @return int
+     * @param string $email
+     * @return bool
      */
-    public function execute(Currency $currency): int;
+    public function execute(Currency $currency, string $email): bool;
 }
