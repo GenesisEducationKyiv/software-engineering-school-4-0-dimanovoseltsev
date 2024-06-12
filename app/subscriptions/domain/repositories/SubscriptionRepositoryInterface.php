@@ -2,6 +2,7 @@
 
 namespace app\subscriptions\domain\repositories;
 
+use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\domain\entities\Subscription;
 
 interface SubscriptionRepositoryInterface
@@ -17,4 +18,10 @@ interface SubscriptionRepositoryInterface
      * @return Subscription
      */
     public function save(Subscription $currency): Subscription;
+
+    /**
+     * @param SearchSubscribersForMailingDto $dto
+     * @return array
+     */
+    public function getNotSent(SearchSubscribersForMailingDto $dto): array;
 }

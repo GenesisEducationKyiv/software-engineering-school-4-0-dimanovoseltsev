@@ -14,8 +14,12 @@ use app\currencies\application\services\ImportCurrencyServiceInterface;
 use app\currencies\infrastructure\models\Currency;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\subscriptions\application\actions\SendEmailsScheduled;
+use app\subscriptions\application\actions\SendEmailsScheduledInterface;
 use app\subscriptions\application\actions\Subscribe;
 use app\subscriptions\application\actions\SubscribeInterface;
+use app\subscriptions\application\services\PublisherService;
+use app\subscriptions\application\services\PublisherServiceInterface;
 use app\subscriptions\application\services\SubscriptionService;
 use app\subscriptions\application\services\SubscriptionServiceInterface;
 use app\subscriptions\infrastructure\models\Subscription;
@@ -75,7 +79,6 @@ return [
                 );
             },
 
-
             ImportCurrencyServiceInterface::class => function (Container $container) {
                 return new ImportCurrencyService(
                      new \app\currencies\infrastructure\providers\EuropeanCentralBankProvider(
@@ -86,6 +89,9 @@ return [
                      ),
                     $container->get(CreateOrUpdateCurrencyInterface::class)
                 );
+            },
+            PublisherServiceInterface::class => function (Container $container) {
+                return new PublisherService(new \app\subscriptions\infrastructure\adapters\RabbitMq(\Yii::$app->sendEmailQueue));
             },
 
 
@@ -104,6 +110,13 @@ return [
             // actions sub
             SubscribeInterface::class => function (Container $container) {
                 return new Subscribe($container->get(SubscriptionServiceInterface::class));
+            },
+
+            SendEmailsScheduledInterface::class => function (Container $container) {
+                return new SendEmailsScheduled(
+                    $container->get(SubscriptionServiceInterface::class),
+                    $container->get(PublisherServiceInterface::class),
+                );
             },
 
 //

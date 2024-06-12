@@ -4,6 +4,7 @@ namespace app\subscriptions\application\services;
 
 use app\shared\application\exceptions\NotValidException;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
+use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\mappers\Mapper;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
@@ -31,8 +32,6 @@ class SubscriptionService implements SubscriptionServiceInterface
     /**
      * @param Subscription $entity
      * @return Subscription
-     * @throws Exception
-     * @throws NotValidException
      */
     public function save(Subscription $entity): Subscription
     {
@@ -42,11 +41,18 @@ class SubscriptionService implements SubscriptionServiceInterface
     /**
      * @param CreateSubscriptionDto $dto
      * @return Subscription
-     * @throws NotValidException
-     * @throws Exception
      */
     public function subscribe(CreateSubscriptionDto $dto): Subscription
     {
         return $this->repository->save(Mapper::fromCreateDto($dto));
+    }
+
+    /**
+     * @param SearchSubscribersForMailingDto $dto
+     * @return Subscription[]
+     */
+    public function findNotSent(SearchSubscribersForMailingDto $dto): array
+    {
+        return  $this->repository->getNotSent($dto);
     }
 }

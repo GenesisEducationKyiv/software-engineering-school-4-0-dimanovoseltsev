@@ -3,7 +3,9 @@
 namespace console\controllers;
 
 use app\currencies\application\actions\ImportRatesInterface;
+use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\shared\application\exceptions\NotValidException;
+use app\subscriptions\application\actions\SendEmailsScheduledInterface;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -19,12 +21,16 @@ class AppController extends Controller
      * @param $id
      * @param $module
      * @param ImportRatesInterface $importRates
+     * @param SendEmailsScheduledInterface $sendEmailsScheduled
+     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
         private readonly ImportRatesInterface $importRates,
+        private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
+        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -109,19 +115,16 @@ class AppController extends Controller
      */
     public function actionSendEmails(): int
     {
-        $currency = (string)getenv("IMPORTED_CURRENCY");
-        $query = Subscription::find()->prepareNotSent();
-        $count = $query->count();
-
-        foreach ($query->each() as $model) {
-            /** @var Subscription $model */
-            Yii::$app->sendEmailQueue->push([
-                'email' => $model->email,
-                'currency' => $currency,
-            ]);
+        try {
+            $count = $this->sendEmailsScheduled->execute(
+                $this->retrieveCurrencyByCode->execute((string)getenv("IMPORTED_CURRENCY")),
+                (int)getenv("BREAK_BETWEEN_SENDING_EMAIL"),
+            );
+            Console::output("Send " . $count);
+            return ExitCode::OK;
+        } catch (Throwable $e) {
+            Console::error($e->getMessage());
+            return ExitCode::DATAERR;
         }
-
-        Console::output("Send " . $count);
-        return ExitCode::OK;
     }
 }

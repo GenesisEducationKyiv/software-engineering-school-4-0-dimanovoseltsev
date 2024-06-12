@@ -3,6 +3,7 @@
 namespace app\subscriptions\infrastructure\repositories;
 
 use app\shared\application\exceptions\NotValidException;
+use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
 use app\subscriptions\infrastructure\mappers\Mapper;
@@ -40,5 +41,27 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     {
         $values = Mapper::toModelAttributes($currency);
         return Mapper::toEntity($this->query->save($values));
+    }
+
+    /**
+     * @param SearchSubscribersForMailingDto $dto
+     * @return array
+     */
+    public function getNotSent(SearchSubscribersForMailingDto $dto): array
+    {
+        $models = $this->query->clear()
+            ->prepareNotSent($dto->getBreakBetweenSending())
+            ->andFilterWhere(['>', 'id', $dto->getLastId()])
+            ->limit($dto->getLimit())
+            ->orderBy(['id' => SORT_ASC])
+            ->all();
+
+        $entities = [];
+
+        foreach ($models as $model) {
+            $entities[] = Mapper::toEntity($model);
+        }
+
+        return $entities;
     }
 }
