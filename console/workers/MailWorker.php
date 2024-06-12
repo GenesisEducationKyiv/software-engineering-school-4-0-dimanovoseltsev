@@ -5,6 +5,7 @@ namespace console\workers;
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\shared\application\exceptions\NotExistException;
 use app\subscriptions\application\actions\SendEmailInterface;
+use app\subscriptions\application\dto\SendEmailDto;
 use Throwable;
 use Yii;
 
@@ -45,7 +46,7 @@ class MailWorker extends BaseWorker
 
         try {
             $currency = $this->retrieveCurrencyByCode->execute((string)$data['currency']);
-            return $this->sendEmail->execute($currency, (string)$data['email']);
+            return $this->sendEmail->execute($currency, new SendEmailDto((string)$data['email'], time()));
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {
