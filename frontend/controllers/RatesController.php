@@ -4,8 +4,6 @@ namespace frontend\controllers;
 
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\shared\application\exceptions\AlreadyException;
-use app\shared\application\exceptions\ConflictException;
-use app\shared\application\exceptions\ForbiddenException;
 use app\shared\application\exceptions\NotExistException;
 use app\shared\application\exceptions\NotSupportedException;
 use app\shared\application\exceptions\NotValidException;
