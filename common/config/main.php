@@ -3,10 +3,14 @@
 
 use app\currencies\application\actions\CreateOrUpdateCurrency;
 use app\currencies\application\actions\CreateOrUpdateCurrencyInterface;
+use app\currencies\application\actions\ImportRates;
+use app\currencies\application\actions\ImportRatesInterface;
 use app\currencies\application\actions\RetrieveCurrencyByCode;
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\application\services\CurrencyServiceInterface;
+use app\currencies\application\services\ImportCurrencyService;
+use app\currencies\application\services\ImportCurrencyServiceInterface;
 use app\currencies\infrastructure\models\Currency;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
@@ -71,12 +75,29 @@ return [
                 );
             },
 
+
+            ImportCurrencyServiceInterface::class => function (Container $container) {
+                return new ImportCurrencyService(
+                     new \app\currencies\infrastructure\providers\EuropeanCentralBankProvider(
+                         new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
+                         (string)getenv("EXCHANGE_RATE_API_LEY"),
+                         (string)getenv("BASE_CURRENCY"),
+                         (string)getenv("IMPORTED_CURRENCY"),
+                     ),
+                    $container->get(CreateOrUpdateCurrencyInterface::class)
+                );
+            },
+
+
             // actions currency
             RetrieveCurrencyByCodeInterface::class => function (Container $container) {
                 return new RetrieveCurrencyByCode($container->get(CurrencyServiceInterface::class));
             },
             CreateOrUpdateCurrencyInterface::class => function (Container $container) {
                 return new CreateOrUpdateCurrency($container->get(CurrencyServiceInterface::class));
+            },
+            ImportRatesInterface::class => function (Container $container) {
+                return new ImportRates($container->get(ImportCurrencyServiceInterface::class));
             },
 
 

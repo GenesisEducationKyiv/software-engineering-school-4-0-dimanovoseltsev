@@ -2,10 +2,8 @@
 
 namespace console\controllers;
 
-use app\exceptions\EntityException;
-use app\models\Currency;
-use app\models\Subscription;
-use app\services\ImportServiceInterface;
+use app\currencies\application\actions\ImportRatesInterface;
+use app\shared\application\exceptions\NotValidException;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -18,16 +16,15 @@ use yii\helpers\Console;
 class AppController extends Controller
 {
     /**
-     * AppController constructor.
      * @param $id
      * @param $module
-     * @param ImportServiceInterface $importService
+     * @param ImportRatesInterface $importRates
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly ImportServiceInterface $importService,
+        private readonly ImportRatesInterface $importRates,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -92,15 +89,14 @@ class AppController extends Controller
     public function actionImportCurrencyRates(): int
     {
         try {
-            $totalCount = Currency::find()->count();
-            $currencies = $this->importService->importRates();
+            $currencies = $this->importRates->execute();
             Console::output(
-                sprintf('%s updated %d (total %d) currencies.', date('Y-m-d H:i:s'), count($currencies), $totalCount)
+                sprintf('%s updated %d currencies.', date('Y-m-d H:i:s'), count($currencies))
             );
             return ExitCode::OK;
-        } catch (EntityException $e) {
+        } catch (NotValidException $e) {
             Console::error($e->getMessage());
-            Console::error('Model errors: ' . var_export($e->getModel()->getErrors(), true));
+            Console::error('Model errors: ' . var_export($e->getErrorsAsResponse(), true));
             return ExitCode::DATAERR;
         } catch (Throwable $e) {
             Console::error($e->getMessage());

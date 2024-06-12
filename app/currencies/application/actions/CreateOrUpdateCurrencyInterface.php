@@ -2,14 +2,14 @@
 
 namespace app\currencies\application\actions;
 
-use app\currencies\application\forms\CreateCurrencyForm;
+use app\currencies\application\forms\CurrencyForm;
 use app\currencies\domain\entities\Currency;
 
 interface CreateOrUpdateCurrencyInterface
 {
     /**
-     * @param CreateCurrencyForm $form
+     * @param CurrencyForm $form
      * @return Currency
      */
-    public function execute(CreateCurrencyForm $form): Currency;
+    public function execute(CurrencyForm $form): Currency;
 }
