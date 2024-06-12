@@ -2,20 +2,26 @@
 
 namespace frontend\controllers;
 
-use app\dto\subscription\CreateDto;
-use app\exceptions\EntityException;
-use app\forms\SubscribeFrom;
-use app\services\CurrenciesServiceInterface;
-use app\services\SubscriptionServiceInterface;
+use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
+use app\shared\application\exceptions\AlreadyException;
+use app\shared\application\exceptions\ConflictException;
+use app\shared\application\exceptions\ForbiddenException;
+use app\shared\application\exceptions\NotExistException;
+use app\shared\application\exceptions\NotSupportedException;
+use app\shared\application\exceptions\NotValidException;
+use app\subscriptions\application\actions\SubscribeInterface;
+use app\subscriptions\application\forms\SubscribeForm;
 use Exception;
 use OpenApi\Attributes as OA;
 use Throwable;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+use yii\web\ConflictHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
+use yii\web\NotFoundHttpException;
 
 #[OA\Info(version: "1.0.0", title: "Currency Rates API")]
 #[OA\Tag(
@@ -30,15 +36,15 @@ class RatesController extends ActiveController
     /**
      * @param $id
      * @param $module
-     * @param CurrenciesServiceInterface $currenciesService
-     * @param SubscriptionServiceInterface $subscriptionService
+     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param SubscribeInterface $subscribe
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly CurrenciesServiceInterface $currenciesService,
-        private readonly SubscriptionServiceInterface $subscriptionService,
+        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly SubscribeInterface $subscribe,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -89,17 +95,36 @@ class RatesController extends ActiveController
 
 
     /**
-     * @param Throwable|Exception $e
-     * @return mixed
+     * @throws \yii\base\NotSupportedException
+     * @throws ConflictHttpException
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
      * @throws BadRequestHttpException
-     * @throws HttpException
-     * @throws Throwable
      */
     protected function processException(Throwable|Exception $e): mixed
     {
+        if ($e instanceof NotValidException) {
+            Yii::$app->response->setStatusCode(422);
+            return $e->getErrorsAsResponse();
+        }
+
         return match (true) {
-            $e instanceof EntityException => $e->getModel(),
-            $e instanceof HttpException => throw $e,
+            $e instanceof NotExistException => throw new NotFoundHttpException(
+                $e->getMessage(), (int)$e->getCode(), $e
+            ),
+            $e instanceof ConflictException, $e instanceof AlreadyException => throw new ConflictHttpException(
+                $e->getMessage(), (int)$e->getCode(), $e
+            ),
+            $e instanceof ForbiddenException => throw new ForbiddenHttpException(
+                $e->getMessage(),
+                (int)$e->getCode(),
+                $e
+            ),
+            $e instanceof NotSupportedException => throw new \yii\base\NotSupportedException(
+                $e->getMessage(),
+                (int)$e->getCode(),
+                $e
+            ),
             default => throw new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
         };
     }
@@ -144,11 +169,11 @@ class RatesController extends ActiveController
     public function actionRate(): float
     {
         try {
-            $currency = $this->currenciesService->findByCode((string)getenv('IMPORTED_CURRENCY'));
-            if ($currency === null) {
-                throw new HttpException(400, 'Invalid status value');
-            }
-            return (float)$currency->rate;
+            $code = (string)getenv('IMPORTED_CURRENCY');
+            $entity = $this->retrieveCurrencyByCode->execute($code);
+            return $entity->getRate()->value();
+        } catch (NotExistException $e) {
+            throw new HttpException(400, 'Invalid status value');
         } catch (Throwable $e) {
             return $this->processException($e);
         }
@@ -158,7 +183,6 @@ class RatesController extends ActiveController
      * @return mixed
      * @throws BadRequestHttpException
      * @throws HttpException
-     * @throws InvalidConfigException
      * @throws Throwable
      */
     #[OA\Post(
@@ -226,19 +250,13 @@ class RatesController extends ActiveController
     )]
     public function actionSubscribe()
     {
-        $form = new SubscribeFrom();
-        $form->load(Yii::$app->request->getBodyParams(), '');
-        if (!$form->validate()) {
-            return $form;
-        }
-
         try {
-            $model = $this->subscriptionService->findByEmail($form->email);
-            if ($model !== null) {
-                throw new HttpException(409, 'Already subscribed');
-            }
-
-            $this->subscriptionService->create(new CreateDto($form->email));
+            $bodyParams = Yii::$app->request->getBodyParams();
+            $this->subscribe->execute(
+                new SubscribeForm(
+                    $bodyParams['email'] ?? null
+                )
+            );
             return null;
         } catch (Throwable $e) {
             return $this->processException($e);

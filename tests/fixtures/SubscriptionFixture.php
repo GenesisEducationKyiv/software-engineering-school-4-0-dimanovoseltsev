@@ -2,7 +2,8 @@
 
 namespace tests\fixtures;
 
-use app\models\Subscription;
+
+use app\subscriptions\infrastructure\models\Subscription;
 
 class SubscriptionFixture extends \yii\test\ActiveFixture
 {

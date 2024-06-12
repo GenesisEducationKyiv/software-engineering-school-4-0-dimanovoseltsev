@@ -1,12 +1,11 @@
 <?php
 
 namespace tests\functional\api;
-
-use app\models\Currency;
-use app\models\Subscription;
 use Exception;
 use tests\functional\FunctionalCest;
 use tests\FunctionalTester;
+use app\currencies\infrastructure\models\Currency;
+use app\subscriptions\infrastructure\models\Subscription;
 
 
 class RateCest extends FunctionalCest
@@ -62,7 +61,7 @@ class RateCest extends FunctionalCest
         $response = json_decode($I->grabResponse(), true);
         $I->assertNotEmpty($response);
         $I->assertEquals([
-            ["field" => "email", "message" => "Email cannot be blank."]
+            ["field" => "email", "message" => "Cannot be blank"]
         ], $response);
     }
 
@@ -80,7 +79,7 @@ class RateCest extends FunctionalCest
         $response = json_decode($I->grabResponse(), true);
         $I->assertNotEmpty($response);
         $I->assertEquals([
-            ["field" => "email", "message" => "Email is not a valid email address."]
+            ["field" => "email", "message" => "Is not a valid email address"]
         ], $response);
     }
 
