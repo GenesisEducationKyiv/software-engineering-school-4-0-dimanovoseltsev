@@ -7,7 +7,6 @@ use Exception;
 /**
  * Class RemoteServiceException.
  *
- * @package app\exceptions
  */
 class RemoteServiceException extends Exception
 {
