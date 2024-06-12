@@ -32,11 +32,10 @@ class ImportCurrencyService implements ImportCurrencyServiceInterface
         }
 
         $currencies = [];
-        // @todo ref $rates as array entity
-        foreach ($rates as $code => $rate) {
-            $currencies[] = $this->createOrUpdateCurrency->execute(new CurrencyForm($code, $rate));
-
-            die();
+        foreach ($rates as $dto) {
+            $currencies[] = $this->createOrUpdateCurrency->execute(
+                new CurrencyForm($dto->getCurrency(), $dto->getRate())
+            );
         }
         return $currencies;
     }

@@ -2,10 +2,12 @@
 
 namespace app\currencies\application\providers;
 
+use app\currencies\application\dto\CurrencyProviderDto;
+
 interface ProviderInterface
 {
     /**
-     * @return array<string, float>
+     * @return CurrencyProviderDto[]
      */
     public function getActualRates(): array;
 }
