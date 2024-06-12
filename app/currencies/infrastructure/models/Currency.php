@@ -4,7 +4,6 @@ namespace app\currencies\infrastructure\models;
 
 use yii\db\ActiveRecord;
 
-
 /**
  * Class Currency.
  *
@@ -65,4 +64,3 @@ class Currency extends ActiveRecord
         ];
     }
 }
-

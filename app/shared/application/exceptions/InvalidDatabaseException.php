@@ -7,7 +7,6 @@ use Throwable;
 
 class InvalidDatabaseException extends Exception implements Throwable
 {
-
     /**
      * InvalidDatabaseException constructor.
      * @param string $message
@@ -18,5 +17,4 @@ class InvalidDatabaseException extends Exception implements Throwable
     {
         parent::__construct($message, $code, $previous);
     }
-
 }

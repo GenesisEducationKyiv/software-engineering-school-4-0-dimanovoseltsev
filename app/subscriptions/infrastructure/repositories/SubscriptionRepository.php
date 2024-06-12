@@ -10,7 +10,6 @@ use app\subscriptions\infrastructure\mappers\Mapper;
 use app\subscriptions\infrastructure\models\SubscriptionQuery;
 use yii\db\Exception;
 
-
 class SubscriptionRepository implements SubscriptionRepositoryInterface
 {
     /**

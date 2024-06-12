@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\subscriptions\application\dto;
-
 
 readonly class CreateSubscriptionDto
 {

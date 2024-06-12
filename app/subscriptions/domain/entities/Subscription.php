@@ -22,7 +22,6 @@ class Subscription implements Arrayable
         private Timestamp $createdAt,
         private Timestamp $updatedAt,
         private Timestamp $lastSendAt,
-
     ) {
     }
 
