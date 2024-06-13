@@ -5,11 +5,12 @@ namespace app\currencies\application\forms;
 use app\currencies\application\enums\CurrencyIso;
 use app\shared\application\forms\BaseForm;
 use app\shared\application\forms\FormInterface;
+use app\shared\application\interfaces\Errorable;
 use app\shared\application\traits\TimestampTrait;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-class CurrencyForm extends BaseForm implements FormInterface
+class CurrencyForm extends BaseForm implements FormInterface, Errorable
 {
     use TimestampTrait;
 
@@ -29,7 +30,7 @@ class CurrencyForm extends BaseForm implements FormInterface
     /**
      * @return void
      */
-    public function filterAttributes(): void
+    protected function filterAttributes(): void
     {
         if ($this->rate !== null) {
             $this->rate = (float)$this->rate;

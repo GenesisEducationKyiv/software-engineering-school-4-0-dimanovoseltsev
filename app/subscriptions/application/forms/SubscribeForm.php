@@ -4,11 +4,12 @@ namespace app\subscriptions\application\forms;
 
 use app\shared\application\forms\BaseForm;
 use app\shared\application\forms\FormInterface;
+use app\shared\application\interfaces\Errorable;
 use app\shared\application\traits\TimestampTrait;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-class SubscribeForm extends BaseForm implements FormInterface
+class SubscribeForm extends BaseForm implements FormInterface, Errorable
 {
     use TimestampTrait;
 
