@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
 class Subscription extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * @return string
      */
     public static function tableName(): string
     {
@@ -33,13 +33,14 @@ class Subscription extends ActiveRecord
      *
      * @return SubscriptionQuery
      */
-    public static function find()
+    public static function find(): SubscriptionQuery
     {
         return new SubscriptionQuery(get_called_class());
     }
 
     /**
      * @inheritdoc
+     * @return array<int, mixed>
      */
     public function rules(): array
     {

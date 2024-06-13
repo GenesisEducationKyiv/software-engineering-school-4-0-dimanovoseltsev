@@ -1,2 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 ./vendor/bin/codecept run unit $* --coverage --coverage-html

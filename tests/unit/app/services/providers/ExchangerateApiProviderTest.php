@@ -4,7 +4,7 @@ namespace tests\unit\app\services\providers;
 
 use app\exceptions\RemoteServiceException;
 use app\repositories\CurrencyRepository;
-use app\services\providers\ExchangerateApiProvider;
+use app\services\providers\EuropeanCentralBankProvider;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
@@ -13,18 +13,18 @@ use tests\unit\UnitTestCase;
 
 class ExchangerateApiProviderTest extends UnitTestCase
 {
-    private ExchangerateApiProvider $provider;
+    private EuropeanCentralBankProvider $provider;
     private Client|MockObject $httpClient;
 
     private string $apiKey = 'test-api-key';
     private string $baseCurrency = 'USD';
-    private string $importCurrency = 'EUR';
+    private string $importCurrency = 'UAH';
 
     public function setUp(): void
     {
         parent::setUp();
         $this->httpClient = $this->getHttpClientMock();
-        $this->provider = new ExchangerateApiProvider(
+        $this->provider = new EuropeanCentralBankProvider(
             $this->httpClient,
             $this->apiKey,
             $this->baseCurrency,
@@ -130,6 +130,24 @@ class ExchangerateApiProviderTest extends UnitTestCase
         $this->expectExceptionMessage('Bad conversion rate');
 
         $this->provider->getActualRates();
+    }
+
+    public function testGetActualRatesBadJson()
+    {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Invalid JSON response');
+
+        $response = new Response(200, [], '');
+
+        $this->httpClient
+            ->expects(self::once())
+            ->method('get')
+            ->willReturn($response);
+
+        $expectedResult = [$this->importCurrency => 0.85000];
+
+        $actualResult = $this->provider->getActualRates();
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
 }

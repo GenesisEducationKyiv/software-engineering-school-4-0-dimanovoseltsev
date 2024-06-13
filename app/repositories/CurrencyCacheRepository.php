@@ -2,6 +2,9 @@
 
 namespace app\repositories;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
+use app\enums\CurrencyIso;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use yii\caching\CacheInterface;
@@ -31,12 +34,12 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
 
     /**
      * @param Currency $model
-     * @return bool
+     * @return void
      */
-    private function saveToCache(Currency $model): bool
+    private function saveToCache(Currency $model): void
     {
         $cacheKey = $this->getCacheKey((string)$model->iso3);
-        return $this->cache->set($cacheKey, json_encode($model->getAttributes()), $this->ttl);
+        $this->cache->set($cacheKey, json_encode($model->getAttributes()), $this->ttl);
     }
 
     /**
@@ -46,7 +49,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     public function getByCode(string $code): ?Currency
     {
         $cacheValue = $this->cache->get($this->getCacheKey($code));
-        if (!empty($cacheValue) && is_string($cacheValue)) {
+        if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
             $model = new Currency();
             $model->load((array)json_decode($cacheValue, true), '');
             return $model;
@@ -60,26 +63,26 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
      * @throws EntityException
      */
-    public function create(array $data = []): Currency
+    public function create(CreateDto $dto): Currency
     {
-        $model = $this->currencyRepository->create($data);
+        $model = $this->currencyRepository->create($dto);
         $this->saveToCache($model);
         return $model;
     }
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      * @throws EntityException
      */
-    public function update(Currency $model, array $data = []): Currency
+    public function update(Currency $model, UpdateDto $dto): Currency
     {
-        $model = $this->currencyRepository->update($model, $data);
+        $model = $this->currencyRepository->update($model, $dto);
         $this->saveToCache($model);
         return $model;
     }

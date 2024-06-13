@@ -20,7 +20,7 @@ use yii\db\ActiveRecord;
 class Currency extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * @return string
      */
     public static function tableName(): string
     {
@@ -32,18 +32,19 @@ class Currency extends ActiveRecord
      *
      * @return CurrencyQuery
      */
-    public static function find()
+    public static function find(): CurrencyQuery
     {
         return new CurrencyQuery(get_called_class());
     }
 
     /**
-     * @inheritdoc
+     * @return array
+     * @return array<int, mixed>
      */
     public function rules(): array
     {
         return [
-            [['iso3', ], 'required'],
+            [['iso3',], 'required'],
             ['iso3', 'unique'],
             ['iso3', 'match', 'pattern' => '/^[a-z]+$/i'],
             [['iso3'], 'string', 'length' => [0, 3]],

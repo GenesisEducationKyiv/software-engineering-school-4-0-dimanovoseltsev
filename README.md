@@ -24,7 +24,7 @@ docker-compose logs -f app-setup
 That's all - your application is available at http://127.0.0.1:9822
 
 # Documentation
-For detailed documentation, check out http://localhost:9822/doc
+For detailed documentation, check out http://127.0.0.1:9822/doc
 
 # Testing
 ### Unit Tests
@@ -50,7 +50,7 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 [CHANGELOG]: ./CHANGELOG.md
 [PIPELINES]: https://gitlab.com/dima.novoseltsev/currency-rates-api/pipelines
 [JOBS]: https://gitlab.com/dima.novoseltsev/currency-rates-api/-/jobs
-[version-badge]: https://img.shields.io/badge/version-1.0.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.1.0-blue.svg
 [pipeline-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/pipeline.svg
 [coverage-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/coverage.svg
 [php-version]:https://img.shields.io/static/v1?label=php&message=8.3&color=green

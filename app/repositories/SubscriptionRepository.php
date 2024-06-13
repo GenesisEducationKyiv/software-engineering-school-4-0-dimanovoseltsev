@@ -2,10 +2,11 @@
 
 namespace app\repositories;
 
+use app\dto\subscription\CreateDto;
 use app\exceptions\EntityException;
-use app\models\Currency;
 use app\models\query\SubscriptionQuery;
 use app\models\Subscription;
+use Throwable;
 
 class SubscriptionRepository implements SubscriptionRepositoryInterface
 {
@@ -22,15 +23,19 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      */
     private function save(Subscription $model): Subscription
     {
-        if (!$model->save()) {
-            throw new EntityException($model, 'Subscription not saved');
+        try {
+            if (!$model->save()) {
+                throw new EntityException($model, 'Subscription not saved');
+            }
+            return $model;
+        } catch (Throwable $exception) {
+            throw new EntityException($model, $exception->getMessage(), previous: $exception);
         }
-        return $model;
     }
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmail(string $email): ?Subscription
     {
@@ -38,20 +43,20 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Subscription
      * @throws EntityException
      */
-    public function create(array $data): Subscription
+    public function create(CreateDto $dto): Subscription
     {
-        /** @var Subscription */
-        $model =  $this->subscriptionQuery->createModel($data);
+        $model = $this->subscriptionQuery->createModel();
+        $model->email = $dto->getEmail();
         return $this->save($model);
     }
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmailAndNotSend(string $email): ?Subscription
     {

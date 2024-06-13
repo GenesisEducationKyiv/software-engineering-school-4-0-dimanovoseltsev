@@ -8,6 +8,9 @@ use app\models\Currency;
  * Class CurrencyQuery.
  *
  * @package app\models\query
+ *
+ * @method CurrencyQuery clear()
+ * @method Currency createModel()
  */
 class CurrencyQuery extends ActiveQuery
 {

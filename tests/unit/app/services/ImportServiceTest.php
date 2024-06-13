@@ -2,10 +2,11 @@
 
 namespace tests\unit\app\services;
 
+use app\exceptions\NotSupportedException;
 use app\models\Currency;
 use app\services\CurrenciesService;
 use app\services\ImportService;
-use app\services\providers\ExchangerateApiProvider;
+use app\services\providers\EuropeanCentralBankProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
@@ -14,7 +15,7 @@ use yii\base\InvalidCallException;
 class ImportServiceTest extends UnitTestCase
 {
     private ImportService $service;
-    private ExchangerateApiProvider|MockObject $currencyRateProvider;
+    private EuropeanCentralBankProvider|MockObject $currencyRateProvider;
     private CurrenciesService|MockObject $currenciesService;
 
     public function setUp(): void
@@ -29,11 +30,11 @@ class ImportServiceTest extends UnitTestCase
     }
 
     /**
-     * @return ExchangerateApiProvider|MockObject
+     * @return EuropeanCentralBankProvider|MockObject
      */
-    protected function getExchangerateApiProviderMock(): ExchangerateApiProvider|MockObject
+    protected function getExchangerateApiProviderMock(): EuropeanCentralBankProvider|MockObject
     {
-        return $this->getMockBuilder(ExchangerateApiProvider::class)
+        return $this->getMockBuilder(EuropeanCentralBankProvider::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'getActualRates',
@@ -61,7 +62,7 @@ class ImportServiceTest extends UnitTestCase
      */
     public function testImportRatesSuccess()
     {
-        $rates = ['EUR' => 0.85, 'GBP' => 0.75];
+        $rates = ['USD' => 0.85, 'UAH' => 0.75];
         $this->currencyRateProvider
             ->expects(self::once())
             ->method('getActualRates')
@@ -105,7 +106,7 @@ class ImportServiceTest extends UnitTestCase
 
     public function testImportRatesWithNewAndExistingCurrency()
     {
-        $rates = ['EUR' => 0.85];
+        $rates = ['USD' => 0.85];
         $this->currencyRateProvider
             ->expects(self::once())
             ->method('getActualRates')
@@ -131,5 +132,22 @@ class ImportServiceTest extends UnitTestCase
         $this->assertSame($newCurrencyModel, $result[0]);
     }
 
+
+    /**
+     * @throws Exception|NotSupportedException
+     */
+    public function testImportRatesFail()
+    {
+        self::expectException(NotSupportedException::class);
+        self::expectExceptionMessage("Currency AAA is not supported");
+
+        $rates = ['AAA' => 0.85];
+        $this->currencyRateProvider
+            ->expects(self::once())
+            ->method('getActualRates')
+            ->willReturn($rates);
+
+        $this->service->importRates();
+    }
 }
 

@@ -2,8 +2,8 @@
 
 namespace tests\unit\app\repositories;
 
+use app\dto\subscription\CreateDto;
 use app\exceptions\EntityException;
-use app\models\query\CurrencyQuery;
 use app\models\query\SubscriptionQuery;
 use app\models\Subscription;
 use app\repositories\SubscriptionRepository;
@@ -12,8 +12,8 @@ use tests\unit\UnitTestCase;
 
 class SubscriptionRepositoryTest extends UnitTestCase
 {
-    private $subscriptionQueryMock;
-    private $subscriptionRepository;
+    private MockObject|SubscriptionQuery $subscriptionQueryMock;
+    private SubscriptionRepository $subscriptionRepository;
 
     protected function setUp(): void
     {
@@ -44,7 +44,9 @@ class SubscriptionRepositoryTest extends UnitTestCase
         $subscriptionModel = $this->getSubscriptionModelMock();
 
         $this->subscriptionQueryMock->expects(self::once())->method('clear')->willReturn($this->subscriptionQueryMock);
-        $this->subscriptionQueryMock->expects(self::once())->method('findByEmail')->with($email)->willReturn($subscriptionModel);
+        $this->subscriptionQueryMock->expects(self::once())->method('findByEmail')->with($email)->willReturn(
+            $subscriptionModel
+        );
 
         $result = $this->subscriptionRepository->getByEmail($email);
 
@@ -53,29 +55,32 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
     public function testCreate()
     {
-        $data = ['email' => 'test@example.com'];
-        $subscriptionModel = $this->getSubscriptionModelMock($data);
+        $dto = new CreateDto('test@example.com');
+        $subscriptionModel = $this->getSubscriptionModelMock(['email' => $dto->getEmail()]);
 
-        $this->subscriptionQueryMock->expects(self::once())->method('createModel')->with($data)->willReturn($subscriptionModel);
+        $this->subscriptionQueryMock->expects(self::once())->method('createModel')->willReturn($subscriptionModel);
         $subscriptionModel->expects(self::once())->method('save')->willReturn(true);
 
-        $result = $this->subscriptionRepository->create($data);
+        $result = $this->subscriptionRepository->create($dto);
 
         $this->assertInstanceOf(Subscription::class, $result);
     }
 
     public function testCreateFailure()
     {
-        $data = ['email' => 'test@example.com'];
-        $subscriptionModel = $this->getSubscriptionModelMock($data);
+        $dto = new CreateDto('test@example.com');
 
-        $this->subscriptionQueryMock->expects(self::once())->method('createModel')->with($data)->willReturn($subscriptionModel);
+        $subscriptionModel = $this->getSubscriptionModelMock(['email' => $dto->getEmail()]);
+
+        $this->subscriptionQueryMock->expects(self::once())->method('createModel')->willReturn(
+            $subscriptionModel
+        );
         $subscriptionModel->expects(self::once())->method('save')->willReturn(false);
 
         $this->expectException(EntityException::class);
         $this->expectExceptionMessage('Subscription not saved');
 
-        $this->subscriptionRepository->create($data);
+        $this->subscriptionRepository->create($dto);
     }
 
     public function testGetByEmailAndNotSend()
@@ -84,8 +89,12 @@ class SubscriptionRepositoryTest extends UnitTestCase
         $subscriptionModel = $this->getSubscriptionModelMock();
 
         $this->subscriptionQueryMock->expects(self::once())->method('clear')->willReturn($this->subscriptionQueryMock);
-        $this->subscriptionQueryMock->expects(self::once())->method('prepareNotSent')->willReturn($this->subscriptionQueryMock);
-        $this->subscriptionQueryMock->expects(self::once())->method('findByEmail')->with($email)->willReturn($subscriptionModel);
+        $this->subscriptionQueryMock->expects(self::once())->method('prepareNotSent')->willReturn(
+            $this->subscriptionQueryMock
+        );
+        $this->subscriptionQueryMock->expects(self::once())->method('findByEmail')->with($email)->willReturn(
+            $subscriptionModel
+        );
 
         $result = $this->subscriptionRepository->getByEmailAndNotSend($email);
 

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use app\dto\subscription\CreateDto;
 use app\exceptions\EntityException;
 use app\forms\SubscribeFrom;
 use app\services\CurrenciesServiceInterface;
@@ -237,7 +238,7 @@ class RatesController extends ActiveController
                 throw new HttpException(409, 'Already subscribed');
             }
 
-            $this->subscriptionService->create($form);
+            $this->subscriptionService->create(new CreateDto($form->email));
             return null;
         } catch (Throwable $e) {
             return $this->processException($e);

@@ -1,7 +1,7 @@
 {
   "name": "novoseltsev/currency-rates-api",
   "description": "Currency rates API",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "project",
   "license": "BSD-3-Clause",
   "minimum-stability": "stable",
@@ -25,7 +25,9 @@
     "codeception/module-phpbrowser": "^3.0",
     "codeception/module-rest": "^3.3",
     "yiisoft/yii2-faker": "^2.0",
-    "codeception/module-yii2": "^1.1"
+    "codeception/module-yii2": "^1.1",
+    "phpstan/phpstan": "^1.10",
+    "squizlabs/php_codesniffer": "*"
   },
   "config": {
     "allow-plugins": {

@@ -10,11 +10,11 @@ use Throwable;
 use Yii;
 
 /**
- * Class EuropeanCentralBankProvider.
+ * Class EuropeanCentralBankProvider
  *
  * @package app\services
  */
-class ExchangerateApiProvider implements ProviderInterface
+class EuropeanCentralBankProvider implements ProviderInterface
 {
     /**
      * EuropeanCentralBankService constructor.
@@ -33,7 +33,7 @@ class ExchangerateApiProvider implements ProviderInterface
 
 
     /**
-     * @return array
+     * @return array<string, float>
      * @throws RemoteServiceException
      * @see https://www.exchangerate-api.com/docs/pair-conversion-requests
      */
@@ -58,7 +58,7 @@ class ExchangerateApiProvider implements ProviderInterface
 
     /**
      * @param ResponseInterface $response
-     * @return array
+     * @return array<string, float>
      * @throws Exception
      */
     protected function processResponse(ResponseInterface $response): array
@@ -67,8 +67,12 @@ class ExchangerateApiProvider implements ProviderInterface
         if ($statusCode !== 200) {
             throw new RemoteServiceException('Status code not successfully');
         }
-        $body = json_decode((string)$response->getBody(), true);
 
+        if (!json_validate((string)$response->getBody())) {
+            throw new RemoteServiceException('Invalid JSON response');
+        }
+
+        $body = (array)json_decode((string)$response->getBody(), true);
         $result = $body['result'] ?? null;
         if ($result !== "success") {
             throw new RemoteServiceException('Result not success');

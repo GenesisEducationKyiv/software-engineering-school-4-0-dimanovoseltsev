@@ -2,6 +2,7 @@
 
 namespace tests\unit\app\services;
 
+use app\dto\subscription\CreateDto;
 use app\forms\SubscribeFrom;
 use app\models\Subscription;
 use app\repositories\SubscriptionRepository;
@@ -37,25 +38,6 @@ class SubscriptionServiceTest extends UnitTestCase
             ->getMock();
     }
 
-    /**
-     * @param array $data
-     * @return SubscribeFrom|MockObject
-     */
-    protected function getSubscribeFromMock(array $data = []): SubscribeFrom|MockObject
-    {
-        $mock = $this->getMockBuilder(SubscribeFrom::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([
-                'attributes'
-            ])
-            ->getMock();
-
-        $mock->expects(self::any())
-            ->method('attributes')
-            ->willReturn((new SubscribeFrom())->attributes());
-
-        return $this->setAttributes($mock, $data);
-    }
 
     public function testFindByEmail()
     {
@@ -73,14 +55,14 @@ class SubscriptionServiceTest extends UnitTestCase
 
     public function testCreate()
     {
-        $form = $this->getSubscribeFromMock(['email' => 'test@example.com']);
+        $dto = new CreateDto('test@example.com');
+
         $subscription = $this->getSubscriptionModelMock();
         $this->repository->expects($this->once())
             ->method('create')
-            ->with(['email' => $form->email])
             ->willReturn($subscription);
 
-        $result = $this->service->create($form);
+        $result = $this->service->create($dto);
 
         self::assertInstanceOf(Subscription::class, $result);
     }

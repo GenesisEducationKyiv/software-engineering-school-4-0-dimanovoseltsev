@@ -2,6 +2,8 @@
 
 namespace app\services;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\models\Currency;
 use app\repositories\CurrencyRepositoryInterface;
 
@@ -31,22 +33,22 @@ class CurrenciesService implements CurrenciesServiceInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
      */
-    public function create(array $data = []): Currency
+    public function create(CreateDto $dto): Currency
     {
-        return $this->currencyRepository->create($data);
+        return $this->currencyRepository->create($dto);
     }
 
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      */
-    public function update(Currency $model, array $data = []): Currency
+    public function update(Currency $model, UpdateDto $dto): Currency
     {
-        return $this->currencyRepository->update($model, $data);
+        return $this->currencyRepository->update($model, $dto);
     }
 }

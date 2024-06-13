@@ -2,9 +2,12 @@
 
 namespace app\repositories;
 
+use app\dto\currency\CreateDto;
+use app\dto\currency\UpdateDto;
 use app\exceptions\EntityException;
 use app\models\Currency;
 use app\models\query\CurrencyQuery;
+use Throwable;
 
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
@@ -21,10 +24,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     private function save(Currency $model): Currency
     {
-        if (!$model->save()) {
-            throw new EntityException($model, 'Currency not saved');
+        try {
+            if (!$model->save()) {
+                throw new EntityException($model, 'Currency not saved');
+            }
+            return $model;
+        } catch (Throwable $exception) {
+            throw new EntityException($model, $exception->getMessage(), previous: $exception);
         }
-        return $model;
     }
 
     /**
@@ -37,26 +44,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Currency
      * @throws EntityException
      */
-    public function create(array $data = []): Currency
+    public function create(CreateDto $dto): Currency
     {
-        /** @var Currency */
-        $model = $this->currencyQuery->createModel($data);
+        $model = $this->currencyQuery->createModel();
+        $model->iso3 = $dto->getCurrencyCode();
+        $model->rate = $dto->getRate();
         return $this->save($model);
     }
 
     /**
      * @param Currency $model
-     * @param array $data
+     * @param UpdateDto $dto
      * @return Currency
      * @throws EntityException
      */
-    public function update(Currency $model, array $data = []): Currency
+    public function update(Currency $model, UpdateDto $dto): Currency
     {
-        $model->load($data, '');
+        $model->rate = $dto->getRate();
         return $this->save($model);
     }
 }

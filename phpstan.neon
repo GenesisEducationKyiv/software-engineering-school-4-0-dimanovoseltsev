@@ -1,0 +1,7 @@
+parameters:
+	bootstrapFiles:
+		- vendor/yiisoft/yii2/Yii.php
+	level: 9
+	paths:
+		- app
+

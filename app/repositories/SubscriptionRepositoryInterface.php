@@ -2,26 +2,26 @@
 
 namespace app\repositories;
 
-use app\models\Currency;
+use app\dto\subscription\CreateDto;
 use app\models\Subscription;
 
 interface SubscriptionRepositoryInterface
 {
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmail(string $email): ?Subscription;
 
     /**
-     * @param array $data
+     * @param CreateDto $dto
      * @return Subscription
      */
-    public function create(array $data): Subscription;
+    public function create(CreateDto $dto): Subscription;
 
     /**
      * @param string $email
-     * @return Currency|null
+     * @return Subscription|null
      */
     public function getByEmailAndNotSend(string $email): ?Subscription;
 

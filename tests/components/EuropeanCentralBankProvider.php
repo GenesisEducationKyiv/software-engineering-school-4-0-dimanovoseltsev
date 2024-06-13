@@ -2,7 +2,7 @@
 
 namespace tests\components;
 
-class ExchangerateApiProvider extends \app\services\providers\ExchangerateApiProvider
+class EuropeanCentralBankProvider extends \app\services\providers\EuropeanCentralBankProvider
 {
     public function getActualRates(): array
     {

@@ -6,7 +6,7 @@
 
 use app\services\providers\ProviderInterface;
 use tests\components\DummyQueue;
-use tests\components\ExchangerateApiProvider;
+use tests\components\EuropeanCentralBankProvider;
 use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
@@ -52,7 +52,7 @@ return [
     'container' => [
         'definitions' => [
             ProviderInterface::class => function (Container $container) {
-                return new ExchangerateApiProvider(
+                return new EuropeanCentralBankProvider(
                     new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
                     (string)getenv("EXCHANGE_RATE_API_LEY"),
                     (string)getenv("BASE_CURRENCY"),

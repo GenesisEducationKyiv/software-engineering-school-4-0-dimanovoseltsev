@@ -8,6 +8,9 @@ use app\models\Subscription;
  * Class SubscriptionQuery.
  *
  * @package app\models\query
+ *
+ * @method SubscriptionQuery clear()
+ * @method Subscription createModel()
  */
 class SubscriptionQuery extends ActiveQuery
 {
