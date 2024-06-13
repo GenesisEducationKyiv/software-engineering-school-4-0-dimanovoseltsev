@@ -14,8 +14,8 @@ class CurrencyForm extends BaseForm implements FormInterface
     use TimestampTrait;
 
     /**
-     * @param $code
-     * @param $rate
+     * @param string|null $code
+     * @param float|null $rate
      */
     public function __construct(
         private $code = null,
@@ -31,7 +31,7 @@ class CurrencyForm extends BaseForm implements FormInterface
      */
     public function filterAttributes(): void
     {
-        if (is_string($this->rate)) {
+        if ($this->rate !== null) {
             $this->rate = (float)$this->rate;
         }
 
