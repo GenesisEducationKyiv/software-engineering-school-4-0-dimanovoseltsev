@@ -5,6 +5,7 @@ namespace tests\unit\app\currencies\application\actions;
 use app\currencies\application\actions\CreateOrUpdateCurrency;
 use app\currencies\application\actions\ImportRates;
 use app\currencies\application\dto\CurrencyProviderDto;
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
 use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
 use app\shared\application\exceptions\InvalidCallException;
@@ -48,8 +49,8 @@ class ImportRatesTest extends UnitTestCase
     public function testExecute()
     {
         $rates = [
-            new CurrencyProviderDto("USD", 1.0),
-            new CurrencyProviderDto("UAH", 5.0),
+            new CurrencyProviderDto(CurrencyIso::USD->value, 1.0),
+            new CurrencyProviderDto(CurrencyIso::UAH->value, 5.0),
         ];
 
         $this->provider->expects($this->once())
@@ -98,7 +99,7 @@ class ImportRatesTest extends UnitTestCase
         self::expectExceptionMessage("Validation Failed");
 
         $rates = [
-            new CurrencyProviderDto("USD", 1.0),
+            new CurrencyProviderDto(CurrencyIso::USD->value, 1.0),
         ];
 
         $this->provider->expects($this->once())

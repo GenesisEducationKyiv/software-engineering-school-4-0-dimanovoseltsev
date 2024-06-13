@@ -3,6 +3,7 @@
 namespace tests\unit\app\currencies\application\actions;
 
 use app\currencies\application\actions\RetrieveCurrencyByCode;
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
 use app\shared\application\exceptions\NotExistException;
@@ -23,11 +24,11 @@ class RetrieveCurrencyByCodeTest extends UnitTestCase
     }
 
     /**
-     * @throws NotValidException
+     * @throws NotExistException
      */
     public function testExecute()
     {
-        $code = "USD";
+        $code =CurrencyIso::USD->value;
 
         $entity = $this->getCurrencyEntity();
         $this->service->expects($this->once())
@@ -46,7 +47,7 @@ class RetrieveCurrencyByCodeTest extends UnitTestCase
     {
         self::expectException(NotExistException::class);
         self::expectExceptionMessage("Currency not found");
-        $code = "USD";
+        $code = CurrencyIso::USD->value;
 
         $this->service->expects($this->once())
             ->method("getByCode")

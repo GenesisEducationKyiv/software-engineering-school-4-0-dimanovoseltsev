@@ -2,6 +2,7 @@
 
 namespace tests\unit;
 
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
 use app\currencies\infrastructure\mappers\Mapper;
@@ -133,7 +134,7 @@ class UnitTestCase extends TestCase
     {
         return [
             'id' => 1,
-            'iso3' => 'UAH',
+            'iso3' => CurrencyIso::UAH->value,
             'rate' => 5.02,
             'createdAt' => strtotime('2024-01-01 00:00:00'),
             'updatedAt' => strtotime('2024-05-01 00:00:00'),
@@ -159,7 +160,6 @@ class UnitTestCase extends TestCase
         return [
             'id' => 1,
             'email' => 'mail@mail.com',
-            'rate' => 5.02,
             'createdAt' => strtotime('2024-01-01 00:00:00'),
             'updatedAt' => strtotime('2024-05-01 00:00:00'),
             'lastSendAt' => strtotime('2024-05-02 00:00:00'),
