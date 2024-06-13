@@ -64,15 +64,6 @@ abstract class BaseQuery extends ActiveQuery
 
     /**
      * @param array<string, mixed> $conditions
-     * @return int
-     */
-    public function deleteAll(array $conditions): int
-    {
-        return $this->modelClass::deleteAll($conditions);
-    }
-
-    /**
-     * @param array<string, mixed> $conditions
      * @return ActiveRecord|null
      */
     public function findOne(array $conditions): ?ActiveRecord

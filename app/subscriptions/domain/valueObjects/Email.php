@@ -14,9 +14,7 @@ final class Email implements ValueObjectInterface
      */
     public function __construct(private readonly string $value)
     {
-        if(is_string($this->value)){
-            $this->validateEmail($this->value);
-        }
+        $this->validateEmail($this->value);
     }
 
     /**

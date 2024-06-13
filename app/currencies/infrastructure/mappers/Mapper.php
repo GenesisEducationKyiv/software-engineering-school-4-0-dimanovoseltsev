@@ -41,9 +41,14 @@ class Mapper
         ];
     }
 
-
     /**
-     * @param array{"id": int|null, "iso3": string|null, "rate": float|null, "createdAt": int|null, "updatedAt": int|null} $value
+     * @param array{
+     *     "id": int|null,
+     *     "iso3": string|null,
+     *     "rate": float|null,
+     *     "createdAt": int|null,
+     *     "updatedAt": int|null
+     * } $value
      * @return CurrencyEntity
      */
     public static function fromPrimitive(array $value): CurrencyEntity

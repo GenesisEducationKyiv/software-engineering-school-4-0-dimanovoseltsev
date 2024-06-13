@@ -16,7 +16,7 @@ use Yii;
 class EuropeanCentralBankProvider implements ProviderInterface
 {
     /**
-     * EuropeanCentralBankService constructor.
+     * EuropeanCentralBankProvider constructor.
      * @param HttpClient $client
      * @param string $apiKey
      * @param string $baseCurrency
