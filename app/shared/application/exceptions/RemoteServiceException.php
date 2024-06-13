@@ -3,6 +3,7 @@
 namespace app\shared\application\exceptions;
 
 use Exception;
+use Throwable;
 
 /**
  * Class RemoteServiceException.
@@ -13,9 +14,9 @@ class RemoteServiceException extends Exception
     /**
      * @param string $message
      * @param int $code
-     * @param Exception|null $previous
+     * @param Throwable|null $previous
      */
-    public function __construct(string $message = "", int $code = 503, Exception $previous = null)
+    public function __construct(string $message = "", int $code = 503, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
