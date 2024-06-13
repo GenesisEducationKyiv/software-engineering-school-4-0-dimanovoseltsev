@@ -4,6 +4,7 @@ namespace tests\unit\app\currencies\application\actions;
 
 use app\currencies\application\actions\CreateOrUpdateCurrency;
 use app\currencies\application\dto\CreateCurrencyDto;
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
@@ -28,7 +29,7 @@ class CreateOrUpdateCurrencyTest extends UnitTestCase
      */
     public function testExecute()
     {
-        $form = new CurrencyForm("USD", 1);
+        $form = new CurrencyForm(CurrencyIso::USD->value, 1);
 
         $entity = $this->getCurrencyEntity();
         $this->service->expects($this->once())
@@ -47,7 +48,7 @@ class CreateOrUpdateCurrencyTest extends UnitTestCase
 
     public function testExecuteCreate()
     {
-        $form = new CurrencyForm("USD", 1);
+        $form = new CurrencyForm(CurrencyIso::USD->value, 1);
 
         $entity = $this->getCurrencyEntity();
         $this->service->expects($this->once())

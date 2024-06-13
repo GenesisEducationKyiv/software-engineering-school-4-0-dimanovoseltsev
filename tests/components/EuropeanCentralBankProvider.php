@@ -2,12 +2,17 @@
 
 namespace tests\components;
 
+use app\currencies\application\dto\CurrencyProviderDto;
+
 class EuropeanCentralBankProvider extends \app\currencies\infrastructure\providers\EuropeanCentralBankProvider
 {
+    /**
+     * @return CurrencyProviderDto[]
+     */
     public function getActualRates(): array
     {
         return [
-            "UAH" => 39.4119
+            new CurrencyProviderDto('UAH', 39.411)
         ];
     }
 }

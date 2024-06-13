@@ -3,6 +3,7 @@
 namespace tests\unit\app\currencies\application\services;
 
 use app\currencies\application\dto\CreateCurrencyDto;
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\mappers\Mapper;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
@@ -82,7 +83,7 @@ class CurrencyServiceTest extends UnitTestCase
      */
     public function testCreate()
     {
-        $dto = new CreateCurrencyDto("USD", 1.0, time());
+        $dto = new CreateCurrencyDto(CurrencyIso::USD->value, 1.0, time());
         $entity = $this->getCurrencyEntity();
         $this->repository->expects($this->once())
             ->method('save')

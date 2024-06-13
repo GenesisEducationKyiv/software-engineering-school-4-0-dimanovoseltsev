@@ -2,6 +2,7 @@
 
 namespace tests\unit\app\currencies\infrastructure\repositories;
 
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\domain\entities\Currency;
 use app\currencies\infrastructure\models\CurrencyQuery;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
@@ -40,7 +41,7 @@ class CurrencyRepositoryTest extends UnitTestCase
 
     public function testFindByCode()
     {
-        $code = 'USD';
+        $code = CurrencyIso::USD->value;
         $model = $this->getCurrencyModelMock();
         $model->id = 1;
         $model->iso3 = $code;
@@ -57,7 +58,7 @@ class CurrencyRepositoryTest extends UnitTestCase
 
     public function testFindByCodeNotExit()
     {
-        $code = 'USD';
+        $code = CurrencyIso::USD->value;
         $this->query->expects(self::once())
             ->method('findByCode')
             ->with($code)
@@ -75,7 +76,7 @@ class CurrencyRepositoryTest extends UnitTestCase
     {
         $entity = $this->getCurrencyEntity();
 
-        $code = 'USD';
+        $code = CurrencyIso::USD->value;
         $model = $this->getCurrencyModelMock();
         $model->id = 1;
         $model->iso3 = $code;

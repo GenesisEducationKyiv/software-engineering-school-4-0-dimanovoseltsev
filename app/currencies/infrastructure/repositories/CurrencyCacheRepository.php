@@ -17,7 +17,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
      * @param int $ttl
      */
     public function __construct(
-        private readonly CurrencyRepository $repository,
+        private readonly CurrencyRepositoryInterface $repository,
         private readonly CacheInterface $cache,
         private readonly int $ttl,
     ) {
