@@ -17,9 +17,9 @@ final class Rate implements ValueObjectInterface
     }
 
     /**
-     * @return mixed|int
+     * @return ?float
      */
-    public function value(): mixed
+    public function value(): ?float
     {
         return $this->value;
     }
