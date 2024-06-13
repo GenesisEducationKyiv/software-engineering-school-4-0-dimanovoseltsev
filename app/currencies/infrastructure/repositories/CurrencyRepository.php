@@ -23,7 +23,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param string $code
      * @return Currency|null
      */
-    public function getByCode(string $code): ?Currency
+    public function findByCode(string $code): ?Currency
     {
         $model = $this->query->findByCode($code);
         return $model === null ? null : Mapper::toEntity($model);

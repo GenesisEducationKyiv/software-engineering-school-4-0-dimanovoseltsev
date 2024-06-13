@@ -2,8 +2,12 @@
 
 namespace tests\unit;
 
-use app\currencies\infrastructure\models\Currency;
-use app\subscriptions\infrastructure\models\Subscription;
+use app\currencies\application\services\CurrencyService;
+use app\currencies\domain\entities\Currency;
+use app\currencies\infrastructure\mappers\Mapper;
+use app\currencies\infrastructure\models\Currency as ModelCurrency;
+use app\subscriptions\domain\entities\Subscription;
+use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;
 use Closure;
 use Codeception\PHPUnit\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -78,11 +82,11 @@ class UnitTestCase extends TestCase
 
     /**
      * @param array $data
-     * @return Subscription|MockObject
+     * @return ModelSubscription|MockObject
      */
-    protected function getSubscriptionModelMock(array $data = []): Subscription|MockObject
+    protected function getSubscriptionModelMock(array $data = []): ModelSubscription|MockObject
     {
-        $mock = $this->getMockBuilder(Subscription::class)
+        $mock = $this->getMockBuilder(ModelSubscription::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'attributes',
@@ -94,18 +98,18 @@ class UnitTestCase extends TestCase
 
         $mock->expects(self::any())
             ->method('attributes')
-            ->willReturn((new Subscription())->attributes());
+            ->willReturn((new ModelSubscription())->attributes());
 
         return $this->setAttributes($mock, $data);
     }
 
     /**
      * @param array $data
-     * @return Currency|MockObject
+     * @return ModelCurrency|MockObject
      */
-    protected function getCurrencyModelMock(array $data = []): Currency|MockObject
+    protected function getCurrencyModelMock(array $data = []): ModelCurrency|MockObject
     {
-        $mock = $this->getMockBuilder(Currency::class)
+        $mock = $this->getMockBuilder(ModelCurrency::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'attributes',
@@ -116,8 +120,89 @@ class UnitTestCase extends TestCase
 
         $mock->expects(self::any())
             ->method('attributes')
-            ->willReturn((new Currency())->attributes());
+            ->willReturn((new ModelCurrency())->attributes());
 
         return $this->setAttributes($mock, $data);
+    }
+
+
+    /**
+     * @return array
+     */
+    protected function getCurrencyEntityDefault(): array
+    {
+        return [
+            'id' => 1,
+            'iso3' => 'UAH',
+            'rate' => 5.02,
+            'createdAt' => strtotime('2024-01-01 00:00:00'),
+            'updatedAt' => strtotime('2024-05-01 00:00:00'),
+        ];
+    }
+
+    /**
+     * @param array $data
+     * @return Currency
+     */
+    protected function getCurrencyEntity(array $data = []): Currency
+    {
+        $data = array_merge($this->getCurrencyEntityDefault(), $data);
+        return Mapper::fromPrimitive($data);
+    }
+
+
+    /**
+     * @return array
+     */
+    protected function getSubscriptionEntityDefault(): array
+    {
+        return [
+            'id' => 1,
+            'email' => 'mail@mail.com',
+            'rate' => 5.02,
+            'createdAt' => strtotime('2024-01-01 00:00:00'),
+            'updatedAt' => strtotime('2024-05-01 00:00:00'),
+            'lastSendAt' => strtotime('2024-05-02 00:00:00'),
+        ];
+    }
+
+    /**
+     * @param array $data
+     * @return Subscription
+     */
+    protected function getSubscriptionEntity(array $data = []): Subscription
+    {
+        $data = array_merge($this->getSubscriptionEntityDefault(), $data);
+        return \app\subscriptions\infrastructure\mappers\Mapper::fromPrimitive($data);
+    }
+
+
+    /**
+     * @return CurrencyService|MockObject
+     */
+    protected function getCurrencyServiceMock(): CurrencyService|MockObject
+    {
+        return $this->getMockBuilder(CurrencyService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByCode',
+                    'save',
+                    'create',
+                ]
+            )
+            ->getMock();
+    }
+
+    /**
+     * @param string $class
+     * @return MockObject
+     */
+    protected function getActionMock(string $class): MockObject
+    {
+        return $this->getMockBuilder($class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['execute'])
+            ->getMock();
     }
 }

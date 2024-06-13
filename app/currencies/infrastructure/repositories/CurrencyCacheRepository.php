@@ -46,7 +46,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
      * @param string $code
      * @return Currency|null
      */
-    public function getByCode(string $code): ?Currency
+    public function findByCode(string $code): ?Currency
     {
         $cacheValue = $this->cache->get($this->getCacheKey($code));
         if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
@@ -54,7 +54,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
             $attributes = json_decode($cacheValue, true);
             return Mapper::fromPrimitive($attributes);
         }
-        $entity = $this->repository->getByCode($code);
+        $entity = $this->repository->findByCode($code);
 
         if ($entity !== null) {
             $this->saveToCache($entity);

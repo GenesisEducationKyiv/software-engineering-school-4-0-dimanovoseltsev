@@ -23,7 +23,7 @@ class CurrencyService implements CurrencyServiceInterface
      */
     public function getByCode(string $code): ?Currency
     {
-        return $this->repository->getByCode($code);
+        return $this->repository->findByCode($code);
     }
 
     /**

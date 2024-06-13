@@ -10,7 +10,7 @@ interface CurrencyRepositoryInterface
      * @param string $code
      * @return Currency|null
      */
-    public function getByCode(string $code): ?Currency;
+    public function findByCode(string $code): ?Currency;
 
     /**
      * @param Currency $currency
