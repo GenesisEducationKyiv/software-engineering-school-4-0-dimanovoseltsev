@@ -49,7 +49,7 @@ class Mapper
     {
         return new SubscriptionEntity(
             new Id($value['id'] ?? null),
-            new Email($value['email'] ?? null),
+            new Email($value['email'] ?? ''),
             new Timestamp($value['createdAt'] ?? null),
             new Timestamp($value['updatedAt'] ?? null),
             new Timestamp($value['lastSendAt'] ?? null),

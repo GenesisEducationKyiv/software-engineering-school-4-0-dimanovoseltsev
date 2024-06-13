@@ -50,7 +50,9 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     {
         $cacheValue = $this->cache->get($this->getCacheKey($code));
         if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
-            return Mapper::fromPrimitive((array)json_decode($cacheValue, true));
+            /** @var array{"id": int|null, "iso3": string|null, "rate": float|null, "createdAt": int|null, "updatedAt": int|null} $attributes */
+            $attributes = json_decode($cacheValue, true);
+            return Mapper::fromPrimitive($attributes);
         }
         $entity = $this->repository->getByCode($code);
 

@@ -10,9 +10,9 @@ final class Email implements ValueObjectInterface
     use ValidationRulesTrait;
 
     /**
-     * @param string|null $value
+     * @param string $value
      */
-    public function __construct(private readonly ?string $value)
+    public function __construct(private readonly string $value)
     {
         if(is_string($this->value)){
             $this->validateEmail($this->value);
@@ -20,9 +20,9 @@ final class Email implements ValueObjectInterface
     }
 
     /**
-     * @return ?string
+     * @return string
      */
-    public function value(): ?string
+    public function value(): string
     {
         return $this->value;
     }

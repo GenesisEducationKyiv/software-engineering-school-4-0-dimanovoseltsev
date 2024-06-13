@@ -30,7 +30,7 @@ abstract class BaseQuery extends ActiveQuery
     {
         $model = new $this->modelClass();
         $oldValues = [];
-        $primaryKeys = array_keys($model->getPrimaryKey(true));
+        $primaryKeys = array_keys((array)$model->getPrimaryKey(true));
         foreach ($primaryKeys as $primaryKey) {
             $oldValues[$primaryKey] = $data[$primaryKey] ?? null;
         }
