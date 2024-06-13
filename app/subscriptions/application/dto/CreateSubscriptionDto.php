@@ -6,11 +6,11 @@ readonly class CreateSubscriptionDto
 {
     /**
      * @param string $email
-     * @param int|null $createdAt
+     * @param int $createdAt
      */
     public function __construct(
         private string $email,
-        private ?int $createdAt = null,
+        private int $createdAt,
     ) {
     }
 
