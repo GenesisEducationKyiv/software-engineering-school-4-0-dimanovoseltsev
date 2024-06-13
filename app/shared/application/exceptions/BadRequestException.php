@@ -13,7 +13,7 @@ class BadRequestException extends Exception implements Throwable
      * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct(string $message = "Bad Request", int $code = 0, Throwable $previous = null)
+    public function __construct(string $message = "Bad Request", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
