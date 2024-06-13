@@ -26,10 +26,14 @@ class Mailer implements MailerAdapterInterface
     {
         return $this->mailer
             ->compose()
-            ->setTo($subscription->getEmail()->value())
+            ->setTo((string)$subscription->getEmail()->value())
             ->setSubject('Actual rate')
             ->setTextBody(
-                sprintf("The current exchange rate as of %s is %f.", date("Y-m-d"), $currency->getRate()->value())
+                sprintf(
+                    "The current exchange rate as of %s is %f.",
+                    date("Y-m-d"),
+                    (float)$currency->getRate()->value()
+                )
             )
             ->send();
     }
