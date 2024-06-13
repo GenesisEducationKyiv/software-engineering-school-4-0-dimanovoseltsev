@@ -70,18 +70,18 @@ class CurrencyForm extends BaseForm implements FormInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getRate(): float
+    public function getRate(): ?float
     {
         return $this->rate;
     }

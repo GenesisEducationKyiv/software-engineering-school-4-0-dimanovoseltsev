@@ -27,7 +27,7 @@ class Subscribe extends BaseAction implements SubscribeInterface
      */
     public function execute(SubscribeForm $form): Subscription
     {
-        if (!$form->validate()) {
+        if (!$form->validate() || $form->getEmail() === null) {
             throw new NotValidException($form->getErrors());
         }
 

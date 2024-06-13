@@ -27,7 +27,11 @@ class CreateOrUpdateCurrency extends BaseAction implements CreateOrUpdateCurrenc
      */
     public function execute(CurrencyForm $form): Currency
     {
-        if (!$form->validate()) {
+        if (
+            !$form->validate()
+            || $form->getCode() === null
+            || $form->getRate() === null
+        ) {
             throw new NotValidException($form->getErrors());
         }
 
