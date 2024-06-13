@@ -41,17 +41,4 @@ trait ErrorsTrait
     {
         return !empty($this->errors);
     }
-
-    /**
-     * @param array<string, array<string>> $errors
-     * @return void
-     */
-    protected function mergeErrors(array $errors): void
-    {
-        foreach ($errors as $field => $values) {
-            foreach ($values as $value) {
-                $this->addError($field, $value);
-            }
-        }
-    }
 }

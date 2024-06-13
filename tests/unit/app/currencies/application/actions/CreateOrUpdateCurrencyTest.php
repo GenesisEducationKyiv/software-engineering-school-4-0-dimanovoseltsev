@@ -75,9 +75,7 @@ class CreateOrUpdateCurrencyTest extends UnitTestCase
     {
         self::expectException(NotValidException::class);
         self::expectExceptionMessage("Validation Failed");
-
         $form = new CurrencyForm("USD_1", "a124");
-
         $actual = $this->action->execute($form);
     }
 }

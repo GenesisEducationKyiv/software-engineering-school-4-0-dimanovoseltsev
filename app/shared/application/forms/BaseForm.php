@@ -14,15 +14,7 @@ class BaseForm implements Errorable
     /**
      * @return void
      */
-    public function filterAttributes(): void
+    protected function filterAttributes(): void
     {
-    }
-
-    /**
-     * @return bool
-     */
-    public function validate(): bool
-    {
-        return true;
     }
 }

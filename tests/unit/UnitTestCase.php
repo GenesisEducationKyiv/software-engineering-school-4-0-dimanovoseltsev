@@ -94,7 +94,6 @@ class UnitTestCase extends TestCase
                 'attributes',
                 'load',
                 'save',
-                'changeLastSendAt',
             ])
             ->getMock();
 
