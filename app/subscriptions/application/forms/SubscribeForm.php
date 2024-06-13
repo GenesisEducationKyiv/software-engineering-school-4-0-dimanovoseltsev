@@ -13,7 +13,7 @@ class SubscribeForm extends BaseForm implements FormInterface
     use TimestampTrait;
 
     /**
-     * @param $email
+     * @param ?string $email
      */
     public function __construct(
         private $email = null,

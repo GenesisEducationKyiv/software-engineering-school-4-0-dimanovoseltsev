@@ -47,7 +47,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
 
     /**
      * @param SearchSubscribersForMailingDto $dto
-     * @return array
+     * @return Subscription[]
      */
     public function getNotSent(SearchSubscribersForMailingDto $dto): array
     {
