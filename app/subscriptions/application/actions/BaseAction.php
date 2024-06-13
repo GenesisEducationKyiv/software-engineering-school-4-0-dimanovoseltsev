@@ -10,10 +10,11 @@ abstract class BaseAction
     /**
      * @throws NotExistException
      */
-    protected function checkExit(?Subscription $entity): void
+    protected function checkExit(?Subscription $entity): Subscription
     {
         if ($entity === null) {
             throw new NotExistException("Subscription not found");
         }
+        return $entity;
     }
 }
