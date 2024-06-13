@@ -6,6 +6,9 @@ use app\shared\application\exceptions\NotValidException;
 use app\shared\infrastructure\models\BaseQuery;
 use yii\db\Exception;
 
+/**
+ * @method SubscriptionQuery clear()
+ */
 class SubscriptionQuery extends BaseQuery
 {
     /**
