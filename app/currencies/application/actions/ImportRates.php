@@ -5,7 +5,7 @@ namespace app\currencies\application\actions;
 use app\currencies\application\forms\CurrencyForm;
 use app\currencies\application\providers\ProviderInterface;
 use app\currencies\domain\entities\Currency;
-use yii\base\InvalidCallException;
+use app\shared\application\exceptions\InvalidCallException;
 
 class ImportRates extends BaseAction implements ImportRatesInterface
 {
@@ -21,6 +21,7 @@ class ImportRates extends BaseAction implements ImportRatesInterface
 
     /**
      * @return Currency[]
+     * @throws InvalidCallException
      */
     public function execute(): array
     {
