@@ -34,29 +34,11 @@ class Subscription implements Arrayable
     }
 
     /**
-     * @param Id $id
-     * @return void
-     */
-    public function setId(Id $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return Email
      */
     public function getEmail(): Email
     {
         return $this->email;
-    }
-
-    /**
-     * @param Email $email
-     * @return void
-     */
-    public function setEmail(Email $email): void
-    {
-        $this->email = $email;
     }
 
     /**
@@ -68,15 +50,6 @@ class Subscription implements Arrayable
     }
 
     /**
-     * @param Timestamp $createdAt
-     * @return void
-     */
-    public function setCreatedAt(Timestamp $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
      * @return Timestamp
      */
     public function getUpdatedAt(): Timestamp
@@ -84,14 +57,6 @@ class Subscription implements Arrayable
         return $this->updatedAt;
     }
 
-    /**
-     * @param Timestamp $updatedAt
-     * @return void
-     */
-    public function setUpdatedAt(Timestamp $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
 
     /**
      * @return Timestamp
