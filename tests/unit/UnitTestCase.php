@@ -2,23 +2,8 @@
 
 namespace tests\unit;
 
-
-use app\links\application\services\LinkService;
-use app\links\domain\entities\Currency;
-use app\links\infrastructure\mappers\Mapper;
-use app\links\infrastructure\repositories\LinkRepository;
-use app\models\Currency;
-use app\models\Subscription;
-use app\shared\infrastructure\adapters\Queue;
-use app\shared\infrastructure\adapters\Redis;
-use app\statistics\application\services\StatisticService;
-use app\statistics\domain\entities\Statistic;
-use app\tokenGenerator\application\services\TokenGeneratorService;
-use app\tokenGenerator\domain\entities\Token;
-use app\urls\application\services\UrlService;
-use app\urls\domain\entities\Url;
-use app\users\application\services\UserService;
-use app\users\domain\entities\User;
+use app\currencies\infrastructure\models\Currency;
+use app\subscriptions\infrastructure\models\Subscription;
 use Closure;
 use Codeception\PHPUnit\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -111,9 +96,7 @@ class UnitTestCase extends TestCase
             ->method('attributes')
             ->willReturn((new Subscription())->attributes());
 
-        $mock = $this->setAttributes($mock, $data);
-
-        return $mock;
+        return $this->setAttributes($mock, $data);
     }
 
     /**
@@ -135,8 +118,6 @@ class UnitTestCase extends TestCase
             ->method('attributes')
             ->willReturn((new Currency())->attributes());
 
-        $mock = $this->setAttributes($mock, $data);
-
-        return $mock;
+        return $this->setAttributes($mock, $data);
     }
 }

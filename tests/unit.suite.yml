@@ -13,7 +13,10 @@ coverage:
   remote: false
   show_uncovered: true
   whitelist:
+    exclude:
+      - app/currencies/infrastructure/models/*
+      - app/subscriptions/infrastructure/models/*
+      - app/shared/infrastructure/models/*
+      - app/shared/application/exceptions/*
     include:
-      - app/repositories/*
-      - app/services/*
-
+      - app/*
