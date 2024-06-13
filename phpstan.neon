@@ -1,7 +1,8 @@
 parameters:
 	bootstrapFiles:
 		- vendor/yiisoft/yii2/Yii.php
-	level: 9
+	level: 4
 	paths:
 		- app
-
+	parallel:
+		maximumNumberOfProcesses: 10

@@ -4,8 +4,12 @@ namespace app\currencies\infrastructure\models;
 
 use app\shared\application\exceptions\NotValidException;
 use app\shared\infrastructure\models\BaseQuery;
+use app\subscriptions\infrastructure\models\SubscriptionQuery;
 use yii\db\Exception;
 
+/**
+ * @method SubscriptionQuery clear()
+ */
 class CurrencyQuery extends BaseQuery
 {
     /**
