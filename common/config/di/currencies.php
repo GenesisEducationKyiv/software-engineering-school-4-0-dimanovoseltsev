@@ -20,18 +20,16 @@ use yii\di\Container;
 return [
     // repositories
     CurrencyRepositoryInterface::class => function (Container $container) {
-        return new CurrencyRepository(Currency::find());
+        return new  CurrencyCacheRepository(
+            new CurrencyRepository(Currency::find()),
+            Yii::$app->cache,
+            (int)getenv("RATE_CACHE_TTL")
+        );
     },
 
     // services
     CurrencyServiceInterface::class => function (Container $container) {
-        return new CurrencyService(
-            new CurrencyCacheRepository(
-                $container->get(CurrencyRepositoryInterface::class),
-                Yii::$app->cache,
-                (int)getenv("RATE_CACHE_TTL")
-            )
-        );
+        return new CurrencyService($container->get(CurrencyRepositoryInterface::class));
     },
     ProviderInterface::class => function (Container $container) {
         return new EuropeanCentralBankProvider(

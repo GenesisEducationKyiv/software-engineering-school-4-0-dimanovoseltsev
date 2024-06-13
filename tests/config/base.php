@@ -5,6 +5,9 @@
 
 
 use app\currencies\application\providers\ProviderInterface;
+use app\currencies\domain\repositories\CurrencyRepositoryInterface;
+use app\currencies\infrastructure\models\Currency;
+use app\currencies\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
 use tests\components\EuropeanCentralBankProvider;
 use tests\components\YiiMailer;
@@ -58,6 +61,9 @@ return [
                     (string)getenv("BASE_CURRENCY"),
                     (string)getenv("IMPORTED_CURRENCY"),
                 );
+            },
+            CurrencyRepositoryInterface::class => function (Container $container) {
+                return new  CurrencyRepository(Currency::find());
             },
         ]
     ],
