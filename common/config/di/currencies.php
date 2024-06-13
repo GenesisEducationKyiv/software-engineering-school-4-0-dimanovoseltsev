@@ -9,8 +9,6 @@ use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
 use app\currencies\application\providers\ProviderInterface;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\application\services\CurrencyServiceInterface;
-use app\currencies\application\services\ImportCurrencyService;
-use app\currencies\application\services\ImportCurrencyServiceInterface;
 use app\currencies\domain\repositories\CurrencyRepositoryInterface;
 use app\currencies\infrastructure\models\Currency;
 use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
@@ -43,12 +41,6 @@ return [
             (string)getenv("IMPORTED_CURRENCY"),
         );
     },
-    ImportCurrencyServiceInterface::class => function (Container $container) {
-        return new ImportCurrencyService(
-            $container->get(ProviderInterface::class),
-            $container->get(CreateOrUpdateCurrencyInterface::class)
-        );
-    },
 
     // actions
     RetrieveCurrencyByCodeInterface::class => function (Container $container) {
@@ -58,6 +50,9 @@ return [
         return new CreateOrUpdateCurrency($container->get(CurrencyServiceInterface::class));
     },
     ImportRatesInterface::class => function (Container $container) {
-        return new ImportRates($container->get(ImportCurrencyServiceInterface::class));
+        return new ImportRates(
+            $container->get(ProviderInterface::class),
+            $container->get(CreateOrUpdateCurrencyInterface::class)
+        );
     },
 ];

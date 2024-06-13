@@ -40,9 +40,13 @@ class Mapper
         ];
     }
 
-
     /**
-     * @param array{"id": int|null, "email": string|null, "createdAt": int|null, "updatedAt": int|null, "lastSendAt": int|null} $value
+     * @param array{
+     *     "id": int|null,
+     *     "email": string|null,
+     *     "createdAt": int|null,
+     *     "updatedAt": int|null,
+     *     "lastSendAt": int|null} $value
      * @return SubscriptionEntity
      */
     public static function fromPrimitive(array $value): SubscriptionEntity
