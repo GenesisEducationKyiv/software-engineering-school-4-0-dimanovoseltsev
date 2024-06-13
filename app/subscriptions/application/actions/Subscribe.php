@@ -36,7 +36,7 @@ class Subscribe extends BaseAction implements SubscribeInterface
             throw new AlreadyException("Already subscribed");
         }
 
-        return $this->service->subscribe(
+        return $this->service->create(
             new CreateSubscriptionDto(
                 $form->getEmail(),
                 $form->getTimestamp()

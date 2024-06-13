@@ -29,7 +29,7 @@ class SendEmail extends BaseAction implements SendEmailInterface
      */
     public function execute(Currency $currency, SendEmailDto $dto): bool
     {
-        $subscription = $this->subscriptionService->findByEmailAndNotSend($dto->getEmail());
+        $subscription = $this->subscriptionService->getByEmailAndNotSend($dto->getEmail());
         if ($subscription === null) {
             throw new NotExistException("Subscription not exit");
         }

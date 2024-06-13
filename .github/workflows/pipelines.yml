@@ -1,6 +1,6 @@
 name: CI Pipeline
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   linter:
@@ -29,32 +29,32 @@ jobs:
       - name: Run PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 app
 
-#  phpunit:
-#    name: PHPUnit
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Set up PHP
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: '8.3'
-#          tools: composer
-#
-#      - name: Validate PHP version
-#        run: php -v
-#
-#      - name: Install dependencies
-#        run: composer install
-#
-#      - name: Run Codeception Unit Tests
-#        run: ./vendor/bin/codecept run unit --coverage --coverage-html
-#
-#      - name: Upload coverage report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: coverage-report
-#          path: tests/_output/coverage
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+
+      - name: Validate PHP version
+        run: php -v
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run Codeception Unit Tests
+        run: ./vendor/bin/codecept run unit --coverage --coverage-html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: tests/_output/coverage
 

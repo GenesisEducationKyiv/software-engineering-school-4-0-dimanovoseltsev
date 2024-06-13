@@ -24,17 +24,17 @@ interface SubscriptionServiceInterface
      * @param CreateSubscriptionDto $dto
      * @return Subscription
      */
-    public function subscribe(CreateSubscriptionDto $dto): Subscription;
+    public function create(CreateSubscriptionDto $dto): Subscription;
 
     /**
      * @param SearchSubscribersForMailingDto $dto
      * @return Subscription[]
      */
-    public function findNotSent(SearchSubscribersForMailingDto $dto): array;
+    public function getNotSent(SearchSubscribersForMailingDto $dto): array;
 
     /**
      * @param string $email
      * @return Subscription|null
      */
-    public function findByEmailAndNotSend(string $email): ?Subscription;
+    public function getByEmailAndNotSend(string $email): ?Subscription;
 }

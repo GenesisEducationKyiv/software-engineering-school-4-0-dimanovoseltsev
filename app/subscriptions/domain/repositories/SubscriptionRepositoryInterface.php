@@ -11,7 +11,7 @@ interface SubscriptionRepositoryInterface
      * @param string $email
      * @return Subscription|null
      */
-    public function getByEmail(string $email): ?Subscription;
+    public function findByEmail(string $email): ?Subscription;
 
     /**
      * @param Subscription $currency
@@ -23,11 +23,11 @@ interface SubscriptionRepositoryInterface
      * @param SearchSubscribersForMailingDto $dto
      * @return Subscription[]
      */
-    public function getNotSent(SearchSubscribersForMailingDto $dto): array;
+    public function findNotSent(SearchSubscribersForMailingDto $dto): array;
 
     /**
      * @param string $email
      * @return Subscription|null
      */
-    public function getByEmailAndNotSend(string $email): ?Subscription;
+    public function findByEmailAndNotSend(string $email): ?Subscription;
 }
