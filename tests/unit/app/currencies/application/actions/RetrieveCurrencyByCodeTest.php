@@ -1,0 +1,59 @@
+<?php
+
+namespace tests\unit\app\currencies\application\actions;
+
+use app\currencies\application\actions\RetrieveCurrencyByCode;
+use app\currencies\application\services\CurrencyService;
+use app\currencies\domain\entities\Currency;
+use app\shared\application\exceptions\NotExistException;
+use app\shared\application\exceptions\NotValidException;
+use PHPUnit\Framework\MockObject\MockObject;
+use tests\unit\UnitTestCase;
+
+class RetrieveCurrencyByCodeTest extends UnitTestCase
+{
+    private RetrieveCurrencyByCode $action;
+    private CurrencyService|MockObject $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = $this->getCurrencyServiceMock();
+        $this->action = new RetrieveCurrencyByCode($this->service);
+    }
+
+    /**
+     * @throws NotValidException
+     */
+    public function testExecute()
+    {
+        $code = "USD";
+
+        $entity = $this->getCurrencyEntity();
+        $this->service->expects($this->once())
+            ->method("getByCode")
+            ->with($code)
+            ->willReturn($entity);
+
+        $actual = $this->action->execute($code);
+        self::assertInstanceOf(Currency::class, $actual);
+    }
+
+    /**
+     * @throws NotExistException
+     */
+    public function testExecuteNotExits()
+    {
+        self::expectException(NotExistException::class);
+        self::expectExceptionMessage("Currency not found");
+        $code = "USD";
+
+        $this->service->expects($this->once())
+            ->method("getByCode")
+            ->with($code)
+            ->willReturn(null);
+
+        $actual = $this->action->execute($code);
+    }
+}
+

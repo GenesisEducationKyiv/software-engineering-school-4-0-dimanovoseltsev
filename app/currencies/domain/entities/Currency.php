@@ -35,29 +35,11 @@ class Currency implements Arrayable
     }
 
     /**
-     * @param Id $id
-     * @return void
-     */
-    public function setId(Id $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return Iso3
      */
     public function getIso3(): Iso3
     {
         return $this->iso3;
-    }
-
-    /**
-     * @param Iso3 $iso3
-     * @return void
-     */
-    public function setIso3(Iso3 $iso3): void
-    {
-        $this->iso3 = $iso3;
     }
 
     /**
@@ -83,15 +65,6 @@ class Currency implements Arrayable
     public function getCreatedAt(): Timestamp
     {
         return $this->createdAt;
-    }
-
-    /**
-     * @param Timestamp $createdAt
-     * @return void
-     */
-    public function setCreatedAt(Timestamp $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     /**
