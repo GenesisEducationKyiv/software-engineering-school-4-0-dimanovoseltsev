@@ -44,6 +44,7 @@ trait ValidationRulesTrait
     protected function validateRequired(string|int|null $value, string $message = 'Cannot be blank'): bool
     {
         Assert::notEmpty($value, $message);
+        Assert::notNull($value, $message);
         return true;
     }
 }
