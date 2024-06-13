@@ -2,7 +2,7 @@
 
 namespace tests\components;
 
-class EuropeanCentralBankProvider extends \app\services\providers\EuropeanCentralBankProvider
+class EuropeanCentralBankProvider extends \app\currencies\infrastructure\providers\EuropeanCentralBankProvider
 {
     public function getActualRates(): array
     {

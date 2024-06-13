@@ -4,7 +4,7 @@
  */
 
 
-use app\services\providers\ProviderInterface;
+use app\currencies\application\providers\ProviderInterface;
 use tests\components\DummyQueue;
 use tests\components\EuropeanCentralBankProvider;
 use tests\components\YiiMailer;
@@ -51,7 +51,6 @@ return [
     ],
     'container' => [
         'definitions' => [
-            // @todo
             ProviderInterface::class => function (Container $container) {
                 return new EuropeanCentralBankProvider(
                     new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
