@@ -27,7 +27,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
     {
         $currencyCode = $currency->getIso3()->value();
 
-        $lastId = 2;
+        $lastId = 0;
         $limit = 50;
         $count = 0;
         do {
@@ -41,7 +41,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
 
             foreach ($subscriptions as $subscription) {
                 $this->publisherService->enqueueMessageForSending($subscription->getEmail()->value(), $currencyCode);
-                $lastId = $subscription->getId()->value();
+                $lastId = (int)$subscription->getId()->value();
                 $count++;
             }
         } while (true);

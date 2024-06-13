@@ -38,7 +38,11 @@ class NotValidException extends Exception implements Throwable
         $items = [];
 
         foreach ($this->errors as $field => $values) {
-            if (!isset($values[0])) {
+            if (
+                !is_array($values)
+                || !isset($values[0])
+                || !is_string($values[0])
+            ) {
                 continue;
             }
 

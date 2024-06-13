@@ -21,9 +21,9 @@ final class Id implements ValueObjectInterface
     }
 
     /**
-     * @return mixed|int
+     * @return ?int
      */
-    public function value(): mixed
+    public function value(): ?int
     {
         return $this->value;
     }

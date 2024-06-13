@@ -22,7 +22,7 @@ trait ErrorsTrait
      */
     protected function addError(string $field, string $message): void
     {
-        $this->errors[$field] = $this->errors[$field] ?? [];
+        $this->errors[$field] = (array)($this->errors[$field] ?? []);
         $this->errors[$field][] = $message;
     }
 
@@ -43,7 +43,7 @@ trait ErrorsTrait
     }
 
     /**
-     * @param array<string, mixed> $errors
+     * @param array<string, array<string>> $errors
      * @return void
      */
     protected function mergeErrors(array $errors): void

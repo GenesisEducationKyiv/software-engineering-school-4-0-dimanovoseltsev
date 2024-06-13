@@ -50,8 +50,8 @@ class Mapper
     {
         return new CurrencyEntity(
             new Id($value['id'] ?? null),
-            new Iso3($value['iso3'] ?? null),
-            new Rate($value['rate'] ?? null),
+            new Iso3($value['iso3'] ?? ''),
+            new Rate($value['rate'] ?? 1.0),
             new Timestamp($value['createdAt'] ?? null),
             new Timestamp($value['updatedAt'] ?? null),
         );
