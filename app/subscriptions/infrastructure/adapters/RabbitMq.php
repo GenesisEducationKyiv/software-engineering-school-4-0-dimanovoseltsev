@@ -15,7 +15,6 @@ class RabbitMq implements MessageBrokerInterface
     ) {
     }
 
-
     /**
      * @param array<mixed> $body
      * @return string|null

@@ -54,7 +54,6 @@ class SubscriptionService implements SubscriptionServiceInterface
         return $this->repository->findNotSent($dto);
     }
 
-
     /**
      * @param string $email
      * @return Subscription|null
