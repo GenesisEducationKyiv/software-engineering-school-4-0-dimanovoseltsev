@@ -31,7 +31,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
         $limit = 50;
         $count = 0;
         do {
-            $subscriptions = $this->service->findNotSent(
+            $subscriptions = $this->service->getNotSent(
                 new SearchSubscribersForMailingDto($lastId, $limit)
             );
 

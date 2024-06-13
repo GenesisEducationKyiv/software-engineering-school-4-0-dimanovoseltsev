@@ -27,7 +27,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      * @param string $email
      * @return Subscription|null
      */
-    public function getByEmail(string $email): ?Subscription
+    public function findByEmail(string $email): ?Subscription
     {
         $model = $this->query->findByEmail($email);
         return $model === null ? null : Mapper::toEntity($model);
@@ -49,7 +49,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      * @param SearchSubscribersForMailingDto $dto
      * @return Subscription[]
      */
-    public function getNotSent(SearchSubscribersForMailingDto $dto): array
+    public function findNotSent(SearchSubscribersForMailingDto $dto): array
     {
         /** @var SubscriptionModel[] $models */
         $models = $this->query->clear()
@@ -72,7 +72,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      * @param string $email
      * @return Subscription|null
      */
-    public function getByEmailAndNotSend(string $email): ?Subscription
+    public function findByEmailAndNotSend(string $email): ?Subscription
     {
         $model = $this->query->clear()
             ->prepareNotSent($this->breakBetweenSending)

@@ -24,7 +24,7 @@ class SubscriptionService implements SubscriptionServiceInterface
      */
     public function getByEmail(string $email): ?Subscription
     {
-        return $this->repository->getByEmail($email);
+        return $this->repository->findByEmail($email);
     }
 
     /**
@@ -40,7 +40,7 @@ class SubscriptionService implements SubscriptionServiceInterface
      * @param CreateSubscriptionDto $dto
      * @return Subscription
      */
-    public function subscribe(CreateSubscriptionDto $dto): Subscription
+    public function create(CreateSubscriptionDto $dto): Subscription
     {
         return $this->repository->save(Mapper::fromCreateDto($dto));
     }
@@ -49,9 +49,9 @@ class SubscriptionService implements SubscriptionServiceInterface
      * @param SearchSubscribersForMailingDto $dto
      * @return Subscription[]
      */
-    public function findNotSent(SearchSubscribersForMailingDto $dto): array
+    public function getNotSent(SearchSubscribersForMailingDto $dto): array
     {
-        return $this->repository->getNotSent($dto);
+        return $this->repository->findNotSent($dto);
     }
 
 
@@ -59,8 +59,8 @@ class SubscriptionService implements SubscriptionServiceInterface
      * @param string $email
      * @return Subscription|null
      */
-    public function findByEmailAndNotSend(string $email): ?Subscription
+    public function getByEmailAndNotSend(string $email): ?Subscription
     {
-        return $this->repository->getByEmailAndNotSend($email);
+        return $this->repository->findByEmailAndNotSend($email);
     }
 }
