@@ -7,6 +7,7 @@ use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
 use app\currencies\infrastructure\mappers\Mapper;
 use app\currencies\infrastructure\models\Currency as ModelCurrency;
+use app\subscriptions\application\services\SubscriptionService;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;
 use Closure;
@@ -203,6 +204,25 @@ class UnitTestCase extends TestCase
         return $this->getMockBuilder($class)
             ->disableOriginalConstructor()
             ->onlyMethods(['execute'])
+            ->getMock();
+    }
+
+    /**
+     * @return SubscriptionService|MockObject
+     */
+    protected function getSubscriptionServiceMock(): SubscriptionService|MockObject
+    {
+        return $this->getMockBuilder(SubscriptionService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByEmail',
+                    'save',
+                    'create',
+                    'getNotSent',
+                    'getByEmailAndNotSend',
+                ]
+            )
             ->getMock();
     }
 }
