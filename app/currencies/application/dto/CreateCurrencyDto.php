@@ -7,12 +7,12 @@ readonly class CreateCurrencyDto
     /**
      * @param string $currency
      * @param float $rate
-     * @param int|null $createdAt
+     * @param int $createdAt
      */
     public function __construct(
         private string $currency,
         private float $rate,
-        private ?int $createdAt = null,
+        private int $createdAt,
     ) {
     }
 

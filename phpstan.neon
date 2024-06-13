@@ -1,7 +1,7 @@
 parameters:
 	bootstrapFiles:
 		- vendor/yiisoft/yii2/Yii.php
-	level: 6
+	level: 7
 	paths:
 		- app
 	parallel:
