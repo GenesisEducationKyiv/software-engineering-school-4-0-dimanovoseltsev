@@ -2,7 +2,6 @@
 
 namespace console\workers;
 
-use app\shared\application\adapters\MessageBrokerInterface;
 use Exception;
 use Throwable;
 use yii\queue\amqp_interop\Command;

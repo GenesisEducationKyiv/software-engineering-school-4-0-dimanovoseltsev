@@ -23,7 +23,6 @@ class m240516_202303_create_currencies_table extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ], $tableOptions);
-
     }
 
     /**

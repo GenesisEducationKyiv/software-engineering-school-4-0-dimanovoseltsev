@@ -7,7 +7,6 @@ use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
 use app\shared\application\exceptions\NotExistException;
-use app\shared\application\exceptions\NotValidException;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -28,7 +27,7 @@ class RetrieveCurrencyByCodeTest extends UnitTestCase
      */
     public function testExecute()
     {
-        $code =CurrencyIso::USD->value;
+        $code = CurrencyIso::USD->value;
 
         $entity = $this->getCurrencyEntity();
         $this->service->expects($this->once())
