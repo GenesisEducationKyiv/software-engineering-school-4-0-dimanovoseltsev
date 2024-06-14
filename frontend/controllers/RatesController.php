@@ -3,7 +3,6 @@
 namespace frontend\controllers;
 
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\shared\application\exceptions\AlreadyException;
 use app\shared\application\exceptions\NotExistException;
 use app\shared\application\exceptions\NotSupportedException;
 use app\shared\application\exceptions\NotValidException;
@@ -94,9 +93,7 @@ class RatesController extends ActiveController
 
     /**
      * @throws \yii\base\NotSupportedException
-     * @throws ConflictHttpException
      * @throws NotFoundHttpException
-     * @throws ForbiddenHttpException
      * @throws BadRequestHttpException
      */
     protected function processException(Throwable|Exception $e): mixed
@@ -109,14 +106,6 @@ class RatesController extends ActiveController
         return match (true) {
             $e instanceof NotExistException => throw new NotFoundHttpException(
                 $e->getMessage(), (int)$e->getCode(), $e
-            ),
-            $e instanceof ConflictException, $e instanceof AlreadyException => throw new ConflictHttpException(
-                $e->getMessage(), (int)$e->getCode(), $e
-            ),
-            $e instanceof ForbiddenException => throw new ForbiddenHttpException(
-                $e->getMessage(),
-                (int)$e->getCode(),
-                $e
             ),
             $e instanceof NotSupportedException => throw new \yii\base\NotSupportedException(
                 $e->getMessage(),
