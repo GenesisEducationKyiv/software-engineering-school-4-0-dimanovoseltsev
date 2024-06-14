@@ -7,9 +7,9 @@ use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
 use app\subscriptions\infrastructure\mappers\Mapper;
+use app\subscriptions\infrastructure\models\Subscription as SubscriptionModel;
 use app\subscriptions\infrastructure\models\SubscriptionQuery;
 use yii\db\Exception;
-use app\subscriptions\infrastructure\models\Subscription as SubscriptionModel;
 
 class SubscriptionRepository implements SubscriptionRepositoryInterface
 {

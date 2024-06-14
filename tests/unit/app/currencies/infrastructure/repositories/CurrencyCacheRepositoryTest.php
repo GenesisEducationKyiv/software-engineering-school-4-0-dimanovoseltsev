@@ -111,7 +111,7 @@ class CurrencyCacheRepositoryTest extends UnitTestCase
 
         $this->cache->expects($this->once())
             ->method('set')
-            ->with('currency-rate:'.CurrencyIso::USD->value, json_encode($entity->toArray()), $this->ttl)
+            ->with('currency-rate:' . CurrencyIso::USD->value, json_encode($entity->toArray()), $this->ttl)
             ->willReturn(true);
 
         $currency = $this->repository->save($entity);
