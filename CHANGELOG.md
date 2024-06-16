@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2024-06-14
 - transition to hexagonal architecture
+- add k6 load tests
 
 ## [1.1.0] - 2024-06-07
 - add linters: `PHPStan` and `PHP_CodeSniffer`
