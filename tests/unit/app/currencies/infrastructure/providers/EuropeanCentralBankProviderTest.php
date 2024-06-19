@@ -4,7 +4,7 @@ namespace tests\unit\app\currencies\infrastructure\providers;
 
 use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\enums\CurrencyIso;
-use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
+use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\shared\application\exceptions\RemoteServiceException;
 use Exception;
 use GuzzleHttp\Client;
@@ -14,7 +14,7 @@ use tests\unit\UnitTestCase;
 
 class EuropeanCentralBankProviderTest extends UnitTestCase
 {
-    private EuropeanCentralBankProvider $provider;
+    private ExchangeRateProvider $provider;
     private Client|MockObject $httpClient;
 
     private string $apiKey = 'test-api-key';
@@ -25,7 +25,7 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
     {
         parent::setUp();
         $this->httpClient = $this->getHttpClientMock();
-        $this->provider = new EuropeanCentralBankProvider(
+        $this->provider = new ExchangeRateProvider(
             $this->httpClient,
             $this->apiKey,
             $this->baseCurrency,

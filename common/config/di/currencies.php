@@ -11,7 +11,7 @@ use app\currencies\application\services\CurrencyService;
 use app\currencies\application\services\CurrencyServiceInterface;
 use app\currencies\domain\repositories\CurrencyRepositoryInterface;
 use app\currencies\infrastructure\models\Currency;
-use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
+use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
 use yii\di\Container;
@@ -32,9 +32,17 @@ return [
         return new CurrencyService($container->get(CurrencyRepositoryInterface::class));
     },
     ProviderInterface::class => function (Container $container) {
-        return new EuropeanCentralBankProvider(
+
+        return new \app\currencies\infrastructure\providers\CoinbaseProvider(
+            new GuzzleHttp\Client(['base_uri' => getenv('COINBASE_API_URL')]),
+            (string)getenv("BASE_CURRENCY"),
+            (string)getenv("IMPORTED_CURRENCY"),
+        );
+
+
+        return new ExchangeRateProvider(
             new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
-            (string)getenv("EXCHANGE_RATE_API_LEY"),
+            (string)getenv("EXCHANGE_RATE_API_KEY"),
             (string)getenv("BASE_CURRENCY"),
             (string)getenv("IMPORTED_CURRENCY"),
         );

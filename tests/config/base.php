@@ -9,7 +9,7 @@ use app\currencies\domain\repositories\CurrencyRepositoryInterface;
 use app\currencies\infrastructure\models\Currency;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
-use tests\components\EuropeanCentralBankProvider;
+use tests\components\ExchangeRateProvider;
 use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
@@ -55,9 +55,9 @@ return [
     'container' => [
         'definitions' => [
             ProviderInterface::class => function (Container $container) {
-                return new EuropeanCentralBankProvider(
+                return new ExchangeRateProvider(
                     new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
-                    (string)getenv("EXCHANGE_RATE_API_LEY"),
+                    (string)getenv("EXCHANGE_RATE_API_KEY"),
                     (string)getenv("BASE_CURRENCY"),
                     (string)getenv("IMPORTED_CURRENCY"),
                 );

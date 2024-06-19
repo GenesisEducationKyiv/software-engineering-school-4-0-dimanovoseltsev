@@ -8,23 +8,20 @@ use app\shared\application\exceptions\RemoteServiceException;
 use app\shared\application\exceptions\UnexpectedValueException;
 use Exception;
 use GuzzleHttp\Client as HttpClient;
-use PHPUnit\Util\InvalidJsonException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 use Yii;
 
-class EuropeanCentralBankProvider implements ProviderInterface
+class CoinbaseProvider extends BaseProvider implements ProviderInterface
 {
     /**
-     * EuropeanCentralBankProvider constructor.
+     * CoinbaseProvider constructor.
      * @param HttpClient $client
-     * @param string $apiKey
      * @param string $baseCurrency
      * @param string $importCurrency
      */
     public function __construct(
         private readonly HttpClient $client,
-        private readonly string $apiKey,
         private readonly string $baseCurrency = "USD",
         private readonly string $importCurrency = "USD",
     ) {
@@ -34,16 +31,11 @@ class EuropeanCentralBankProvider implements ProviderInterface
     /**
      * @return CurrencyProviderDto[]
      * @throws RemoteServiceException
-     * @see https://www.exchangerate-api.com/docs/pair-conversion-requests
+     * @see https://docs.cdp.coinbase.com/sign-in-with-coinbase/docs/api-prices/#get-buy-price
      */
     public function getActualRates(): array
     {
-        $url = sprintf(
-            "/v6/%s/pair/%s/%s",
-            $this->apiKey,
-            $this->baseCurrency,
-            $this->importCurrency
-        );
+        $url = sprintf("/v2/prices/%s-%s/buy", $this->baseCurrency, $this->importCurrency);
         try {
             $response = $this->client->get($url);
             return $this->processResponse($response);
@@ -62,29 +54,14 @@ class EuropeanCentralBankProvider implements ProviderInterface
      */
     protected function processResponse(ResponseInterface $response): array
     {
-        $statusCode = $response->getStatusCode();
-        if ($statusCode !== 200) {
-            throw new RemoteServiceException('Status code not successfully');
-        }
-
-        if (!json_validate((string)$response->getBody())) {
-            throw new InvalidJsonException('Invalid JSON response');
-        }
-
-        $body = (array)json_decode((string)$response->getBody(), true);
-        $result = $body['result'] ?? null;
-        if ($result !== "success") {
-            throw new UnexpectedValueException('Result not success');
-        }
-
-        $conversionRate = (float)($body['conversion_rate'] ?? 0);
-
-        if (empty($conversionRate)) {
+        $this->checkStatusCode($response, 200);
+        $body = $this->parseJsonBody($response);
+        if (empty($body['data']['amount'])) {
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
         return [
-            new CurrencyProviderDto($this->importCurrency, round($conversionRate, 5))
+            new CurrencyProviderDto($this->importCurrency, round((float)$body['data']['amount'], 5))
         ];
     }
 }

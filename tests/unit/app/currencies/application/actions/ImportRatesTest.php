@@ -7,7 +7,7 @@ use app\currencies\application\actions\ImportRates;
 use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
-use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
+use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\shared\application\exceptions\InvalidCallException;
 use app\shared\application\exceptions\NotValidException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -16,7 +16,7 @@ use tests\unit\UnitTestCase;
 class ImportRatesTest extends UnitTestCase
 {
     private ImportRates $action;
-    private EuropeanCentralBankProvider|MockObject $provider;
+    private ExchangeRateProvider|MockObject $provider;
     private CreateOrUpdateCurrency|MockObject $createOrUpdateCurrency;
 
     public function setUp(): void
@@ -29,11 +29,11 @@ class ImportRatesTest extends UnitTestCase
 
 
     /**
-     * @return EuropeanCentralBankProvider|MockObject
+     * @return ExchangeRateProvider|MockObject
      */
-    protected function getEuropeanCentralBankProviderMock(): EuropeanCentralBankProvider|MockObject
+    protected function getEuropeanCentralBankProviderMock(): ExchangeRateProvider|MockObject
     {
-        return $this->getMockBuilder(EuropeanCentralBankProvider::class)
+        return $this->getMockBuilder(ExchangeRateProvider::class)
             ->disableOriginalConstructor()
             ->onlyMethods(
                 [

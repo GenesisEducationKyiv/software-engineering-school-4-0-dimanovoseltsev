@@ -4,7 +4,7 @@ namespace tests\components;
 
 use app\currencies\application\dto\CurrencyProviderDto;
 
-class EuropeanCentralBankProvider extends \app\currencies\infrastructure\providers\EuropeanCentralBankProvider
+class ExchangeRateProvider extends \app\currencies\infrastructure\providers\ExchangeRateProvider
 {
     /**
      * @return CurrencyProviderDto[]
