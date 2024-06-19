@@ -11,9 +11,12 @@ class RateChain implements RateChainProviderInterface
 
     /**
      * @param ProviderInterface $rateProvider
+     * @param int $retries
      */
-    public function __construct(private readonly ProviderInterface $rateProvider)
-    {
+    public function __construct(
+        private readonly ProviderInterface $rateProvider,
+        private readonly int $retries
+    ) {
     }
 
     /**
@@ -31,13 +34,20 @@ class RateChain implements RateChainProviderInterface
      */
     public function getActualRate(string $sourceCurrency, string $targetCurrency): ?CurrencyProviderDto
     {
-        try {
-            return $this->rateProvider->getRate($sourceCurrency, $targetCurrency);
-        } catch (Throwable $e) {
-            if ($this->next !== null) {
-                return $this->next->getActualRate($sourceCurrency, $targetCurrency);
+        $attempt = 0;
+        do {
+            $attempt++;
+            try {
+                return $this->rateProvider->getRate($sourceCurrency, $targetCurrency);
+            } catch (Throwable $e) {
+                if ($attempt === $this->retries) {
+                    if ($this->next === null) {
+                        break;
+                    }
+                    return $this->next->getActualRate($sourceCurrency, $targetCurrency);
+                }
             }
-        }
+        } while (true);
         return null;
     }
 }
