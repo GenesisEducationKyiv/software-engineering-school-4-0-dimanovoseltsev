@@ -111,22 +111,22 @@ services:
     deploy:
       replicas: 1
 
-  cron:
-    build:
-      context: .
-      dockerfile: DockerfileCron
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./docker/cron/cron.log:/var/log/cron.log
-    networks:
-      - app-network
-    depends_on:
-      - mysql
-      - memcached
-      - rabbitmq
-    environment:
-      - TZ=America/New_York
+#  cron:
+#    build:
+#      context: .
+#      dockerfile: DockerfileCron
+#    working_dir: /app
+#    volumes:
+#      - .:/app
+#      - ./docker/cron/cron.log:/var/log/cron.log
+#    networks:
+#      - app-network
+#    depends_on:
+#      - mysql
+#      - memcached
+#      - rabbitmq
+#    environment:
+#      - TZ=America/New_York
 
 #  prometheus:
 #    image: prom/prometheus:latest
