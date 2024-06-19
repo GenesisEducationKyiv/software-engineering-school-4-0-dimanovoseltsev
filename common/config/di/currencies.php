@@ -6,11 +6,15 @@ use app\currencies\application\actions\ImportRates;
 use app\currencies\application\actions\ImportRatesInterface;
 use app\currencies\application\actions\RetrieveCurrencyByCode;
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\currencies\application\providers\ProviderInterface;
+use app\currencies\application\providers\RateChain;
+use app\currencies\application\providers\RateChainProviderInterface;
 use app\currencies\application\services\CurrencyService;
 use app\currencies\application\services\CurrencyServiceInterface;
+use app\currencies\application\services\RateService;
+use app\currencies\application\services\RateServiceInterface;
 use app\currencies\domain\repositories\CurrencyRepositoryInterface;
 use app\currencies\infrastructure\models\Currency;
+use app\currencies\infrastructure\providers\CoinbaseProvider;
 use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
@@ -31,21 +35,22 @@ return [
     CurrencyServiceInterface::class => function (Container $container) {
         return new CurrencyService($container->get(CurrencyRepositoryInterface::class));
     },
-    ProviderInterface::class => function (Container $container) {
-
-        return new \app\currencies\infrastructure\providers\CoinbaseProvider(
-            new GuzzleHttp\Client(['base_uri' => getenv('COINBASE_API_URL')]),
-            (string)getenv("BASE_CURRENCY"),
-            (string)getenv("IMPORTED_CURRENCY"),
-        );
-
-
-        return new ExchangeRateProvider(
+    RateServiceInterface::class => function (Container $container) {
+        return new RateService($container->get(RateChainProviderInterface::class));
+    },
+    RateChainProviderInterface::class => function (Container $container) {
+        $exchangeRateProvider = new ExchangeRateProvider(
             new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
             (string)getenv("EXCHANGE_RATE_API_KEY"),
-            (string)getenv("BASE_CURRENCY"),
-            (string)getenv("IMPORTED_CURRENCY"),
         );
+
+        $coinbaseProvider = new CoinbaseProvider(
+            new GuzzleHttp\Client(['base_uri' => getenv('COINBASE_API_URL')]),
+        );
+
+        $chain = new RateChain($exchangeRateProvider);
+        $chain->setNext(new RateChain($coinbaseProvider));
+        return $chain;
     },
 
     // actions
@@ -57,8 +62,10 @@ return [
     },
     ImportRatesInterface::class => function (Container $container) {
         return new ImportRates(
-            $container->get(ProviderInterface::class),
-            $container->get(CreateOrUpdateCurrencyInterface::class)
+            $container->get(RateServiceInterface::class),
+            $container->get(CreateOrUpdateCurrencyInterface::class),
+            (string)getenv("BASE_CURRENCY"),
+            (string)getenv("IMPORTED_CURRENCY"),
         );
     },
 ];

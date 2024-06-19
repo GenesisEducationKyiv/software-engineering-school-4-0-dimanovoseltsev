@@ -7,12 +7,12 @@ use app\currencies\application\dto\CurrencyProviderDto;
 class ExchangeRateProvider extends \app\currencies\infrastructure\providers\ExchangeRateProvider
 {
     /**
-     * @return CurrencyProviderDto[]
+     * @param string $sourceCurrency
+     * @param string $targetCurrency
+     * @return CurrencyProviderDto
      */
-    public function getActualRates(): array
+    public function getRate(string $sourceCurrency, string $targetCurrency): CurrencyProviderDto
     {
-        return [
-            new CurrencyProviderDto('UAH', 39.411)
-        ];
+        return  new CurrencyProviderDto($targetCurrency, 39.411);
     }
 }

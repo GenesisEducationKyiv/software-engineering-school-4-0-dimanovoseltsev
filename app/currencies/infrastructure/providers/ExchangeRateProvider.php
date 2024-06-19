@@ -6,7 +6,6 @@ use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
 use app\shared\application\exceptions\UnexpectedValueException;
-use Exception;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -18,33 +17,26 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
      * ExchangeRateProvider constructor.
      * @param HttpClient $client
      * @param string $apiKey
-     * @param string $baseCurrency
-     * @param string $importCurrency
      */
     public function __construct(
         private readonly HttpClient $client,
         private readonly string $apiKey,
-        private readonly string $baseCurrency = "USD",
-        private readonly string $importCurrency = "USD",
     ) {
     }
 
     /**
-     * @return CurrencyProviderDto[]
+     * @param string $sourceCurrency
+     * @param string $targetCurrency
+     * @return CurrencyProviderDto
      * @throws RemoteServiceException
      * @see https://www.exchangerate-api.com/docs/pair-conversion-requests
      */
-    public function getActualRates(): array
+    public function getRate(string $sourceCurrency, string $targetCurrency): CurrencyProviderDto
     {
-        $url = sprintf(
-            "/v6/%s/pair/%s/%s",
-            $this->apiKey,
-            $this->baseCurrency,
-            $this->importCurrency
-        );
+        $url = sprintf("/v6/%s/pair/%s/%s", $this->apiKey, $sourceCurrency, $targetCurrency);
         try {
             $response = $this->client->get($url);
-            return $this->processResponse($response);
+            return $this->processResponse($response, $targetCurrency);
         } catch (RemoteServiceException $e) {
             throw $e;
         } catch (Throwable $e) {
@@ -55,12 +47,15 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
 
     /**
      * @param ResponseInterface $response
-     * @return CurrencyProviderDto[]
-     * @throws Exception
+     * @param string $targetCurrency
+     * @return CurrencyProviderDto
+     * @throws RemoteServiceException
+     * @throws UnexpectedValueException
      */
-    protected function processResponse(ResponseInterface $response): array
+    protected function processResponse(ResponseInterface $response, string $targetCurrency): CurrencyProviderDto
     {
         $this->checkStatusCode($response, 200);
+        /** @var array{result?: string, conversion_rate?: float} $body */
         $body = $this->parseJsonBody($response);
 
         $result = $body['result'] ?? null;
@@ -69,13 +64,10 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
         }
 
         $conversionRate = (float)($body['conversion_rate'] ?? 0);
-
         if (empty($conversionRate)) {
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
-        return [
-            new CurrencyProviderDto($this->importCurrency, round($conversionRate, 5))
-        ];
+        return new CurrencyProviderDto($targetCurrency, round($conversionRate, 5));
     }
 }

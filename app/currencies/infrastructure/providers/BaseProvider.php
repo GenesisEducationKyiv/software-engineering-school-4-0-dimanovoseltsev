@@ -21,7 +21,7 @@ abstract class BaseProvider
 
     /**
      * @param ResponseInterface $response
-     * @return array
+     * @return array<string,mixed>
      */
     protected function parseJsonBody(ResponseInterface $response): array
     {
