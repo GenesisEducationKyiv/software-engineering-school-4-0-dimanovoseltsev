@@ -39,6 +39,7 @@ return [
     ],
     'container' => [
         'definitions' => array_merge(
+            require 'di/shared.php',
             require 'di/currencies.php',
             require 'di/subscriptions.php',
         )

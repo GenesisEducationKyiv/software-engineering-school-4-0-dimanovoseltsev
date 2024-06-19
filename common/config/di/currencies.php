@@ -18,6 +18,7 @@ use app\currencies\infrastructure\providers\CoinbaseProvider;
 use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\shared\application\services\LogServiceInterface;
 use yii\di\Container;
 
 
@@ -42,10 +43,12 @@ return [
         $exchangeRateProvider = new ExchangeRateProvider(
             new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
             (string)getenv("EXCHANGE_RATE_API_KEY"),
+            $container->get(LogServiceInterface::class),
         );
 
         $coinbaseProvider = new CoinbaseProvider(
             new GuzzleHttp\Client(['base_uri' => getenv('COINBASE_API_URL')]),
+            $container->get(LogServiceInterface::class),
         );
 
         $chain = new RateChain($exchangeRateProvider);

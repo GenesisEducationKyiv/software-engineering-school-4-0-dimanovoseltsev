@@ -3,11 +3,21 @@
 namespace app\currencies\infrastructure\providers;
 
 use app\shared\application\exceptions\RemoteServiceException;
+use app\shared\application\services\LogServiceInterface;
 use PHPUnit\Util\InvalidJsonException;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class BaseProvider
 {
+    protected const string PROVIDER = "";
+
+    /**
+     * @param LogServiceInterface $logService
+     */
+    public function __construct(protected LogServiceInterface $logService)
+    {
+    }
+
     /**
      * @throws RemoteServiceException
      */
@@ -25,10 +35,13 @@ abstract class BaseProvider
      */
     protected function parseJsonBody(ResponseInterface $response): array
     {
-        if (!json_validate((string)$response->getBody())) {
+        $body = (string)$response->getBody()->getContents();
+        $this->logService->log(sprintf("%s - Response: %s", static::PROVIDER, $body));
+
+        if (!json_validate($body)) {
             throw new InvalidJsonException('Invalid JSON response');
         }
 
-        return (array)json_decode((string)$response->getBody(), true);
+        return (array)json_decode($body, true);
     }
 }

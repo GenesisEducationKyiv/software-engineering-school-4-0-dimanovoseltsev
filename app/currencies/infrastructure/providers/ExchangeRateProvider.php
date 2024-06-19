@@ -6,6 +6,7 @@ use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
 use app\shared\application\exceptions\UnexpectedValueException;
+use app\shared\application\services\LogServiceInterface;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -13,15 +14,20 @@ use Yii;
 
 class ExchangeRateProvider extends BaseProvider implements ProviderInterface
 {
+    final protected const string PROVIDER = "exchangerate-api.com";
+
     /**
      * ExchangeRateProvider constructor.
+     * @param LogServiceInterface $logService
      * @param HttpClient $client
      * @param string $apiKey
      */
     public function __construct(
         private readonly HttpClient $client,
         private readonly string $apiKey,
+        LogServiceInterface $logService,
     ) {
+        parent::__construct($logService);
     }
 
     /**
@@ -34,6 +40,9 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
     public function getRate(string $sourceCurrency, string $targetCurrency): CurrencyProviderDto
     {
         $url = sprintf("/v6/%s/pair/%s/%s", $this->apiKey, $sourceCurrency, $targetCurrency);
+
+
+
         try {
             $response = $this->client->get($url);
             return $this->processResponse($response, $targetCurrency);

@@ -6,6 +6,7 @@ use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\providers\ProviderInterface;
 use app\shared\application\exceptions\RemoteServiceException;
 use app\shared\application\exceptions\UnexpectedValueException;
+use app\shared\application\services\LogServiceInterface;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -13,13 +14,18 @@ use Yii;
 
 class CoinbaseProvider extends BaseProvider implements ProviderInterface
 {
+    final protected const string PROVIDER = "coinbase.com";
+
     /**
      * CoinbaseProvider constructor.
+     * @param LogServiceInterface $logService
      * @param HttpClient $client
      */
     public function __construct(
         private readonly HttpClient $client,
+        LogServiceInterface $logService,
     ) {
+        parent::__construct($logService);
     }
 
 
@@ -35,6 +41,10 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
         $url = sprintf("/v2/prices/%s-%s/buy", $sourceCurrency, $targetCurrency);
         try {
             $response = $this->client->get($url);
+
+            $this->logService->log(sprintf("%s - Response: %s", "coinbase.com", $response->getC()));
+
+
             return $this->processResponse($response, $targetCurrency);
         } catch (RemoteServiceException $e) {
             throw $e;
