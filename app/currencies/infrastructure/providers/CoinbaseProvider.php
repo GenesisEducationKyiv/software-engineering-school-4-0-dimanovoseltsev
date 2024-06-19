@@ -41,10 +41,6 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
         $url = sprintf("/v2/prices/%s-%s/buy", $sourceCurrency, $targetCurrency);
         try {
             $response = $this->client->get($url);
-
-            $this->logService->log(sprintf("%s - Response: %s", "coinbase.com", $response->getC()));
-
-
             return $this->processResponse($response, $targetCurrency);
         } catch (RemoteServiceException $e) {
             throw $e;
