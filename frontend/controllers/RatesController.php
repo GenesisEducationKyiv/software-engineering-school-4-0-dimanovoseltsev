@@ -94,7 +94,7 @@ class RatesController extends ActiveController
      * @throws NotFoundHttpException
      * @throws BadRequestHttpException
      */
-    protected function processException(Throwable|Exception $e): mixed
+    protected function processException(Throwable $e): mixed
     {
         if ($e instanceof NotValidException) {
             Yii::$app->response->setStatusCode(422);
