@@ -40,9 +40,6 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
     public function getRate(string $sourceCurrency, string $targetCurrency): CurrencyProviderDto
     {
         $url = sprintf("/v6/%s/pair/%s/%s", $this->apiKey, $sourceCurrency, $targetCurrency);
-
-
-
         try {
             $response = $this->client->get($url);
             return $this->processResponse($response, $targetCurrency);
