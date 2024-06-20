@@ -6,16 +6,18 @@ use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\enums\CurrencyIso;
 use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\shared\application\exceptions\RemoteServiceException;
+use app\shared\infrastructure\services\YiiLogger;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
-class EuropeanCentralBankProviderTest extends UnitTestCase
+class ExchangeRateProviderTest extends UnitTestCase
 {
     private ExchangeRateProvider $provider;
     private Client|MockObject $httpClient;
+    private YiiLogger|MockObject $logService;
 
     private string $apiKey = 'test-api-key';
     private string $baseCurrency = CurrencyIso::USD->value;
@@ -25,12 +27,25 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
     {
         parent::setUp();
         $this->httpClient = $this->getHttpClientMock();
+        $this->logService = $this->getLogServiceMock();
         $this->provider = new ExchangeRateProvider(
             $this->httpClient,
             $this->apiKey,
-            $this->baseCurrency,
-            $this->importCurrency,
+            $this->logService,
         );
+    }
+
+    /**
+     * @return YiiLogger|MockObject
+     */
+    protected function getLogServiceMock(): YiiLogger|MockObject
+    {
+        return $this->getMockBuilder(YiiLogger::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'log',
+            ])
+            ->getMock();
     }
 
     /**
@@ -60,30 +75,31 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
             ->method('get')
             ->willReturn($response);
 
-        $expectedResult = [
-            new CurrencyProviderDto($this->importCurrency, 0.85000),
-        ];
+        $expectedResult = new CurrencyProviderDto($this->importCurrency, 0.85000);
 
-        $actualResult = $this->provider->getActualRates();
-        $this->assertEquals($expectedResult, $actualResult);
+        $actual = $this->provider->getRate($this->baseCurrency, $this->importCurrency);
+        self::assertInstanceOf(CurrencyProviderDto::class, $actual);
+        self::assertEquals($expectedResult, $actual);
     }
 
     public function testGetActualRatesServiceUnavailable()
     {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Service unavailable: Service down');
+
         $this->httpClient
             ->expects(self::once())
             ->method('get')
             ->willThrowException(new Exception('Service down'));
 
-        $this->expectException(RemoteServiceException::class);
-        $this->expectExceptionMessage('Service unavailable: Service down');
-
-        $actual = $this->provider->getActualRates();
-        self::assertIsArray($actual);
+        $this->provider->getRate($this->baseCurrency, $this->importCurrency);
     }
 
     public function testGetActualRatesStatusNotSuccessful()
     {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Status code not successfully');
+
         $response = new Response(500, [], '');
 
         $this->httpClient
@@ -91,15 +107,14 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
             ->method('get')
             ->willReturn($response);
 
-        $this->expectException(RemoteServiceException::class);
-        $this->expectExceptionMessage('Status code not successfully');
-
-        $actual = $this->provider->getActualRates();
-        self::assertIsArray($actual);
+        $this->provider->getRate($this->baseCurrency, $this->importCurrency);
     }
 
     public function testGetActualRatesResultNotSuccess()
     {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Result not success');
+
         $responseBody = json_encode([
             'result' => 'failure',
         ]);
@@ -111,15 +126,14 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
             ->method('get')
             ->willReturn($response);
 
-        $this->expectException(RemoteServiceException::class);
-        $this->expectExceptionMessage('Result not success');
-
-        $actual = $this->provider->getActualRates();
-        self::assertIsArray($actual);
+        $this->provider->getRate($this->baseCurrency, $this->importCurrency);
     }
 
     public function testGetActualRatesBadConversionRate()
     {
+        $this->expectException(RemoteServiceException::class);
+        $this->expectExceptionMessage('Bad conversion rate');
+
         $responseBody = json_encode([
             'result' => 'success',
             'conversion_rate' => 0,
@@ -132,11 +146,8 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
             ->method('get')
             ->willReturn($response);
 
-        $this->expectException(RemoteServiceException::class);
-        $this->expectExceptionMessage('Bad conversion rate');
-
-        $actual = $this->provider->getActualRates();
-        self::assertIsArray($actual);
+        $actual = $this->provider->getRate($this->baseCurrency, $this->importCurrency);
+        self::assertInstanceOf(CurrencyProviderDto::class, $actual);
     }
 
     public function testGetActualRatesBadJson()
@@ -151,6 +162,6 @@ class EuropeanCentralBankProviderTest extends UnitTestCase
             ->method('get')
             ->willReturn($response);
 
-        $actualResult = $this->provider->getActualRates();
+        $this->provider->getRate($this->baseCurrency, $this->importCurrency);
     }
 }
