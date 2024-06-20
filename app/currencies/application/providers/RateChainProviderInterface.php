@@ -7,10 +7,10 @@ use app\currencies\application\dto\CurrencyProviderDto;
 interface RateChainProviderInterface
 {
     /**
-     * @param RateChainProviderInterface|null $provider
-     * @return void
+     * @param RateChainProviderInterface $next
+     * @return RateChainProviderInterface
      */
-    public function setNext(?RateChainProviderInterface $provider): void;
+    public function setNext(RateChainProviderInterface $next): RateChainProviderInterface;
 
     /**
      * @param string $sourceCurrency

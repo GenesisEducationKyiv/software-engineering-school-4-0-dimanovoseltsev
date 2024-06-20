@@ -19,8 +19,8 @@ use app\currencies\infrastructure\providers\ExchangeRateProvider;
 use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
 use app\shared\application\services\LogServiceInterface;
+use GuzzleHttp\Client as GuzzleClient;
 use yii\di\Container;
-
 
 return [
     // repositories
@@ -40,19 +40,20 @@ return [
         return new RateService($container->get(RateChainProviderInterface::class));
     },
     RateChainProviderInterface::class => function (Container $container) {
+        $retries = (int)(getenv("RATE_CACHE_TTL") ?: 1);
         $exchangeRateProvider = new ExchangeRateProvider(
-            new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
+            new GuzzleClient(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
             (string)getenv("EXCHANGE_RATE_API_KEY"),
             $container->get(LogServiceInterface::class),
         );
 
         $coinbaseProvider = new CoinbaseProvider(
-            new GuzzleHttp\Client(['base_uri' => getenv('COINBASE_API_URL')]),
+            new GuzzleClient(['base_uri' => getenv('COINBASE_API_URL')]),
             $container->get(LogServiceInterface::class),
         );
 
-        $chain = new RateChain($exchangeRateProvider);
-        $chain->setNext(new RateChain($coinbaseProvider));
+        $chain = new RateChain($exchangeRateProvider, $retries);
+        $chain->setNext(new RateChain($coinbaseProvider, $retries));
         return $chain;
     },
 
