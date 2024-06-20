@@ -28,7 +28,6 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
         parent::__construct($logService);
     }
 
-
     /**
      * @param string $sourceCurrency
      * @param string $targetCurrency

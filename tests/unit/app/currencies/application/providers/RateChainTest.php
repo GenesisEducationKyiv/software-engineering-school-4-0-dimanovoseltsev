@@ -44,8 +44,6 @@ class RateChainTest extends UnitTestCase
             ->getMock();
     }
 
-    /**
-     */
     public function testGetActualRate()
     {
         $source = CurrencyIso::USD->value;
@@ -63,8 +61,6 @@ class RateChainTest extends UnitTestCase
         self::assertInstanceOf(CurrencyProviderDto::class, $actual);
     }
 
-    /**
-     */
     public function testGetActualRateFallback()
     {
         $source = CurrencyIso::USD->value;
@@ -87,9 +83,6 @@ class RateChainTest extends UnitTestCase
         self::assertInstanceOf(CurrencyProviderDto::class, $actual);
     }
 
-
-    /**
-     */
     public function testGetActualRateAllProvidersFail()
     {
         $source = CurrencyIso::USD->value;

@@ -8,7 +8,6 @@ use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
 use app\currencies\application\services\RateService;
-use app\shared\application\exceptions\InvalidCallException;
 use app\shared\application\exceptions\NotValidException;
 use app\shared\application\exceptions\UnexpectedValueException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -22,7 +21,6 @@ class ImportRatesTest extends UnitTestCase
     private string $sourceCurrency = CurrencyIso::USD->value;
     private string $targetCurrency = CurrencyIso::UAH->value;
 
-
     public function setUp(): void
     {
         parent::setUp();
@@ -35,7 +33,6 @@ class ImportRatesTest extends UnitTestCase
             $this->targetCurrency,
         );
     }
-
 
     /**
      * @return RateService|MockObject
@@ -53,7 +50,8 @@ class ImportRatesTest extends UnitTestCase
     }
 
     /**
-     * @throws InvalidCallException|UnexpectedValueException
+     * @return void
+     * @throws UnexpectedValueException
      */
     public function testExecute()
     {
@@ -91,9 +89,9 @@ class ImportRatesTest extends UnitTestCase
         self::assertCount(1, $actual);
     }
 
-
     /**
-     * @throws InvalidCallException|\app\shared\application\exceptions\UnexpectedValueException
+     * @return void
+     * @throws UnexpectedValueException
      */
     public function testExecuteNotCreated()
     {

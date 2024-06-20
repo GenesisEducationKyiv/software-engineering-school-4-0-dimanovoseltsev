@@ -13,6 +13,6 @@ class ExchangeRateProvider extends \app\currencies\infrastructure\providers\Exch
      */
     public function getRate(string $sourceCurrency, string $targetCurrency): CurrencyProviderDto
     {
-        return  new CurrencyProviderDto($targetCurrency, 39.411);
+        return new CurrencyProviderDto($targetCurrency, 39.411);
     }
 }
