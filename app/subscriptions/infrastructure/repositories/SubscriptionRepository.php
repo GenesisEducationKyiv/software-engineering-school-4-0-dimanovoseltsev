@@ -3,7 +3,7 @@
 namespace app\subscriptions\infrastructure\repositories;
 
 use app\shared\application\exceptions\NotValidException;
-use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
+use app\subscriptions\domain\dto\SearchSubscribersDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
 use app\subscriptions\infrastructure\mappers\Mapper;
@@ -46,10 +46,10 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     }
 
     /**
-     * @param SearchSubscribersForMailingDto $dto
+     * @param SearchSubscribersDto $dto
      * @return Subscription[]
      */
-    public function findNotSent(SearchSubscribersForMailingDto $dto): array
+    public function findNotSent(SearchSubscribersDto $dto): array
     {
         /** @var SubscriptionModel[] $models */
         $models = $this->query->clear()

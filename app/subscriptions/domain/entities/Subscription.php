@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\domain\entities;
 
-use app\shared\application\interfaces\Arrayable;
+use app\shared\domain\interfaces\Arrayable;
 use app\shared\domain\valueObjects\Id;
 use app\shared\domain\valueObjects\Timestamp;
 use app\subscriptions\domain\valueObjects\Email;
