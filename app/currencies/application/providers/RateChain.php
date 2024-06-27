@@ -15,7 +15,7 @@ class RateChain implements RateChainProviderInterface
      */
     public function __construct(
         private readonly ProviderInterface $rateProvider,
-        private readonly int $retries = 2
+        private readonly int $retries
     ) {
     }
 
