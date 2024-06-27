@@ -21,6 +21,7 @@ trait TimestampTrait
     public function setTimestamp(int $timestamp): static
     {
         $this->timestamp = $timestamp;
+
         return $this;
     }
 

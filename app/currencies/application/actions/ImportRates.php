@@ -30,6 +30,7 @@ class ImportRates extends BaseAction implements ImportRatesInterface
     public function execute(): array
     {
         $rateDto = $this->rateService->getRate($this->sourceCurrency, $this->targetCurrency);
+
         return [
             $this->createOrUpdateCurrency->execute(
                 new CurrencyForm($rateDto->getCurrency(), $rateDto->getRoundedRate())
