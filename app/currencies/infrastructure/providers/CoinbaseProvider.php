@@ -66,6 +66,6 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
-        return new CurrencyProviderDto($targetCurrency, round((float)$body['data']['amount'], 5));
+        return new CurrencyProviderDto($targetCurrency, (float)$body['data']['amount']);
     }
 }

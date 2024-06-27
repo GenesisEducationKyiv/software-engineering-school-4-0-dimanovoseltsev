@@ -69,7 +69,7 @@ class ImportRatesTest extends UnitTestCase
         $mapInvoke['createOrUpdateCurrency.execute']['params'][] = [
             new CurrencyForm(
                 $rate->getCurrency(),
-                $rate->getRate()
+                $rate->getRoundedRate()
             )
         ];
         $mapInvoke['createOrUpdateCurrency.execute']['return'][] = $entity;

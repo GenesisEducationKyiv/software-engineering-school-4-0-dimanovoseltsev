@@ -74,6 +74,6 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
-        return new CurrencyProviderDto($targetCurrency, round($conversionRate, 5));
+        return new CurrencyProviderDto($targetCurrency, $conversionRate);
     }
 }
