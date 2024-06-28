@@ -18,8 +18,8 @@ class ImportRatesTest extends UnitTestCase
     private ImportRates $action;
     private CreateOrUpdateCurrency|MockObject $createOrUpdateCurrency;
     private RateService|MockObject $rateService;
-    private string $sourceCurrency = CurrencyIso::USD->value;
-    private string $targetCurrency = CurrencyIso::UAH->value;
+    private CurrencyIso $sourceCurrency = CurrencyIso::USD;
+    private CurrencyIso $targetCurrency = CurrencyIso::UAH;
 
     public function setUp(): void
     {

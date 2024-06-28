@@ -69,8 +69,8 @@ return [
         return new ImportRates(
             $container->get(RateServiceInterface::class),
             $container->get(CreateOrUpdateCurrencyInterface::class),
-            CurrencyIso::from((string)getenv("BASE_CURRENCY"))->value,
-            CurrencyIso::from((string)getenv("IMPORTED_CURRENCY"))->value,
+            CurrencyIso::from((string)getenv("BASE_CURRENCY")),
+            CurrencyIso::from((string)getenv("IMPORTED_CURRENCY")),
         );
     },
 ];

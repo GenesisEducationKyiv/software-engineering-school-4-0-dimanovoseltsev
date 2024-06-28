@@ -2,6 +2,7 @@
 
 namespace app\currencies\application\actions;
 
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
 use app\currencies\application\services\RateServiceInterface;
 use app\currencies\domain\entities\Currency;
@@ -12,14 +13,14 @@ class ImportRates extends BaseAction implements ImportRatesInterface
     /**
      * @param RateServiceInterface $rateService
      * @param CreateOrUpdateCurrencyInterface $createOrUpdateCurrency
-     * @param string $sourceCurrency
-     * @param string $targetCurrency
+     * @param CurrencyIso $sourceCurrency
+     * @param CurrencyIso $targetCurrency
      */
     public function __construct(
         private readonly RateServiceInterface $rateService,
         private readonly CreateOrUpdateCurrencyInterface $createOrUpdateCurrency,
-        private readonly string $sourceCurrency,
-        private readonly string $targetCurrency
+        private readonly CurrencyIso $sourceCurrency,
+        private readonly CurrencyIso $targetCurrency
     ) {
     }
 
@@ -29,7 +30,7 @@ class ImportRates extends BaseAction implements ImportRatesInterface
      */
     public function execute(): array
     {
-        $rateDto = $this->rateService->getRate($this->sourceCurrency, $this->targetCurrency);
+        $rateDto = $this->rateService->getRate($this->sourceCurrency->value, $this->targetCurrency->value);
 
         return [
             $this->createOrUpdateCurrency->execute(
