@@ -27,6 +27,7 @@ services:
       - TZ=America/New_York
 
   nginx:
+    container_name: nginx-currencies
     image: nginx:latest
     restart: always
     ports:
@@ -59,9 +60,9 @@ services:
 #      - ./tests/load-k6:/load-k6
 #    entrypoint: [
 #      "sh", "-c",
-#      "k6 run /load-k6/subscription-currency.js \
-#      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
-#      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
+#      "k6 run /load-k6/retrieve-currency.js \
+#      --out experimental-prometheus-rw=http://prometheus-currency-rates:9090/metrics/job/k6  \
+#      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus-currency-rates:9090/api/v1/write "
 #    ]
 #    networks:
 #      - currency-rate-app-network
@@ -70,5 +71,3 @@ networks:
   currency-rate-app-network:
     external: true
 
-volumes:
-  grafana_data:
