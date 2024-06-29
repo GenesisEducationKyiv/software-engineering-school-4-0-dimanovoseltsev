@@ -14,9 +14,7 @@ coverage:
   show_uncovered: true
   whitelist:
     exclude:
-      - app/currencies/infrastructure/models/*
-      - app/subscriptions/infrastructure/models/*
-      - app/shared/infrastructure/models/*
-      - app/shared/application/exceptions/*
+      - app/infrastructure/models/*
+      - app/application/exceptions/*
     include:
       - app/*

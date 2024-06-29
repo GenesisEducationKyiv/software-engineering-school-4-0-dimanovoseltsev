@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae1d561aa4ae754fe069872e2768750b",
+    "content-hash": "4889604bfc7fc9d94f0156510a517970",
     "packages": [
         {
             "name": "bower-asset/swagger-ui",

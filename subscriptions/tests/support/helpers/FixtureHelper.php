@@ -59,10 +59,6 @@ class FixtureHelper extends Module
     public function fixtures(): array
     {
         return [
-            'currencies' => [
-                'class' => CurrencyFixture::class,
-                'dataFile' => codecept_data_dir() . 'currencies.php',
-            ],
             'subscriptions' => [
                 'class' => SubscriptionFixture::class,
                 'dataFile' => codecept_data_dir() . 'subscriptions.php',

@@ -17,6 +17,7 @@ return [
         'cache' => [
             'class' => \yii\caching\MemCache::class,
             'useMemcached' => true,
+            'keyPrefix' => 'subscriptions',
             'servers' => [
                 [
                     'host' => getenv('MEMCACHE_HOST'),
@@ -38,10 +39,6 @@ return [
         ],
     ],
     'container' => [
-        'definitions' => array_merge(
-            require 'di/shared.php',
-            require 'di/currencies.php',
-            require 'di/subscriptions.php',
-        )
+        'definitions' => require "di.php"
     ],
 ];

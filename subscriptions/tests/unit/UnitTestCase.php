@@ -4,13 +4,16 @@ namespace tests\unit;
 
 use app\application\enums\CurrencyIso;
 use app\application\services\CurrencyService;
+use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
+use app\domain\entities\Subscription;
+use app\domain\valueObjects\Iso3;
+use app\domain\valueObjects\Rate;
+use app\domain\valueObjects\Timestamp;
 use app\infrastructure\mappers\Mapper;
 use app\infrastructure\models\Currency as ModelCurrency;
+use app\infrastructure\models\Subscription as ModelSubscription;
 use app\infrastructure\services\YiiLogger;
-use app\subscriptions\application\services\SubscriptionService;
-use app\subscriptions\domain\entities\Subscription;
-use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;
 use Closure;
 use Codeception\PHPUnit\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -134,10 +137,8 @@ class UnitTestCase extends TestCase
     protected function getCurrencyEntityDefault(): array
     {
         return [
-            'id' => 1,
             'iso3' => CurrencyIso::UAH->value,
             'rate' => 5.02,
-            'createdAt' => strtotime('2024-01-01 00:00:00'),
             'updatedAt' => strtotime('2024-05-01 00:00:00'),
         ];
     }
@@ -149,7 +150,12 @@ class UnitTestCase extends TestCase
     protected function getCurrencyEntity(array $data = []): Currency
     {
         $data = array_merge($this->getCurrencyEntityDefault(), $data);
-        return Mapper::fromPrimitive($data);
+
+        return new Currency(
+            new Iso3($data['iso3'] ?? null),
+            new Rate($data['rate'] ?? null),
+            new Timestamp($data['updatedAt'] ?? null),
+        );
     }
 
 
@@ -174,7 +180,7 @@ class UnitTestCase extends TestCase
     protected function getSubscriptionEntity(array $data = []): Subscription
     {
         $data = array_merge($this->getSubscriptionEntityDefault(), $data);
-        return \app\subscriptions\infrastructure\mappers\Mapper::fromPrimitive($data);
+        return Mapper::fromPrimitive($data);
     }
 
 
@@ -187,9 +193,7 @@ class UnitTestCase extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(
                 [
-                    'getByCode',
-                    'save',
-                    'create',
+                    'getActual',
                 ]
             )
             ->getMock();

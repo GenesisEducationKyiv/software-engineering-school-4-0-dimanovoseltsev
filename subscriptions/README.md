@@ -7,11 +7,11 @@
 ![php-version]
 ![mysql-version]
 
-# 💱 Currency Rates Api
+# 💱 Subscriptions Api
 
-The migration and initial import of currencies will be carried out in the Docker container named `app-setup`.
+The migration will be carried out in the Docker container named `app-setup`.
 
-Emails are sent once a day using cron jobs. A separate container named `cron` was created specifically for these tasks. You can view the list of commands and logs in the `docker/cron` directory. Additionally, continuous import of exchange rates is also implemented using cron jobs.
+Emails are sent once a day using cron jobs. A separate container named `cron` was created specifically for these tasks. You can view the list of commands and logs in the `docker/cron` directory.
 
 # Quick Start (via  docker)
 ```bash
@@ -21,10 +21,10 @@ docker-compose up -d --build
 docker-compose logs -f app-setup
 ```
 
-That's all - your application is available at http://127.0.0.1:9822
+That's all - your application is available at http://127.0.0.1:9832
 
 # Documentation
-For detailed documentation, check out http://127.0.0.1:9822/doc
+For detailed documentation, check out http://127.0.0.1:9832/doc
 
 # Testing
 ### Unit Tests
@@ -50,7 +50,7 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 [CHANGELOG]: ./CHANGELOG.md
 [PIPELINES]: https://gitlab.com/dima.novoseltsev/currency-rates-api/pipelines
 [JOBS]: https://gitlab.com/dima.novoseltsev/currency-rates-api/-/jobs
-[version-badge]: https://img.shields.io/badge/version-1.4.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.0.0-blue.svg
 [pipeline-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/pipeline.svg
 [coverage-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/coverage.svg
 [php-version]:https://img.shields.io/static/v1?label=php&message=8.3&color=green

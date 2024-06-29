@@ -4,18 +4,10 @@
  */
 
 
-use app\application\providers\RateChain;
-use app\application\providers\RateChainProviderInterface;
-use app\application\services\LogServiceInterface;
-use app\domain\repositories\CurrencyRepositoryInterface;
-use app\infrastructure\models\Currency;
-use app\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
-use tests\components\ExchangeRateProvider;
 use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
-use yii\di\Container;
 
 return [
     'id' => 'test',
@@ -55,20 +47,7 @@ return [
         ],
     ],
     'container' => [
-        'definitions' => [
-            RateChainProviderInterface::class => function (Container $container) {
-                $exchangeRateProvider = new ExchangeRateProvider(
-                    new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
-                    (string)getenv("EXCHANGE_RATE_API_KEY"),
-                    $container->get(LogServiceInterface::class),
-                );
-
-                return new RateChain($exchangeRateProvider);
-            },
-            CurrencyRepositoryInterface::class => function (Container $container) {
-                return new  CurrencyRepository(Currency::find());
-            },
-        ]
+        'definitions' => []
     ],
     'params' => [],
 ];

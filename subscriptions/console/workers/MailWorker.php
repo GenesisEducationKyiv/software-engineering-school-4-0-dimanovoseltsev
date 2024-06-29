@@ -2,10 +2,13 @@
 
 namespace console\workers;
 
-use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\actions\RetrieveActualCurrencyRateInterface;
+use app\application\actions\SendEmailInterface;
+use app\application\dto\SendEmailDto;
 use app\application\exceptions\NotExistException;
-use app\subscriptions\application\actions\SendEmailInterface;
-use app\subscriptions\application\dto\SendEmailDto;
+use app\domain\entities\Currency;
+use app\domain\valueObjects\Iso3;
+use app\domain\valueObjects\Rate;
 use Throwable;
 use Yii;
 
@@ -14,14 +17,14 @@ class MailWorker extends BaseWorker
     /**
      * @param $id
      * @param $module
-     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate
      * @param SendEmailInterface $sendEmail
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate,
         private readonly SendEmailInterface $sendEmail,
         array $config = []
     ) {
@@ -39,13 +42,19 @@ class MailWorker extends BaseWorker
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
         $data = (array)json_decode($body, true);
+
         if (empty($data['email']) || empty($data['currency'])) {
             return true;
         }
 
+        $currencyInfo = $data['currency'];
 
         try {
-            $currency = $this->retrieveCurrencyByCode->execute((string)$data['currency']);
+            $currency = new Currency(
+                new Iso3($currencyInfo['iso3']),
+                new Rate($currencyInfo['rate']),
+                new Rate($currencyInfo['updatedAt']),
+            );
             return $this->sendEmail->execute($currency, new SendEmailDto((string)$data['email'], time()));
         } catch (NotExistException $e) {
             return true;

@@ -20,8 +20,8 @@ modules:
       cleanup: true
       transaction: false
     PhpBrowser:
-      url: "nginx:8080"
+      url: "nginx-subscriptions:8080"
     REST:
       depends: PhpBrowser
-      url: "nginx:8080"
+      url: "nginx-subscriptions:8080"
 step_decorators: ~

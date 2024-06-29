@@ -2,10 +2,8 @@
 
 namespace console\controllers;
 
-use app\application\actions\ImportRatesInterface;
-use app\application\actions\RetrieveCurrencyByCodeInterface;
-use app\application\exceptions\NotValidException;
-use app\subscriptions\application\actions\SendEmailsScheduledInterface;
+use app\application\actions\RetrieveActualCurrencyRateInterface;
+use app\application\actions\SendEmailsScheduledInterface;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -20,17 +18,15 @@ class AppController extends Controller
     /**
      * @param $id
      * @param $module
-     * @param ImportRatesInterface $importRates
      * @param SendEmailsScheduledInterface $sendEmailsScheduled
-     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly ImportRatesInterface $importRates,
         private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
-        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -90,34 +86,13 @@ class AppController extends Controller
 
 
     /**
-     * @run php yii app/import-currency-rates
-     */
-    public function actionImportCurrencyRates(): int
-    {
-        try {
-            $currencies = $this->importRates->execute();
-            Console::output(
-                sprintf('%s updated %d currencies.', date('Y-m-d H:i:s'), count($currencies))
-            );
-            return ExitCode::OK;
-        } catch (NotValidException $e) {
-            Console::error($e->getMessage());
-            Console::error('Model errors: ' . var_export($e->getErrorsAsResponse(), true));
-            return ExitCode::DATAERR;
-        } catch (Throwable $e) {
-            Console::error($e->getMessage());
-            return ExitCode::DATAERR;
-        }
-    }
-
-    /**
      * @run php yii app/send-emails
      */
     public function actionSendEmails(): int
     {
         try {
             $count = $this->sendEmailsScheduled->execute(
-                $this->retrieveCurrencyByCode->execute((string)getenv("IMPORTED_CURRENCY")),
+                $this->retrieveActualCurrencyRate->execute(),
             );
             Console::output("Send " . $count);
             return ExitCode::OK;

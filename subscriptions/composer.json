@@ -1,7 +1,7 @@
 {
   "name": "novoseltsev/currency-rates-api",
-  "description": "Currency rates API",
-  "version": "1.4.0",
+  "description": "Subscriptions API",
+  "version": "1.0.0",
   "type": "project",
   "license": "BSD-3-Clause",
   "minimum-stability": "stable",
