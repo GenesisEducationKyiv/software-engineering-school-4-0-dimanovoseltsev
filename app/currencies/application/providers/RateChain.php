@@ -15,7 +15,7 @@ class RateChain implements RateChainProviderInterface
      */
     public function __construct(
         private readonly ProviderInterface $rateProvider,
-        private readonly int $retries = 2
+        private readonly int $retries
     ) {
     }
 
@@ -26,6 +26,7 @@ class RateChain implements RateChainProviderInterface
     public function setNext(RateChainProviderInterface $next): RateChainProviderInterface
     {
         $this->next = $next;
+
         return $this;
     }
 
@@ -49,9 +50,11 @@ class RateChain implements RateChainProviderInterface
                 if ($this->next === null) {
                     break;
                 }
+
                 return $this->next->getActualRate($sourceCurrency, $targetCurrency);
             }
         } while (true);
+
         return null;
     }
 }

@@ -40,6 +40,7 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
         $url = sprintf("/v2/prices/%s-%s/buy", $sourceCurrency, $targetCurrency);
         try {
             $response = $this->client->get($url);
+
             return $this->processResponse($response, $targetCurrency);
         } catch (RemoteServiceException $e) {
             throw $e;
@@ -66,6 +67,6 @@ class CoinbaseProvider extends BaseProvider implements ProviderInterface
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
-        return new CurrencyProviderDto($targetCurrency, round((float)$body['data']['amount'], 5));
+        return new CurrencyProviderDto($targetCurrency, (float)$body['data']['amount']);
     }
 }

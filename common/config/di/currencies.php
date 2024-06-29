@@ -6,6 +6,7 @@ use app\currencies\application\actions\ImportRates;
 use app\currencies\application\actions\ImportRatesInterface;
 use app\currencies\application\actions\RetrieveCurrencyByCode;
 use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
+use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\providers\RateChain;
 use app\currencies\application\providers\RateChainProviderInterface;
 use app\currencies\application\services\CurrencyService;
@@ -68,8 +69,8 @@ return [
         return new ImportRates(
             $container->get(RateServiceInterface::class),
             $container->get(CreateOrUpdateCurrencyInterface::class),
-            (string)getenv("BASE_CURRENCY"),
-            (string)getenv("IMPORTED_CURRENCY"),
+            CurrencyIso::from((string)getenv("BASE_CURRENCY")),
+            CurrencyIso::from((string)getenv("IMPORTED_CURRENCY")),
         );
     },
 ];

@@ -48,6 +48,7 @@ class CreateOrUpdateCurrency extends BaseAction implements CreateOrUpdateCurrenc
 
         $entity->setRate(new Rate($form->getRate()));
         $entity->setUpdatedAt(new Timestamp($form->getTimestamp()));
+
         return $this->service->save($entity);
     }
 }

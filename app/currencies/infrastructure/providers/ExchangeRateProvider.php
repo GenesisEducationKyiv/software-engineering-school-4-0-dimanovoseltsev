@@ -42,6 +42,7 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
         $url = sprintf("/v6/%s/pair/%s/%s", $this->apiKey, $sourceCurrency, $targetCurrency);
         try {
             $response = $this->client->get($url);
+
             return $this->processResponse($response, $targetCurrency);
         } catch (RemoteServiceException $e) {
             throw $e;
@@ -74,6 +75,6 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
             throw new UnexpectedValueException('Bad conversion rate');
         }
 
-        return new CurrencyProviderDto($targetCurrency, round($conversionRate, 5));
+        return new CurrencyProviderDto($targetCurrency, $conversionRate);
     }
 }

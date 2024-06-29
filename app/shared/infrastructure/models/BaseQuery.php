@@ -18,6 +18,7 @@ abstract class BaseQuery extends ActiveQuery
     {
         $model = new $this->modelClass();
         $model->load($data, $formName);
+
         return $model;
     }
 

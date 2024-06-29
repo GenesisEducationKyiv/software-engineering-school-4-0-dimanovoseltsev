@@ -52,6 +52,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
         if (!empty($cacheValue) && is_string($cacheValue) && json_validate($cacheValue)) {
             /** @var array{"id": int|null, "iso3": string|null, "rate": float|null, "createdAt": int|null, "updatedAt": int|null} $attributes */
             $attributes = json_decode($cacheValue, true);
+
             return Mapper::fromPrimitive($attributes);
         }
         $entity = $this->repository->findByCode($code);
@@ -59,6 +60,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
         if ($entity !== null) {
             $this->saveToCache($entity);
         }
+
         return $entity;
     }
 
@@ -72,6 +74,7 @@ class CurrencyCacheRepository implements CurrencyRepositoryInterface
     {
         $entity = $this->repository->save($currency);
         $this->saveToCache($entity);
+
         return $entity;
     }
 }
