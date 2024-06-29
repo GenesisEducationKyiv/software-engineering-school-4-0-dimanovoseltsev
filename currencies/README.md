@@ -10,8 +10,7 @@
 # 💱 Currencies Api
 
 The migration and initial import of currencies will be carried out in the Docker container named `app-setup`.
-
-Emails are sent once a day using cron jobs. A separate container named `cron` was created specifically for these tasks. You can view the list of commands and logs in the `docker/cron` directory. Additionally, continuous import of exchange rates is also implemented using cron jobs.
+ Additionally, continuous import of exchange rates is also implemented using cron jobs.
 
 # Quick Start (via  docker)
 ```bash
@@ -50,7 +49,7 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 [CHANGELOG]: ./CHANGELOG.md
 [PIPELINES]: https://gitlab.com/dima.novoseltsev/currency-rates-api/pipelines
 [JOBS]: https://gitlab.com/dima.novoseltsev/currency-rates-api/-/jobs
-[version-badge]: https://img.shields.io/badge/version-1.4.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.0.0-blue.svg
 [pipeline-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/pipeline.svg
 [coverage-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/coverage.svg
 [php-version]:https://img.shields.io/static/v1?label=php&message=8.3&color=green
