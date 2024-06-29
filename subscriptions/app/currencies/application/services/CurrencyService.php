@@ -2,10 +2,11 @@
 
 namespace app\currencies\application\services;
 
-use app\currencies\application\dto\CreateCurrencyDto;
-use app\currencies\application\mappers\Mapper;
-use app\currencies\domain\entities\Currency;
-use app\currencies\domain\repositories\CurrencyRepositoryInterface;
+use app\application\dto\CreateCurrencyDto;
+use app\application\mappers\Mapper;
+use app\application\services\CurrencyServiceInterface;
+use app\domain\entities\Currency;
+use app\domain\repositories\CurrencyRepositoryInterface;
 
 class CurrencyService implements CurrencyServiceInterface
 {

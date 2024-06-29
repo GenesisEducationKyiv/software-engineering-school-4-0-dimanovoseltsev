@@ -2,7 +2,9 @@
 
 namespace app\currencies\application\providers;
 
-use app\currencies\application\dto\CurrencyProviderDto;
+use app\application\dto\CurrencyProviderDto;
+use app\application\providers\ProviderInterface;
+use app\application\providers\RateChainProviderInterface;
 use Throwable;
 
 class RateChain implements RateChainProviderInterface

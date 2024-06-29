@@ -1,25 +1,25 @@
 <?php
 
-use app\currencies\application\actions\CreateOrUpdateCurrency;
-use app\currencies\application\actions\CreateOrUpdateCurrencyInterface;
-use app\currencies\application\actions\ImportRates;
-use app\currencies\application\actions\ImportRatesInterface;
-use app\currencies\application\actions\RetrieveCurrencyByCode;
-use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\providers\RateChain;
-use app\currencies\application\providers\RateChainProviderInterface;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\application\services\CurrencyServiceInterface;
-use app\currencies\application\services\RateService;
-use app\currencies\application\services\RateServiceInterface;
-use app\currencies\domain\repositories\CurrencyRepositoryInterface;
-use app\currencies\infrastructure\models\Currency;
-use app\currencies\infrastructure\providers\CoinbaseProvider;
-use app\currencies\infrastructure\providers\ExchangeRateProvider;
-use app\currencies\infrastructure\repositories\CurrencyCacheRepository;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
-use app\shared\application\services\LogServiceInterface;
+use app\application\actions\CreateOrUpdateCurrency;
+use app\application\actions\CreateOrUpdateCurrencyInterface;
+use app\application\actions\ImportRates;
+use app\application\actions\ImportRatesInterface;
+use app\application\actions\RetrieveCurrencyByCode;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\enums\CurrencyIso;
+use app\application\providers\RateChain;
+use app\application\providers\RateChainProviderInterface;
+use app\application\services\CurrencyService;
+use app\application\services\CurrencyServiceInterface;
+use app\application\services\LogServiceInterface;
+use app\application\services\RateService;
+use app\application\services\RateServiceInterface;
+use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\models\Currency;
+use app\infrastructure\providers\CoinbaseProvider;
+use app\infrastructure\providers\ExchangeRateProvider;
+use app\infrastructure\repositories\CurrencyCacheRepository;
+use app\infrastructure\repositories\CurrencyRepository;
 use GuzzleHttp\Client as GuzzleClient;
 use yii\di\Container;
 

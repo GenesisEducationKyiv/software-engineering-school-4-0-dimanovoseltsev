@@ -2,11 +2,11 @@
 
 namespace app\currencies\application\forms;
 
-use app\currencies\application\enums\CurrencyIso;
-use app\shared\application\forms\BaseForm;
-use app\shared\application\forms\FormInterface;
-use app\shared\application\interfaces\Errorable;
-use app\shared\application\traits\TimestampTrait;
+use app\application\enums\CurrencyIso;
+use app\application\forms\BaseForm;
+use app\application\forms\FormInterface;
+use app\application\interfaces\Errorable;
+use app\application\traits\TimestampTrait;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 

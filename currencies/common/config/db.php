@@ -2,7 +2,7 @@
 
 use yii\db\Connection;
 
-$db = [
+return [
     'class' => Connection::class,
     'dsn' => getenv('DB_DSN'),
     'username' => getenv('DB_USERNAME'),
@@ -14,5 +14,3 @@ $db = [
     'schemaCache' => 'cache',
 ];
 
-
-return $db;

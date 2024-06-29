@@ -2,7 +2,7 @@
 
 namespace app\currencies\domain\repositories;
 
-use app\currencies\domain\entities\Currency;
+use app\domain\entities\Currency;
 
 interface CurrencyRepositoryInterface
 {

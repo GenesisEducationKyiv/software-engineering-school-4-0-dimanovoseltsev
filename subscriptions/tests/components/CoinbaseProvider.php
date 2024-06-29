@@ -2,9 +2,9 @@
 
 namespace tests\components;
 
-use app\currencies\application\dto\CurrencyProviderDto;
+use app\application\dto\CurrencyProviderDto;
 
-class CoinbaseProvider extends \app\currencies\infrastructure\providers\CoinbaseProvider
+class CoinbaseProvider extends \app\infrastructure\providers\CoinbaseProvider
 {
     /**
      * @param string $sourceCurrency

@@ -2,7 +2,7 @@
 
 namespace tests\unit\app\subscriptions\application\services;
 
-use app\currencies\application\enums\CurrencyIso;
+use app\application\enums\CurrencyIso;
 use app\subscriptions\application\services\PublisherService;
 use app\subscriptions\infrastructure\adapters\RabbitMq;
 use PHPUnit\Framework\MockObject\MockObject;

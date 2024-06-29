@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\infrastructure\adapters;
 
-use app\currencies\domain\entities\Currency;
+use app\domain\entities\Currency;
 use app\subscriptions\application\adapters\MailerAdapterInterface;
 use app\subscriptions\domain\entities\Subscription;
 use yii\symfonymailer\Mailer as YiiMailer;

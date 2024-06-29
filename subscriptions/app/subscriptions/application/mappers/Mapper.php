@@ -2,8 +2,8 @@
 
 namespace app\subscriptions\application\mappers;
 
-use app\shared\domain\valueObjects\Id;
-use app\shared\domain\valueObjects\Timestamp;
+use app\domain\valueObjects\Id;
+use app\domain\valueObjects\Timestamp;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\valueObjects\Email;

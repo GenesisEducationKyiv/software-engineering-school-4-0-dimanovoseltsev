@@ -2,13 +2,12 @@
 
 namespace frontend\controllers;
 
-use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\shared\application\exceptions\NotExistException;
-use app\shared\application\exceptions\NotSupportedException;
-use app\shared\application\exceptions\NotValidException;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\exceptions\NotExistException;
+use app\application\exceptions\NotSupportedException;
+use app\application\exceptions\NotValidException;
 use app\subscriptions\application\actions\SubscribeInterface;
 use app\subscriptions\application\forms\SubscribeForm;
-use Exception;
 use OpenApi\Attributes as OA;
 use Throwable;
 use Yii;

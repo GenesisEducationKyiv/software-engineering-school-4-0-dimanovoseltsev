@@ -2,11 +2,11 @@
 
 namespace tests\unit\app\currencies\infrastructure\providers;
 
-use app\currencies\application\dto\CurrencyProviderDto;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\infrastructure\providers\CoinbaseProvider;
-use app\shared\application\exceptions\RemoteServiceException;
-use app\shared\infrastructure\services\YiiLogger;
+use app\application\dto\CurrencyProviderDto;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\RemoteServiceException;
+use app\infrastructure\providers\CoinbaseProvider;
+use app\infrastructure\services\YiiLogger;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;

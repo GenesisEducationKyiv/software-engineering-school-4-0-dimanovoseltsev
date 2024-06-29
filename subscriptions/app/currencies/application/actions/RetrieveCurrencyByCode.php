@@ -2,9 +2,11 @@
 
 namespace app\currencies\application\actions;
 
-use app\currencies\application\services\CurrencyServiceInterface;
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\NotExistException;
+use app\application\actions\BaseAction;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\exceptions\NotExistException;
+use app\application\services\CurrencyServiceInterface;
+use app\domain\entities\Currency;
 
 class RetrieveCurrencyByCode extends BaseAction implements RetrieveCurrencyByCodeInterface
 {

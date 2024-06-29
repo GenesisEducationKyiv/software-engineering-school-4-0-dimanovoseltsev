@@ -2,11 +2,11 @@
 
 namespace tests\unit\app\currencies\application\actions;
 
-use app\currencies\application\actions\RetrieveCurrencyByCode;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\NotExistException;
+use app\application\actions\RetrieveCurrencyByCode;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotExistException;
+use app\application\services\CurrencyService;
+use app\domain\entities\Currency;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

@@ -2,10 +2,11 @@
 
 namespace app\currencies\infrastructure\repositories;
 
-use app\currencies\domain\entities\Currency;
-use app\currencies\domain\repositories\CurrencyRepositoryInterface;
-use app\currencies\infrastructure\mappers\Mapper;
-use app\shared\application\exceptions\NotValidException;
+use app\application\exceptions\NotValidException;
+use app\domain\entities\Currency;
+use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\mappers\Mapper;
+use app\infrastructure\repositories\CurrencyRepository;
 use yii\caching\CacheInterface;
 use yii\db\Exception;
 

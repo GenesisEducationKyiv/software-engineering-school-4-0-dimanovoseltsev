@@ -2,8 +2,8 @@
 
 namespace app\currencies\application\actions;
 
-use app\currencies\application\forms\CurrencyForm;
-use app\currencies\domain\entities\Currency;
+use app\application\forms\CurrencyForm;
+use app\domain\entities\Currency;
 
 interface CreateOrUpdateCurrencyInterface
 {

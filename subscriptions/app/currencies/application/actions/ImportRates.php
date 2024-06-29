@@ -2,11 +2,14 @@
 
 namespace app\currencies\application\actions;
 
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\forms\CurrencyForm;
-use app\currencies\application\services\RateServiceInterface;
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\UnexpectedValueException;
+use app\application\actions\BaseAction;
+use app\application\actions\CreateOrUpdateCurrencyInterface;
+use app\application\actions\ImportRatesInterface;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\UnexpectedValueException;
+use app\application\forms\CurrencyForm;
+use app\application\services\RateServiceInterface;
+use app\domain\entities\Currency;
 
 class ImportRates extends BaseAction implements ImportRatesInterface
 {

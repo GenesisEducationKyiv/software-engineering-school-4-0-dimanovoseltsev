@@ -2,8 +2,8 @@
 
 namespace app\subscriptions\application\actions;
 
-use app\shared\application\exceptions\AlreadyException;
-use app\shared\application\exceptions\NotValidException;
+use app\application\exceptions\AlreadyException;
+use app\application\exceptions\NotValidException;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\application\forms\SubscribeForm;
 use app\subscriptions\application\services\SubscriptionServiceInterface;

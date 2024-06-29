@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\application\actions;
 
-use app\currencies\domain\entities\Currency;
+use app\domain\entities\Currency;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\services\PublisherServiceInterface;
 use app\subscriptions\application\services\SubscriptionServiceInterface;

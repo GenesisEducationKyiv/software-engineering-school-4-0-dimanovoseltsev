@@ -2,8 +2,8 @@
 
 namespace app\currencies\application\actions;
 
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\NotExistException;
+use app\application\exceptions\NotExistException;
+use app\domain\entities\Currency;
 
 abstract class BaseAction
 {

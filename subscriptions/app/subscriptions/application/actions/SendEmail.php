@@ -2,9 +2,9 @@
 
 namespace app\subscriptions\application\actions;
 
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\NotExistException;
-use app\shared\domain\valueObjects\Timestamp;
+use app\application\exceptions\NotExistException;
+use app\domain\entities\Currency;
+use app\domain\valueObjects\Timestamp;
 use app\subscriptions\application\dto\SendEmailDto;
 use app\subscriptions\application\services\MailServiceInterface;
 use app\subscriptions\application\services\SubscriptionServiceInterface;

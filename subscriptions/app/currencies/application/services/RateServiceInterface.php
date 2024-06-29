@@ -2,8 +2,8 @@
 
 namespace app\currencies\application\services;
 
-use app\currencies\application\dto\CurrencyProviderDto;
-use app\shared\application\exceptions\UnexpectedValueException;
+use app\application\dto\CurrencyProviderDto;
+use app\application\exceptions\UnexpectedValueException;
 
 interface RateServiceInterface
 {

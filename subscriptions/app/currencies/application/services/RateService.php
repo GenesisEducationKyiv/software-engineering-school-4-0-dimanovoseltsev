@@ -2,9 +2,10 @@
 
 namespace app\currencies\application\services;
 
-use app\currencies\application\dto\CurrencyProviderDto;
-use app\currencies\application\providers\RateChainProviderInterface;
-use app\shared\application\exceptions\InvalidCallException;
+use app\application\dto\CurrencyProviderDto;
+use app\application\exceptions\InvalidCallException;
+use app\application\providers\RateChainProviderInterface;
+use app\application\services\RateServiceInterface;
 
 class RateService implements RateServiceInterface
 {

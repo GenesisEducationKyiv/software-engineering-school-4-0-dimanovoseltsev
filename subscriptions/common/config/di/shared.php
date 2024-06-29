@@ -1,7 +1,7 @@
 <?php
 
-use app\shared\application\services\LogServiceInterface;
-use app\shared\infrastructure\services\YiiLogger;
+use app\application\services\LogServiceInterface;
+use app\infrastructure\services\YiiLogger;
 use yii\di\Container;
 
 return [

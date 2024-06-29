@@ -2,15 +2,16 @@
 
 namespace app\currencies\application\providers;
 
-use app\currencies\application\dto\CurrencyProviderDto;
+use app\application\dto\CurrencyProviderDto;
 
 interface RateChainProviderInterface
 {
     /**
-     * @param RateChainProviderInterface $next
-     * @return RateChainProviderInterface
+     * @param \app\application\providers\RateChainProviderInterface $next
+     * @return \app\application\providers\RateChainProviderInterface
      */
-    public function setNext(RateChainProviderInterface $next): RateChainProviderInterface;
+    public function setNext(
+        \app\application\providers\RateChainProviderInterface $next): \app\application\providers\RateChainProviderInterface;
 
     /**
      * @param string $sourceCurrency

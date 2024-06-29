@@ -2,9 +2,9 @@
 
 namespace tests\components;
 
-use app\currencies\application\dto\CurrencyProviderDto;
+use app\application\dto\CurrencyProviderDto;
 
-class ExchangeRateProvider extends \app\currencies\infrastructure\providers\ExchangeRateProvider
+class ExchangeRateProvider extends \app\infrastructure\providers\ExchangeRateProvider
 {
     /**
      * @param string $sourceCurrency

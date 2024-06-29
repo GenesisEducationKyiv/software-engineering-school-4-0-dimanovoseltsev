@@ -2,6 +2,7 @@
 
 namespace app\currencies\infrastructure\models;
 
+use app\infrastructure\models\CurrencyQuery;
 use yii\db\ActiveRecord;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace tests\unit\app\subscriptions\application\services;
 
-use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\infrastructure\repositories\CurrencyRepository;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\services\SubscriptionService;

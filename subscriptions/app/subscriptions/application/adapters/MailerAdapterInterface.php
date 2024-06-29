@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\application\adapters;
 
-use app\currencies\domain\entities\Currency;
+use app\domain\entities\Currency;
 use app\subscriptions\domain\entities\Subscription;
 
 interface MailerAdapterInterface

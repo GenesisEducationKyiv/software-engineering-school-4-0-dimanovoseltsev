@@ -2,12 +2,12 @@
 
 namespace tests\unit\app\currencies\application\services;
 
-use app\currencies\application\dto\CreateCurrencyDto;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\mappers\Mapper;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\domain\entities\Currency;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\application\dto\CreateCurrencyDto;
+use app\application\enums\CurrencyIso;
+use app\application\mappers\Mapper;
+use app\application\services\CurrencyService;
+use app\domain\entities\Currency;
+use app\infrastructure\repositories\CurrencyRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

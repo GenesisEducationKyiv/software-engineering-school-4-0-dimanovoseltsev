@@ -2,11 +2,11 @@
 
 namespace tests\unit\app\currencies\infrastructure\repositories;
 
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\domain\entities\Currency;
-use app\currencies\infrastructure\models\CurrencyQuery;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
-use app\shared\application\exceptions\NotValidException;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotValidException;
+use app\domain\entities\Currency;
+use app\infrastructure\models\CurrencyQuery;
+use app\infrastructure\repositories\CurrencyRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 use yii\db\Exception;

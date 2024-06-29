@@ -4,7 +4,7 @@ services:
   memcached:
     container_name: memcached-currency-rates
     networks:
-      - currency-rates-network
+      - currency-rate-app-network
     restart: always
     image: memcached
     environment:
@@ -28,7 +28,7 @@ services:
     ports:
       - "3320:3306"
     networks:
-      - currency-rates-network
+      - currency-rate-app-network
 
   rabbitmq:
     container_name: rabbitmq-currency-rates
@@ -40,16 +40,64 @@ services:
       - "5670:5672"
       - "15670:15672"
     networks:
-      - currency-rates-network
+      - currency-rate-app-network
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
       - TZ=America/New_York
 
+
+  prometheus:
+    container_name: prometheus-currency-rates
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - currency-rate-app-network
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+
+  node-exporter:
+    container_name: node-exporter-currency-rates
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    pid: host
+    ports:
+      - "9100:9100"
+    networks:
+      - currency-rate-app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-currency-rates
+    ports:
+      - "3010:3000"
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_BASIC_ENABLED=false
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_currency_rates_api:/var/lib/grafana
+      - ./docker/grafana:/etc/grafana/provisioning
+    networks:
+      - currency-rate-app-network
+
 networks:
-  currency-rates-network:
+  currency-rate-app-network:
+    name: "currency-rate-app-network"
     driver: bridge
 
 volumes:
   mysql_currency_rates_api:
   rabbitmq_currency_rates_api:
+  grafana_currency_rates_api:

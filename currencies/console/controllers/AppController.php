@@ -2,10 +2,9 @@
 
 namespace console\controllers;
 
-use app\currencies\application\actions\ImportRatesInterface;
-use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\shared\application\exceptions\NotValidException;
-use app\subscriptions\application\actions\SendEmailsScheduledInterface;
+use app\application\actions\ImportRatesInterface;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\exceptions\NotValidException;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -21,7 +20,6 @@ class AppController extends Controller
      * @param $id
      * @param $module
      * @param ImportRatesInterface $importRates
-     * @param SendEmailsScheduledInterface $sendEmailsScheduled
      * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
      * @param array $config
      */
@@ -29,7 +27,6 @@ class AppController extends Controller
         $id,
         $module,
         private readonly ImportRatesInterface $importRates,
-        private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
         private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
         array $config = []
     ) {
@@ -104,23 +101,6 @@ class AppController extends Controller
             Console::error($e->getMessage());
             Console::error('Model errors: ' . var_export($e->getErrorsAsResponse(), true));
             return ExitCode::DATAERR;
-        } catch (Throwable $e) {
-            Console::error($e->getMessage());
-            return ExitCode::DATAERR;
-        }
-    }
-
-    /**
-     * @run php yii app/send-emails
-     */
-    public function actionSendEmails(): int
-    {
-        try {
-            $count = $this->sendEmailsScheduled->execute(
-                $this->retrieveCurrencyByCode->execute((string)getenv("IMPORTED_CURRENCY")),
-            );
-            Console::output("Send " . $count);
-            return ExitCode::OK;
         } catch (Throwable $e) {
             Console::error($e->getMessage());
             return ExitCode::DATAERR;

@@ -2,7 +2,7 @@
 
 namespace tests\unit\app\subscriptions\application\actions;
 
-use app\shared\application\exceptions\NotExistException;
+use app\application\exceptions\NotExistException;
 use app\subscriptions\application\actions\SendEmailsScheduled;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\services\MailService;

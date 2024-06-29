@@ -2,7 +2,7 @@
 
 namespace app\currencies\application\providers;
 
-use app\currencies\application\dto\CurrencyProviderDto;
+use app\application\dto\CurrencyProviderDto;
 
 interface ProviderInterface
 {

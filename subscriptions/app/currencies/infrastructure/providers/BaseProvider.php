@@ -2,8 +2,8 @@
 
 namespace app\currencies\infrastructure\providers;
 
-use app\shared\application\exceptions\RemoteServiceException;
-use app\shared\application\services\LogServiceInterface;
+use app\application\exceptions\RemoteServiceException;
+use app\application\services\LogServiceInterface;
 use PHPUnit\Util\InvalidJsonException;
 use Psr\Http\Message\ResponseInterface;
 

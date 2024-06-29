@@ -2,7 +2,7 @@
 
 namespace tests\functional\api;
 
-use app\currencies\infrastructure\models\Currency;
+use app\infrastructure\models\Currency;
 use app\subscriptions\infrastructure\models\Subscription;
 use Exception;
 use tests\functional\FunctionalCest;

@@ -50,9 +50,9 @@ abstract class BaseQuery extends ActiveQuery
      * This method resets the `where`, `orderBy`, `select`, `union`, and `join` properties of the query
      * to their initial values.
      *
-     * @return BaseQuery
+     * @return \app\infrastructure\models\BaseQuery
      */
-    public function clear(): BaseQuery
+    public function clear(): \app\infrastructure\models\BaseQuery
     {
         $this->where = null;
         $this->orderBy = null;

@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\application\actions;
 
-use app\currencies\domain\entities\Currency;
+use app\domain\entities\Currency;
 
 interface SendEmailsScheduledInterface
 {

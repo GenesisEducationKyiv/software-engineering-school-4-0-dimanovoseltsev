@@ -3,7 +3,7 @@
 namespace tests\fixtures;
 
 
-use app\currencies\infrastructure\models\Currency;
+use app\infrastructure\models\Currency;
 
 class CurrencyFixture extends \yii\test\ActiveFixture
 {

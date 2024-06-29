@@ -2,7 +2,8 @@
 
 namespace app\shared\domain\valueObjects;
 
-use app\shared\application\traits\ValidationRulesTrait;
+use app\application\traits\ValidationRulesTrait;
+use app\domain\valueObjects\ValueObjectInterface;
 use Webmozart\Assert\Assert;
 
 final class Id implements ValueObjectInterface

@@ -2,7 +2,7 @@
 
 namespace tests\unit\app\shared\infrastructure\services;
 
-use app\shared\infrastructure\services\YiiLogger;
+use app\infrastructure\services\YiiLogger;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 use yii\log\Logger;

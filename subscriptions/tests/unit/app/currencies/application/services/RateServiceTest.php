@@ -2,12 +2,12 @@
 
 namespace tests\unit\app\currencies\application\services;
 
-use app\currencies\application\dto\CurrencyProviderDto;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\providers\RateChain;
-use app\currencies\application\services\RateService;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
-use app\shared\application\exceptions\InvalidCallException;
+use app\application\dto\CurrencyProviderDto;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\InvalidCallException;
+use app\application\providers\RateChain;
+use app\application\services\RateService;
+use app\infrastructure\repositories\CurrencyRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

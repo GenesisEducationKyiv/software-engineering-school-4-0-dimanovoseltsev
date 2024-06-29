@@ -2,8 +2,8 @@
 
 namespace app\subscriptions\infrastructure\models;
 
-use app\shared\application\exceptions\NotValidException;
-use app\shared\infrastructure\models\BaseQuery;
+use app\application\exceptions\NotValidException;
+use app\infrastructure\models\BaseQuery;
 use yii\db\Exception;
 
 /**

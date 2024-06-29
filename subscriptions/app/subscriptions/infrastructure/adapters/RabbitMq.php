@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\infrastructure\adapters;
 
-use app\shared\application\adapters\MessageBrokerInterface;
+use app\application\adapters\MessageBrokerInterface;
 use yii\queue\amqp_interop\Queue;
 
 class RabbitMq implements MessageBrokerInterface

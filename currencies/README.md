@@ -7,7 +7,7 @@
 ![php-version]
 ![mysql-version]
 
-# 💱 Currency Rates Api
+# 💱 Currencies Api
 
 The migration and initial import of currencies will be carried out in the Docker container named `app-setup`.
 

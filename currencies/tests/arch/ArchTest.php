@@ -16,18 +16,12 @@ class ArchTest
     {
         return PHPat::rule()
             ->classes(
-                Selector::inNamespace('app\currencies\domain'),
-                Selector::inNamespace('app\shared\domain'),
-                Selector::inNamespace('app\subscriptions\domain'),
+                Selector::inNamespace('app\domain'),
             )
             ->shouldNotDependOn()
             ->classes(
-                Selector::inNamespace('app\currencies\application'),
-                Selector::inNamespace('app\currencies\infrastructure'),
-                Selector::inNamespace('app\shared\application'),
-                Selector::inNamespace('app\shared\infrastructure'),
-                Selector::inNamespace('app\subscriptions\application'),
-                Selector::inNamespace('app\subscriptions\infrastructure'),
+                Selector::inNamespace('app\application'),
+                Selector::inNamespace('app\infrastructure'),
                 Selector::classname(Yii::class),
             )
             ->because('domain layers doesnt depend from other layers');
@@ -40,15 +34,11 @@ class ArchTest
     {
         return PHPat::rule()
             ->classes(
-                Selector::inNamespace('app\currencies\application'),
-                Selector::inNamespace('app\shared\application'),
-                Selector::inNamespace('app\subscriptions\application'),
+                Selector::inNamespace('app\application'),
             )
             ->shouldNotDependOn()
             ->classes(
-                Selector::inNamespace('app\currencies\infrastructure'),
-                Selector::inNamespace('app\shared\infrastructure'),
-                Selector::inNamespace('app\subscriptions\infrastructure'),
+                Selector::inNamespace('app\infrastructure'),
                 Selector::classname(Yii::class),
             )
             ->because('application layers doesnt depend from infrastructure layers');

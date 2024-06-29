@@ -2,11 +2,11 @@
 
 namespace app\currencies\domain\entities;
 
-use app\currencies\domain\valueObjects\Iso3;
-use app\currencies\domain\valueObjects\Rate;
-use app\shared\domain\interfaces\Arrayable;
-use app\shared\domain\valueObjects\Id;
-use app\shared\domain\valueObjects\Timestamp;
+use app\domain\interfaces\Arrayable;
+use app\domain\valueObjects\Id;
+use app\domain\valueObjects\Iso3;
+use app\domain\valueObjects\Rate;
+use app\domain\valueObjects\Timestamp;
 
 class Currency implements Arrayable
 {

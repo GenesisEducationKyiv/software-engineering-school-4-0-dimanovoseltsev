@@ -2,15 +2,12 @@
 
 namespace tests\unit;
 
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\domain\entities\Currency;
-use app\currencies\infrastructure\mappers\Mapper;
-use app\currencies\infrastructure\models\Currency as ModelCurrency;
-use app\shared\infrastructure\services\YiiLogger;
-use app\subscriptions\application\services\SubscriptionService;
-use app\subscriptions\domain\entities\Subscription;
-use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;
+use app\application\enums\CurrencyIso;
+use app\application\services\CurrencyService;
+use app\domain\entities\Currency;
+use app\infrastructure\mappers\Mapper;
+use app\infrastructure\models\Currency as ModelCurrency;
+use app\infrastructure\services\YiiLogger;
 use Closure;
 use Codeception\PHPUnit\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -85,28 +82,6 @@ class UnitTestCase extends TestCase
 
     /**
      * @param array $data
-     * @return ModelSubscription|MockObject
-     */
-    protected function getSubscriptionModelMock(array $data = []): ModelSubscription|MockObject
-    {
-        $mock = $this->getMockBuilder(ModelSubscription::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([
-                'attributes',
-                'load',
-                'save',
-            ])
-            ->getMock();
-
-        $mock->expects(self::any())
-            ->method('attributes')
-            ->willReturn((new ModelSubscription())->attributes());
-
-        return $this->setAttributes($mock, $data);
-    }
-
-    /**
-     * @param array $data
      * @return ModelCurrency|MockObject
      */
     protected function getCurrencyModelMock(array $data = []): ModelCurrency|MockObject
@@ -152,32 +127,6 @@ class UnitTestCase extends TestCase
         return Mapper::fromPrimitive($data);
     }
 
-
-    /**
-     * @return array
-     */
-    protected function getSubscriptionEntityDefault(): array
-    {
-        return [
-            'id' => 1,
-            'email' => 'mail@mail.com',
-            'createdAt' => strtotime('2024-01-01 00:00:00'),
-            'updatedAt' => strtotime('2024-05-01 00:00:00'),
-            'lastSendAt' => strtotime('2024-05-02 00:00:00'),
-        ];
-    }
-
-    /**
-     * @param array $data
-     * @return Subscription
-     */
-    protected function getSubscriptionEntity(array $data = []): Subscription
-    {
-        $data = array_merge($this->getSubscriptionEntityDefault(), $data);
-        return \app\subscriptions\infrastructure\mappers\Mapper::fromPrimitive($data);
-    }
-
-
     /**
      * @return CurrencyService|MockObject
      */
@@ -204,25 +153,6 @@ class UnitTestCase extends TestCase
         return $this->getMockBuilder($class)
             ->disableOriginalConstructor()
             ->onlyMethods(['execute'])
-            ->getMock();
-    }
-
-    /**
-     * @return SubscriptionService|MockObject
-     */
-    protected function getSubscriptionServiceMock(): SubscriptionService|MockObject
-    {
-        return $this->getMockBuilder(SubscriptionService::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(
-                [
-                    'getByEmail',
-                    'save',
-                    'create',
-                    'getNotSent',
-                    'getByEmailAndNotSend',
-                ]
-            )
             ->getMock();
     }
 

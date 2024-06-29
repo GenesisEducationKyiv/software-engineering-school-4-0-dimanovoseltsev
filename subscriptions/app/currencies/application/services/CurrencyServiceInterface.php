@@ -2,8 +2,8 @@
 
 namespace app\currencies\application\services;
 
-use app\currencies\application\dto\CreateCurrencyDto;
-use app\currencies\domain\entities\Currency;
+use app\application\dto\CreateCurrencyDto;
+use app\domain\entities\Currency;
 
 interface CurrencyServiceInterface
 {

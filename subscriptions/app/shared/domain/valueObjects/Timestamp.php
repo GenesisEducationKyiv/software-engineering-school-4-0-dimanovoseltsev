@@ -2,6 +2,7 @@
 
 namespace app\shared\domain\valueObjects;
 
+use app\domain\valueObjects\ValueObjectInterface;
 use Webmozart\Assert\Assert;
 
 final class Timestamp implements ValueObjectInterface

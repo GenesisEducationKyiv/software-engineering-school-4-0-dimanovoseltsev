@@ -2,8 +2,8 @@
 
 namespace console\workers;
 
-use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\shared\application\exceptions\NotExistException;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\exceptions\NotExistException;
 use app\subscriptions\application\actions\SendEmailInterface;
 use app\subscriptions\application\dto\SendEmailDto;
 use Throwable;

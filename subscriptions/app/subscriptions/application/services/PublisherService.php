@@ -2,7 +2,7 @@
 
 namespace app\subscriptions\application\services;
 
-use app\shared\application\adapters\MessageBrokerInterface;
+use app\application\adapters\MessageBrokerInterface;
 
 class PublisherService implements PublisherServiceInterface
 {

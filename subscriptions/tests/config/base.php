@@ -4,12 +4,12 @@
  */
 
 
-use app\currencies\application\providers\RateChain;
-use app\currencies\application\providers\RateChainProviderInterface;
-use app\currencies\domain\repositories\CurrencyRepositoryInterface;
-use app\currencies\infrastructure\models\Currency;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
-use app\shared\application\services\LogServiceInterface;
+use app\application\providers\RateChain;
+use app\application\providers\RateChainProviderInterface;
+use app\application\services\LogServiceInterface;
+use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\models\Currency;
+use app\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
 use tests\components\ExchangeRateProvider;
 use tests\components\YiiMailer;

@@ -4,12 +4,12 @@
  */
 
 
-use app\currencies\application\providers\RateChain;
-use app\currencies\application\providers\RateChainProviderInterface;
-use app\currencies\domain\repositories\CurrencyRepositoryInterface;
-use app\currencies\infrastructure\models\Currency;
-use app\currencies\infrastructure\repositories\CurrencyRepository;
-use app\shared\application\services\LogServiceInterface;
+use app\application\providers\RateChain;
+use app\application\providers\RateChainProviderInterface;
+use app\application\services\LogServiceInterface;
+use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\models\Currency;
+use app\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
 use tests\components\ExchangeRateProvider;
 use tests\components\YiiMailer;
@@ -42,17 +42,7 @@ return [
             'charset' => 'utf8mb4',
             'enableSchemaCache' => false,
         ],
-        'sendEmailQueue' => ['class' => DummyQueue::class],
-        'sendEmailFailQueue' => ['class' => DummyQueue::class],
-        'sendEmailQueueWorker' => ['class' => DummyQueue::class],
-        'mailer' => [
-            'class' => YiiMailer::class,
-            'transport' => [
-                'dsn' => getenv('MAILER_DSN'),
-            ],
-            'useFileTransport' => (bool)getenv('MAILER_DEBUG'),
-            'viewPath' => '@themes/mails/views',
-        ],
+        'eventBusQueue' => ['class' => DummyQueue::class],
     ],
     'container' => [
         'definitions' => [
@@ -63,7 +53,7 @@ return [
                     $container->get(LogServiceInterface::class),
                 );
 
-                return new RateChain($exchangeRateProvider);
+                return new RateChain($exchangeRateProvider, (int)getenv("RATE_PROVIDERS_RETRIES"));
             },
             CurrencyRepositoryInterface::class => function (Container $container) {
                 return new  CurrencyRepository(Currency::find());

@@ -2,9 +2,9 @@
 
 namespace console\controllers;
 
-use app\currencies\application\actions\ImportRatesInterface;
-use app\currencies\application\actions\RetrieveCurrencyByCodeInterface;
-use app\shared\application\exceptions\NotValidException;
+use app\application\actions\ImportRatesInterface;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\exceptions\NotValidException;
 use app\subscriptions\application\actions\SendEmailsScheduledInterface;
 use Throwable;
 use Yii;

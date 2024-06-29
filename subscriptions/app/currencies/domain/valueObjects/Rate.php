@@ -2,7 +2,7 @@
 
 namespace app\currencies\domain\valueObjects;
 
-use app\shared\domain\valueObjects\ValueObjectInterface;
+use app\domain\valueObjects\ValueObjectInterface;
 use Webmozart\Assert\Assert;
 
 final class Rate implements ValueObjectInterface

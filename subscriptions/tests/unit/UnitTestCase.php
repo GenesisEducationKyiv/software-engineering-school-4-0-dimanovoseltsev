@@ -2,12 +2,12 @@
 
 namespace tests\unit;
 
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\domain\entities\Currency;
-use app\currencies\infrastructure\mappers\Mapper;
-use app\currencies\infrastructure\models\Currency as ModelCurrency;
-use app\shared\infrastructure\services\YiiLogger;
+use app\application\enums\CurrencyIso;
+use app\application\services\CurrencyService;
+use app\domain\entities\Currency;
+use app\infrastructure\mappers\Mapper;
+use app\infrastructure\models\Currency as ModelCurrency;
+use app\infrastructure\services\YiiLogger;
 use app\subscriptions\application\services\SubscriptionService;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;

@@ -2,12 +2,12 @@
 
 namespace app\currencies\infrastructure\mappers;
 
-use app\currencies\domain\entities\Currency as CurrencyEntity;
-use app\currencies\domain\valueObjects\Iso3;
-use app\currencies\domain\valueObjects\Rate;
-use app\currencies\infrastructure\models\Currency;
-use app\shared\domain\valueObjects\Id;
-use app\shared\domain\valueObjects\Timestamp;
+use app\domain\entities\Currency as CurrencyEntity;
+use app\domain\valueObjects\Id;
+use app\domain\valueObjects\Iso3;
+use app\domain\valueObjects\Rate;
+use app\domain\valueObjects\Timestamp;
+use app\infrastructure\models\Currency;
 
 class Mapper
 {

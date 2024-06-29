@@ -2,13 +2,13 @@
 
 namespace tests\unit\app\currencies\application\actions;
 
-use app\currencies\application\actions\CreateOrUpdateCurrency;
-use app\currencies\application\dto\CreateCurrencyDto;
-use app\currencies\application\enums\CurrencyIso;
-use app\currencies\application\forms\CurrencyForm;
-use app\currencies\application\services\CurrencyService;
-use app\currencies\domain\entities\Currency;
-use app\shared\application\exceptions\NotValidException;
+use app\application\actions\CreateOrUpdateCurrency;
+use app\application\dto\CreateCurrencyDto;
+use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotValidException;
+use app\application\forms\CurrencyForm;
+use app\application\services\CurrencyService;
+use app\domain\entities\Currency;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

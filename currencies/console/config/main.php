@@ -1,10 +1,7 @@
 <?php
 
-use console\workers\MailWorker;
 use yii\console\controllers\MigrateController;
 use yii\log\FileTarget;
-use yii\queue\amqp_interop\Queue;
-use yii\queue\serializers\JsonSerializer;
 
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
@@ -14,7 +11,7 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'sendEmailQueueWorker'],
+    'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -35,50 +32,9 @@ return [
                 ],
             ],
         ],
-        'sendEmailQueue' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'queueName' => getenv('RABBITMQ_SEND_EMAIL_QUEUE'),
-            'exchangeName' => getenv('RABBITMQ_SEND_EMAIL_EXCHANGE'),
-            'routingKey' => getenv('RABBITMQ_SEND_EMAIL_ROUTING_KEY'),
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
-        ],
-        'sendEmailFailQueue' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'queueName' => getenv('RABBITMQ_SEND_EMAIL_FAIL_QUEUE'),
-            'exchangeName' => getenv('RABBITMQ_SEND_EMAIL_FAIL_EXCHANGE'),
-            'routingKey' => getenv('RABBITMQ_SEND_EMAIL_FAIL_ROUTING_KEY'),
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
-        ],
-        'sendEmailQueueWorker' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'queueName' => getenv('RABBITMQ_SEND_EMAIL_QUEUE'),
-            'exchangeName' => getenv('RABBITMQ_SEND_EMAIL_EXCHANGE'),
-            'routingKey' => getenv('RABBITMQ_SEND_EMAIL_ROUTING_KEY'),
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
-            'commandClass' => MailWorker::class,
-            'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
-        ],
     ],
     'params' => $params,
-
     'container' => [
-        'definitions' => [
-
-        ]
+        'definitions' => []
     ],
 ];

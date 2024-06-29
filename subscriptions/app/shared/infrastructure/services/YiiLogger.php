@@ -2,7 +2,7 @@
 
 namespace app\shared\infrastructure\services;
 
-use app\shared\application\services\LogServiceInterface;
+use app\application\services\LogServiceInterface;
 use yii\log\Logger;
 
 class YiiLogger implements LogServiceInterface

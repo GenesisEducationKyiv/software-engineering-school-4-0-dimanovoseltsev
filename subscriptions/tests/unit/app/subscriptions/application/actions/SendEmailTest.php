@@ -2,7 +2,7 @@
 
 namespace tests\unit\app\subscriptions\application\actions;
 
-use app\shared\application\exceptions\NotExistException;
+use app\application\exceptions\NotExistException;
 use app\subscriptions\application\actions\SendEmail;
 use app\subscriptions\application\dto\SendEmailDto;
 use app\subscriptions\application\services\MailService;

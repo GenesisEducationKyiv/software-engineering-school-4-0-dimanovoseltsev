@@ -2,8 +2,9 @@
 
 namespace app\currencies\infrastructure\models;
 
-use app\shared\application\exceptions\NotValidException;
-use app\shared\infrastructure\models\BaseQuery;
+use app\application\exceptions\NotValidException;
+use app\infrastructure\models\BaseQuery;
+use app\infrastructure\models\Currency;
 use app\subscriptions\infrastructure\models\SubscriptionQuery;
 use yii\db\Exception;
 

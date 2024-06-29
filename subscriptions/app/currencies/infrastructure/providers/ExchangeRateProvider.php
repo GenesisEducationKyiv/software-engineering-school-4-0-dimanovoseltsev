@@ -2,11 +2,12 @@
 
 namespace app\currencies\infrastructure\providers;
 
-use app\currencies\application\dto\CurrencyProviderDto;
-use app\currencies\application\providers\ProviderInterface;
-use app\shared\application\exceptions\RemoteServiceException;
-use app\shared\application\exceptions\UnexpectedValueException;
-use app\shared\application\services\LogServiceInterface;
+use app\application\dto\CurrencyProviderDto;
+use app\application\exceptions\RemoteServiceException;
+use app\application\exceptions\UnexpectedValueException;
+use app\application\providers\ProviderInterface;
+use app\application\services\LogServiceInterface;
+use app\infrastructure\providers\BaseProvider;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
