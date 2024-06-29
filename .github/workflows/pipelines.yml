@@ -1,6 +1,11 @@
-name: CI Pipeline
+name: Currencies CI Pipeline
 
 on: [ push ]
+
+defaults:
+  run:
+    working-directory: ./currencies
+
 
 jobs:
   linter:
