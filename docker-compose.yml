@@ -44,69 +44,6 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
       - TZ=America/New_York
 
-  prometheus:
-    container_name: prometheus-currency-rates
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - currency-rates-network
-    command:
-      - --web.enable-remote-write-receiver
-      - --enable-feature=native-histograms
-      - --config.file=/etc/prometheus/prometheus.yml
-
-  node-exporter:
-    container_name: node-exporter-currency-rates
-    image: prom/node-exporter:latest
-    restart: unless-stopped
-    pid: host
-    ports:
-      - "9100:9100"
-    networks:
-      - currency-rates-network
-
-  grafana:
-    container_name: grafana-currency-rates
-    image: grafana/grafana:latest
-    ports:
-      - "3010:3000"
-    environment:
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_USERS_ALLOW_ORG_CREATE=false
-      - GF_AUTH_BASIC_ENABLED=false
-    depends_on:
-      - prometheus
-    volumes:
-      - grafana_currency_rates_api:/var/lib/grafana
-      - ./docker/grafana:/etc/grafana/provisioning
-    networks:
-      - currency-rates-network
-
-  k6:
-    image: grafana/k6:latest
-    container_name: k6
-    volumes:
-      - ./tests/load-k6:/load-k6
-    entrypoint: [
-      "sh", "-c",
-      "k6 run /load-k6/subscription-currency.js \
-      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
-      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
-    ]
-    links:
-      - prometheus
-    depends_on:
-      - prometheus
-    networks:
-      - currency-rates-network
-
 networks:
   currency-rates-network:
     driver: bridge
@@ -114,4 +51,3 @@ networks:
 volumes:
   mysql_currency_rates_api:
   rabbitmq_currency_rates_api:
-  grafana_currency_rates_api:
