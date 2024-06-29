@@ -1,64 +1,17 @@
 version: '3.7'
 
 services:
-  fpm:
-    build: .
-    working_dir: /app
-    restart: always
-    volumes:
-      - .:/app
-    networks:
-      - app-network
-    depends_on:
-      - mysql
-      - memcached
-      - rabbitmq
-    environment:
-      - TZ=America/New_York
-
   memcached:
+    container_name: memcached-currency-rates
     networks:
-      - app-network
+      - currency-rates-network
     restart: always
     image: memcached
     environment:
       - TZ=America/New_York
 
-  app-setup:
-    build: .
-    networks:
-      - app-network
-    user: root
-    working_dir: /app
-    tty: true
-    stdin_open: true
-    command: /bin/bash -c "composer install ;sleep 10; php yii app/init --interactive=0"
-    depends_on:
-      - memcached
-      - mysql
-      - rabbitmq
-    volumes:
-      - .:/app
-    environment:
-      - TZ=America/New_York
-
-  nginx:
-    image: nginx:latest
-    restart: always
-    ports:
-      - "9822:80"
-      - "9823:8080"
-    volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./:/app
-    depends_on:
-      - fpm
-      - rabbitmq
-      - mysql
-    networks:
-      - app-network
-
   mysql:
+    container_name: mysql-currency-rates
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     image: mysql:8.0
     restart: always
@@ -73,9 +26,10 @@ services:
     ports:
       - "3320:3306"
     networks:
-      - app-network
+      - currency-rates-network
 
   rabbitmq:
+    container_name: rabbitmq-currency-rates
     image: "rabbitmq:3-management"
     restart: always
     volumes:
@@ -84,116 +38,80 @@ services:
       - "5670:5672"
       - "15670:15672"
     networks:
-      - app-network
+      - currency-rates-network
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
       - TZ=America/New_York
 
-  worker-mails:
-    build: .
-    restart: always
-    networks:
-      - app-network
-    user: root
-    working_dir: /app
-    tty: true
-    stdin_open: true
-    command: /bin/bash -c "sleep 10;  ./yii send-email-queue-worker/listen"
-    depends_on:
-      - mysql
-      - rabbitmq
-      - memcached
+  prometheus:
+    container_name: prometheus-currency-rates
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
     volumes:
-      - .:/app
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - currency-rates-network
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+
+  node-exporter:
+    container_name: node-exporter-currency-rates
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    pid: host
+    ports:
+      - "9100:9100"
+    networks:
+      - currency-rates-network
+
+  grafana:
+    container_name: grafana-currency-rates
+    image: grafana/grafana:latest
+    ports:
+      - "3010:3000"
     environment:
-      - TZ=America/New_York
-    deploy:
-      replicas: 1
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_BASIC_ENABLED=false
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_currency_rates_api:/var/lib/grafana
+      - ./docker/grafana:/etc/grafana/provisioning
+    networks:
+      - currency-rates-network
 
-#  cron:
-#    build:
-#      context: .
-#      dockerfile: DockerfileCron
-#    working_dir: /app
-#    volumes:
-#      - .:/app
-#      - ./docker/cron/cron.log:/var/log/cron.log
-#    networks:
-#      - app-network
-#    depends_on:
-#      - mysql
-#      - memcached
-#      - rabbitmq
-#    environment:
-#      - TZ=America/New_York
-
-#  prometheus:
-#    image: prom/prometheus:latest
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-#    networks:
-#      - app-network
-#    command:
-#      - --web.enable-remote-write-receiver
-#      - --enable-feature=native-histograms
-#      - --config.file=/etc/prometheus/prometheus.yml
-#
-#  node-exporter:
-#    image: prom/node-exporter:latest
-#    restart: unless-stopped
-#    pid: host
-#    ports:
-#      - "9100:9100"
-#    networks:
-#      - app-network
-#
-#  grafana:
-#    image: grafana/grafana:latest
-#    container_name: grafana
-#    ports:
-#      - "3010:3000"
-#    environment:
-#      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-#      - GF_SECURITY_ADMIN_PASSWORD=admin
-#      - GF_SECURITY_ADMIN_USER=admin
-#      - GF_AUTH_ANONYMOUS_ENABLED=true
-#      - GF_USERS_ALLOW_SIGN_UP=false
-#      - GF_USERS_ALLOW_ORG_CREATE=false
-#      - GF_AUTH_BASIC_ENABLED=false
-#    depends_on:
-#      - prometheus
-#    volumes:
-#      - grafana_data:/var/lib/grafana
-#      - ./docker/grafana:/etc/grafana/provisioning
-#    networks:
-#      - app-network
-#
-#  k6:
-#    image: grafana/k6:latest
-#    container_name: k6
-#    volumes:
-#      - ./tests/load-k6:/load-k6
-#    entrypoint: [
-#      "sh", "-c",
-#      "k6 run /load-k6/subscription-currency.js \
-#      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
-#      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
-#    ]
-#    links:
-#      - prometheus
-#    depends_on:
-#      - prometheus
-#    networks:
-#      - app-network
+  k6:
+    image: grafana/k6:latest
+    container_name: k6
+    volumes:
+      - ./tests/load-k6:/load-k6
+    entrypoint: [
+      "sh", "-c",
+      "k6 run /load-k6/subscription-currency.js \
+      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
+      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
+    ]
+    links:
+      - prometheus
+    depends_on:
+      - prometheus
+    networks:
+      - currency-rates-network
 
 networks:
-  app-network:
+  currency-rates-network:
     driver: bridge
 
 volumes:
   mysql_currency_rates_api:
   rabbitmq_currency_rates_api:
-  grafana_data:
+  grafana_currency_rates_api:
