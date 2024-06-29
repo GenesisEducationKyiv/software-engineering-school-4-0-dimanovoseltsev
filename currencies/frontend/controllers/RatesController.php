@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\enums\CurrencyIso;
 use app\application\exceptions\NotExistException;
 use app\application\exceptions\NotSupportedException;
 use app\application\exceptions\NotValidException;
@@ -111,7 +112,7 @@ class RatesController extends ActiveController
 
 
     /**
-     * @return float
+     * @return array
      * @throws HttpException|Throwable
      */
     #[OA\Get(
@@ -125,7 +126,14 @@ class RatesController extends ActiveController
                 description: "Returns the current exchange rate",
                 content: new OA\MediaType(
                     mediaType: "application/json",
-                    schema: new OA\Schema(type: "number")
+                    schema: new OA\Schema(
+                        properties: [
+                            new OA\Property(property: "iso3", type: "string", example: "UAH"),
+                            new OA\Property(property: "rate", type: "float", example: "5.123"),
+                            new OA\Property(property: "updatedAt", type: "integer", example: 1719690217),
+                        ],
+                        type: "object",
+                    )
                 )
             ),
             new OA\Response(
@@ -146,12 +154,16 @@ class RatesController extends ActiveController
             ),
         ],
     )]
-    public function actionRate(): float
+    public function actionRate(): array
     {
         try {
             $code = (string)getenv('IMPORTED_CURRENCY');
-            $entity = $this->retrieveCurrencyByCode->execute($code);
-            return $entity->getRate()->value();
+            $entity = $this->retrieveCurrencyByCode->execute(CurrencyIso::from($code));
+            return [
+                'iso3' => $code,
+                'rate' => $entity->getRate()->value(),
+                'updatedAt' => $entity->getUpdatedAt()->value(),
+            ];
         } catch (NotExistException $e) {
             throw new HttpException(400, 'Invalid status value');
         } catch (Throwable $e) {

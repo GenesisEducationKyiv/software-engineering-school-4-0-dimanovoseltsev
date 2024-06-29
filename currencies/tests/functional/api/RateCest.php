@@ -43,7 +43,14 @@ class RateCest extends FunctionalCest
 
         $response = json_decode($I->grabResponse(), true);
         $I->assertNotEmpty($response);
-        $I->assertIsNumeric($response);
-    }
 
+        $I->assertArrayHasKey('iso3', $response);
+        $I->assertIsString($response['iso3']);
+
+        $I->assertArrayHasKey('rate', $response);
+        $I->assertIsNumeric($response['rate']);
+
+        $I->assertArrayHasKey('updatedAt', $response);
+        $I->assertIsInt($response['updatedAt']);
+    }
 }

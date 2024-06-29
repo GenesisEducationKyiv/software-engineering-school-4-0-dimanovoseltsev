@@ -20,6 +20,7 @@ use app\infrastructure\providers\CoinbaseProvider;
 use app\infrastructure\providers\ExchangeRateProvider;
 use app\infrastructure\repositories\CurrencyCacheRepository;
 use app\infrastructure\repositories\CurrencyRepository;
+use app\infrastructure\services\YiiLogger;
 use GuzzleHttp\Client as GuzzleClient;
 use yii\di\Container;
 
@@ -75,6 +76,6 @@ return [
         );
     },
     LogServiceInterface::class => function (Container $container) {
-        return new \app\infrastructure\services\YiiLogger(\Yii::$app->log->getLogger());
+        return new YiiLogger(\Yii::$app->log->getLogger());
     },
 ];
