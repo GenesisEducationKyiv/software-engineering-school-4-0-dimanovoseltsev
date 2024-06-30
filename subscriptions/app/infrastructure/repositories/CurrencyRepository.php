@@ -32,12 +32,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         try {
             $response = $this->httpClient->get('/rate');
             $statusCode = $response->getStatusCode();
+            $json = (string)$response->getBody()->getContents();
 
             if ($statusCode !== 200) {
-                throw new RemoteServiceException(sprintf("Return %d status code", $statusCode));
+                throw new RemoteServiceException(sprintf("Return %d status code. Response: %s", $statusCode, $json));
             }
 
-            $json = (string)$response->getBody()->getContents();
             if (!json_validate($json) || empty($json)) {
                 throw new InvalidJsonException();
             }
