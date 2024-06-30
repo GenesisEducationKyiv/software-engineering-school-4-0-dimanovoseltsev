@@ -6,7 +6,7 @@ use app\application\adapters\MessageBrokerInterface;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 
-class PublisherService implements PublisherServiceInterface
+class PublisherService implements EventBus
 {
     /**
      * @param MessageBrokerInterface $sendMessageQueue

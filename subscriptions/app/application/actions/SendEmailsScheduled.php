@@ -3,7 +3,9 @@
 namespace app\application\actions;
 
 use app\application\dto\SearchSubscribersForMailingDto;
-use app\application\services\PublisherServiceInterface;
+use app\application\events\MailSendEvent;
+use app\application\interfaces\EventBusInterface;
+use app\application\services\EventBus;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Currency;
 
@@ -11,11 +13,11 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
 {
     /**
      * @param SubscriptionServiceInterface $service
-     * @param PublisherServiceInterface $publisherService
+     * @param EventBusInterface $eventBus
      */
     public function __construct(
         private readonly SubscriptionServiceInterface $service,
-        private readonly PublisherServiceInterface $publisherService,
+        private readonly EventBusInterface $eventBus,
     ) {
     }
 
@@ -38,7 +40,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
             }
 
             foreach ($subscriptions as $subscription) {
-                $this->publisherService->enqueueMessageForSending($subscription, $currency);
+                $this->eventBus->publish(new MailSendEvent($currency, $subscription));
                 $lastId = (int)$subscription->getId()->value();
                 $count++;
             }

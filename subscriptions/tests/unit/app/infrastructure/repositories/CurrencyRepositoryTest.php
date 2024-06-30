@@ -2,8 +2,6 @@
 
 namespace tests\unit\app\infrastructure\repositories;
 
-use app\application\enums\CurrencyIso;
-use app\application\exceptions\InvalidJsonException;
 use app\application\exceptions\RemoteServiceException;
 use app\domain\entities\Currency;
 use app\infrastructure\repositories\CurrencyRepository;
@@ -41,7 +39,7 @@ class CurrencyRepositoryTest extends UnitTestCase
 
     public function testFindActual()
     {
-        $responseBody = ["iso3" => CurrencyIso::UAH->value, "rate" => 5, "updatedAt" => time()];
+        $responseBody = ["iso3" => "UAH", "rate" => 5, "updatedAt" => time()];
 
         $this->httpClient->expects(self::once())
             ->method('get')

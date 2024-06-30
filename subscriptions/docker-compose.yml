@@ -39,23 +39,6 @@ services:
     networks:
       - currency-rate-app-network
 
-  worker-mails:
-    build: .
-    restart: always
-    networks:
-      - currency-rate-app-network
-    user: root
-    working_dir: /app
-    tty: true
-    stdin_open: true
-    command: /bin/bash -c "sleep 10;  ./yii send-email-queue-worker/listen"
-    volumes:
-      - .:/app
-    environment:
-      - TZ=America/New_York
-    deploy:
-      replicas: 1
-
   cron:
     build:
       context: .
