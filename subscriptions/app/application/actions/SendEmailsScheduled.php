@@ -2,9 +2,9 @@
 
 namespace app\application\actions;
 
+use app\application\adapters\EventBusInterface;
 use app\application\dto\SearchSubscribersForMailingDto;
 use app\application\events\MailSendEvent;
-use app\application\interfaces\EventBusInterface;
 use app\application\services\EventBus;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Currency;

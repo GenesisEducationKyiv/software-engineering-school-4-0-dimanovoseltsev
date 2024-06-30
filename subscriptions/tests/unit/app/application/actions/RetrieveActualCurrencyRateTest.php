@@ -3,7 +3,6 @@
 namespace tests\unit\app\application\actions;
 
 use app\application\actions\RetrieveActualCurrencyRate;
-use app\application\dto\SendEmailDto;
 use app\application\exceptions\NotExistException;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
@@ -43,7 +42,6 @@ class RetrieveActualCurrencyRateTest extends UnitTestCase
     {
         self::expectException(NotExistException::class);
         self::expectExceptionMessage("Currency not found");
-
 
         $this->service->expects($this->once())
             ->method('getActual')

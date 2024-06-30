@@ -4,10 +4,13 @@
  */
 
 
+use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\repositories\CurrencyRepository;
+use tests\components\CurrencyClient;
 use tests\components\DummyQueue;
-use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
+use yii\di\Container;
 
 return [
     'id' => 'test',
@@ -34,20 +37,16 @@ return [
             'charset' => 'utf8mb4',
             'enableSchemaCache' => false,
         ],
-        'sendEmailQueue' => ['class' => DummyQueue::class],
-        'sendEmailFailQueue' => ['class' => DummyQueue::class],
-        'sendEmailQueueWorker' => ['class' => DummyQueue::class],
-        'mailer' => [
-            'class' => YiiMailer::class,
-            'transport' => [
-                'dsn' => getenv('MAILER_DSN'),
-            ],
-            'useFileTransport' => (bool)getenv('MAILER_DEBUG'),
-            'viewPath' => '@themes/mails/views',
-        ],
+        'eventBusQueue' => ['class' => DummyQueue::class],
     ],
     'container' => [
-        'definitions' => []
+        'definitions' => [
+            CurrencyRepositoryInterface::class => function (Container $container) {
+                return new CurrencyRepository(
+                    new CurrencyClient(),
+                );
+            },
+        ]
     ],
     'params' => [],
 ];

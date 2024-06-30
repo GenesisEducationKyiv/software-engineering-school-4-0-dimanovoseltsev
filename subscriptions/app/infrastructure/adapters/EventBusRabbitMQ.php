@@ -1,8 +1,8 @@
 <?php
 
-namespace app\infrastructure\services;
+namespace app\infrastructure\adapters;
 
-use app\application\interfaces\EventBusInterface;
+use app\application\adapters\EventBusInterface;
 use app\application\interfaces\EventInterface;
 use yii\queue\amqp_interop\Queue;
 

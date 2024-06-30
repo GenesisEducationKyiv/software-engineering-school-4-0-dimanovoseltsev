@@ -9,7 +9,7 @@ use app\application\exceptions\NotExistException;
 use app\application\services\MailService;
 use app\application\services\PublisherService;
 use app\application\services\SubscriptionService;
-use app\infrastructure\services\EventBusRabbitMQ;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

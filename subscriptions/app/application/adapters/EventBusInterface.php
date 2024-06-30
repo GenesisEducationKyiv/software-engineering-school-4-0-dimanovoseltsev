@@ -1,6 +1,8 @@
 <?php
 
-namespace app\application\interfaces;
+namespace app\application\adapters;
+
+use app\application\interfaces\EventInterface;
 
 interface EventBusInterface
 {
