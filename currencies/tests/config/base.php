@@ -42,7 +42,6 @@ return [
             'charset' => 'utf8mb4',
             'enableSchemaCache' => false,
         ],
-        'eventBusQueue' => ['class' => DummyQueue::class],
     ],
     'container' => [
         'definitions' => [

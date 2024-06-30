@@ -1,10 +1,6 @@
 <?php
 
 
-use Interop\Amqp\AmqpTopic;
-use yii\queue\Queue;
-use yii\queue\serializers\JsonSerializer;
-
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -27,17 +23,6 @@ return [
                     'weight' => 100,
                 ],
             ],
-        ],
-        'eventBusQueue' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'exchangeName' => getenv('RABBITMQ_EVENT_BUS_EXCHANGE'),
-            'exchangeType' => AmqpTopic::TYPE_TOPIC,
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
         ],
     ],
     'container' => [

@@ -3,7 +3,6 @@
 namespace console\controllers;
 
 use app\application\actions\ImportRatesInterface;
-use app\application\actions\RetrieveCurrencyByCodeInterface;
 use app\application\exceptions\NotValidException;
 use Throwable;
 use Yii;
@@ -20,14 +19,12 @@ class AppController extends Controller
      * @param $id
      * @param $module
      * @param ImportRatesInterface $importRates
-     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
         private readonly ImportRatesInterface $importRates,
-        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
