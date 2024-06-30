@@ -16,7 +16,6 @@ class CurrencyService implements CurrencyServiceInterface
     public function __construct(
         private readonly CurrencyRepositoryInterface $repository,
         private readonly LogServiceInterface $logService,
-
     ) {
     }
 
