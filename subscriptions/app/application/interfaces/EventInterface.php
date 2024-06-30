@@ -10,7 +10,7 @@ interface EventInterface
     public function getName(): string;
 
     /**
-     * @return array
+     * @return array<string,mixed>
      */
     public function getBody(): array;
 }

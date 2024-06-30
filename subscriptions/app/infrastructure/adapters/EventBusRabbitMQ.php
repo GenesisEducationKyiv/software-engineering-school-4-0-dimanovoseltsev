@@ -4,6 +4,7 @@ namespace app\infrastructure\adapters;
 
 use app\application\adapters\EventBusInterface;
 use app\application\interfaces\EventInterface;
+use Enqueue\AmqpLib\AmqpContext;
 use PhpAmqpLib\Channel\AMQPChannel;
 use yii\queue\amqp_interop\Queue;
 
@@ -36,7 +37,9 @@ class EventBusRabbitMQ implements EventBusInterface
      */
     private function getChanel(): AMQPChannel
     {
-        return $this->queue->getContext()->getLibChannel();
+        /** @var AmqpContext $context */
+        $context = $this->queue->getContext();
+        return $context->getLibChannel();
     }
 
     /**

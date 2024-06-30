@@ -26,6 +26,9 @@ class CreateMailEvent implements EventInterface
         return 'mail.create';
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getBody(): array
     {
         return [
