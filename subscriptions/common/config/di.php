@@ -1,5 +1,7 @@
 <?php
 
+use app\application\actions\MailSent;
+use app\application\actions\MailSentInterface;
 use app\application\actions\RetrieveActualCurrencyRate;
 use app\application\actions\RetrieveActualCurrencyRateInterface;
 use app\application\actions\SendEmailsScheduled;
@@ -67,6 +69,11 @@ return [
     RetrieveActualCurrencyRateInterface::class => function (Container $container) {
         return new RetrieveActualCurrencyRate(
             $container->get(CurrencyServiceInterface::class),
+        );
+    },
+    MailSentInterface::class => function (Container $container) {
+        return new MailSent(
+            $container->get(SubscriptionServiceInterface::class),
         );
     },
 ];

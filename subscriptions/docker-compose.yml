@@ -52,6 +52,23 @@ services:
     environment:
       - TZ=America/New_York
 
+  worker-mail-sent:
+    build: .
+    restart: always
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "sleep 10;  ./yii mail-sent-queue/listen"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
+    deploy:
+      replicas: 1
+
 #  k6:
 #    image: grafana/k6:latest
 #    volumes:

@@ -38,6 +38,8 @@ return [
             'enableSchemaCache' => false,
         ],
         'eventBusQueue' => ['class' => DummyQueue::class],
+        'mailSentQueue' => ['class' => DummyQueue::class],
+        'mailSentFailQueue' => ['class' => DummyQueue::class],
     ],
     'container' => [
         'definitions' => [

@@ -41,7 +41,7 @@ class RetrieveActualCurrencyRateTest extends UnitTestCase
     public function testExecuteNotExist()
     {
         self::expectException(NotExistException::class);
-        self::expectExceptionMessage("Currency not found");
+        self::expectExceptionMessage("Currency not exist");
 
         $this->service->expects($this->once())
             ->method('getActual')

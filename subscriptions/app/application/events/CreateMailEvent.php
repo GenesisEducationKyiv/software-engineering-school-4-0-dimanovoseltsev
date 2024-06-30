@@ -6,7 +6,7 @@ use app\application\interfaces\EventInterface;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 
-class MailSendEvent implements EventInterface
+class CreateMailEvent implements EventInterface
 {
     /**
      * @param Currency $currency
@@ -23,7 +23,7 @@ class MailSendEvent implements EventInterface
      */
     public function getName(): string
     {
-        return 'mail.send';
+        return 'mail.create';
     }
 
     public function getBody(): array

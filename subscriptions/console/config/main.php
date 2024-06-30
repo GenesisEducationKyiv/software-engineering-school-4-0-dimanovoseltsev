@@ -1,7 +1,10 @@
 <?php
 
+use console\workers\MailSentWorker;
 use yii\console\controllers\MigrateController;
 use yii\log\FileTarget;
+use yii\queue\amqp_interop\Queue;
+use yii\queue\serializers\JsonSerializer;
 
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
@@ -11,7 +14,7 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'mailSentQueue'],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -32,9 +35,34 @@ return [
                 ],
             ],
         ],
+        'mailSentQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_SENT_MAIL_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_SENT_MAIL_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_SENT_MAIL_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+            'commandClass' => MailSentWorker::class,
+            'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
+        ],
+        'mailSentFailQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_SENT_MAIL_FAIL_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_SENT_MAIL_FAIL_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_SENT_MAIL_FAIL_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+        ],
     ],
     'params' => $params,
-
     'container' => [
         'definitions' => []
     ],

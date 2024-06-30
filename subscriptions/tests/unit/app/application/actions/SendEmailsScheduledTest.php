@@ -4,7 +4,7 @@ namespace tests\unit\app\application\actions;
 
 use app\application\actions\SendEmailsScheduled;
 use app\application\dto\SearchSubscribersForMailingDto;
-use app\application\events\MailSendEvent;
+use app\application\events\CreateMailEvent;
 use app\application\exceptions\NotExistException;
 use app\application\services\MailService;
 use app\application\services\PublisherService;
@@ -68,7 +68,7 @@ class SendEmailsScheduledTest extends UnitTestCase
 
         foreach ($subscriptions as $subscription) {
             $mapInvoke['eventBus.publish']['params'][] = [
-                new MailSendEvent($currency, $subscription)
+                new CreateMailEvent($currency, $subscription)
             ];
         }
 
