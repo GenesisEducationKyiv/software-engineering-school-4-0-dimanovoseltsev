@@ -26,7 +26,7 @@ abstract class BaseAction
     protected function checkExit(?Subscription $entity): Subscription
     {
         if ($entity === null) {
-            throw new NotExistException("Subscription not exit");
+            throw new NotExistException("Subscription not exist");
         }
 
         return $entity;

@@ -22,6 +22,7 @@ use app\infrastructure\repositories\CurrencyRepository;
 use app\infrastructure\repositories\SubscriptionRepository;
 use app\infrastructure\services\YiiLogger;
 use GuzzleHttp\Client as GuzzleClient;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 use yii\di\Container;
 
 return [
@@ -42,7 +43,11 @@ return [
         );
     },
     EventBusInterface::class => function (Container $container) {
-        return new EventBusRabbitMQ(Yii::$app->eventBusQueue);
+        return new EventBusRabbitMQ(
+            Yii::$app->eventBusQueue,
+            (string)getenv("RABBITMQ_EVENT_BUS_EXCHANGE"),
+            AMQPExchangeType::TOPIC
+        );
     },
 
     // services
