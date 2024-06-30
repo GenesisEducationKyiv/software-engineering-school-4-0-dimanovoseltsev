@@ -38,15 +38,6 @@ class Currency implements Arrayable
     }
 
     /**
-     * @param Rate $rate
-     * @return void
-     */
-    public function setRate(Rate $rate): void
-    {
-        $this->rate = $rate;
-    }
-
-    /**
      * @return Timestamp
      */
     public function getUpdatedAt(): Timestamp
@@ -54,14 +45,6 @@ class Currency implements Arrayable
         return $this->updatedAt;
     }
 
-    /**
-     * @param Timestamp $updatedAt
-     * @return void
-     */
-    public function setUpdatedAt(Timestamp $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
 
     /**
      * @return array<string,mixed>
@@ -69,9 +52,9 @@ class Currency implements Arrayable
     public function toArray(): array
     {
         return [
-            'iso3' => $this->iso3->value(),
-            'rate' => $this->rate->value(),
-            'updatedAt' => $this->updatedAt->value(),
+            'iso3' => $this->getIso3()->value(),
+            'rate' => $this->getRate()->value(),
+            'updatedAt' => $this->getUpdatedAt()->value(),
         ];
     }
 }

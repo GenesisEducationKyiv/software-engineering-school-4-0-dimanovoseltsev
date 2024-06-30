@@ -5,6 +5,7 @@ namespace app\application\services;
 use app\application\exceptions\RemoteServiceException;
 use app\domain\entities\Currency;
 use app\domain\repositories\CurrencyRepositoryInterface;
+use Throwable;
 
 class CurrencyService implements CurrencyServiceInterface
 {
@@ -26,7 +27,7 @@ class CurrencyService implements CurrencyServiceInterface
     {
         try {
             return $this->repository->findActual();
-        } catch (RemoteServiceException $e) {
+        } catch (Throwable $e) {
             $this->logService->log($e->getMessage());
             return null;
         }
