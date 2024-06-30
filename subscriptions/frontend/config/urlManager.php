@@ -8,7 +8,7 @@ return [
     'enablePrettyUrl' => true,
     'showScriptName' => false,
     'rules' => [
-        'POST subscribe' => 'rates/subscribe',
+        'POST /subscribe' => 'rates/subscribe',
 
         'OPTIONS <opts:(.*)>' => 'rates/options',
         '' => 'rates/options',

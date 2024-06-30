@@ -8,7 +8,7 @@ return [
     'enablePrettyUrl' => true,
     'showScriptName' => false,
     'rules' => [
-        'GET rate' => 'rates/rate',
+        'GET /rate' => 'rates/rate',
 
         'OPTIONS <opts:(.*)>' => 'rates/options',
         '' => 'rates/options',
