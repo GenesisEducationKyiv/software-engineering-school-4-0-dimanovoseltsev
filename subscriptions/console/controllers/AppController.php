@@ -54,7 +54,6 @@ class AppController extends Controller
         $this->runAction('set-executable', ['interactive' => $this->interactive]);
         Yii::$app->runAction('migrate/up', ['interactive' => $this->interactive]);
 
-        $this->runAction('import-currency-rates');
         return ExitCode::OK;
     }
 
