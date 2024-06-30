@@ -4,6 +4,7 @@ namespace tests\unit\app\infrastructure\adapters;
 
 use app\application\events\CreateMailEvent;
 use app\infrastructure\adapters\EventBusRabbitMQ;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 use yii\queue\amqp_interop\Queue;
@@ -17,7 +18,7 @@ class EventBusRabbitMQTest extends UnitTestCase
     {
         parent::setUp();
         $this->queue = $this->getQueueMock();
-        $this->adapter = new EventBusRabbitMQ($this->queue);
+        $this->adapter = new EventBusRabbitMQ($this->queue, 'exchange', AMQPExchangeType::TOPIC);
     }
 
     /**
@@ -39,13 +40,9 @@ class EventBusRabbitMQTest extends UnitTestCase
         $subscription = $this->getSubscriptionEntity();
         $event = new CreateMailEvent($currency, $subscription);
 
-
         $this->queue->expects($this->once())
             ->method('push')
-            ->with([
-                'event' => $event->getName(),
-                'body' => $event->getBody(),
-            ]);
+            ->with($event->getBody());
 
         $this->adapter->publish($event);
     }
