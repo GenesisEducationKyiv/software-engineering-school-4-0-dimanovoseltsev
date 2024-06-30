@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] - 2024-06-29
 - migrate to microservices architecture
+- add event bus
 
 ## [1.4.0] - 2024-06-26
 - add architecture test with `phpat`
