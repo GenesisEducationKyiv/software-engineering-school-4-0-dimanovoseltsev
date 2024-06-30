@@ -4,11 +4,14 @@ namespace console\workers;
 
 use app\application\actions\RetrieveActualCurrencyRateInterface;
 use app\application\actions\SendEmailInterface;
-use app\application\dto\SendEmailDto;
+use app\application\dto\MailSendDto;
 use app\application\exceptions\NotExistException;
 use app\domain\entities\Currency;
+use app\domain\entities\Subscription;
+use app\domain\valueObjects\Email;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
+use app\domain\valueObjects\Timestamp;
 use Throwable;
 use Yii;
 
@@ -17,14 +20,12 @@ class MailWorker extends BaseWorker
     /**
      * @param $id
      * @param $module
-     * @param RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate
      * @param SendEmailInterface $sendEmail
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate,
         private readonly SendEmailInterface $sendEmail,
         array $config = []
     ) {
@@ -42,7 +43,6 @@ class MailWorker extends BaseWorker
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
         $data = (array)json_decode($body, true);
-
         if (empty($data['email']) || empty($data['currency'])) {
             return true;
         }
@@ -51,11 +51,13 @@ class MailWorker extends BaseWorker
 
         try {
             $currency = new Currency(
-                new Iso3($currencyInfo['iso3']),
-                new Rate($currencyInfo['rate']),
-                new Rate($currencyInfo['updatedAt']),
+                new Iso3($currencyInfo['iso3'] ?? null),
+                new Rate($currencyInfo['rate']?? null),
+                new Timestamp($currencyInfo['updatedAt']?? null),
             );
-            return $this->sendEmail->execute($currency, new SendEmailDto((string)$data['email'], time()));
+
+            $subscription = new Subscription(new Email((string)$data['email']));
+            return $this->sendEmail->execute(new MailSendDto($currency, $subscription, time()));
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {

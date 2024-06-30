@@ -4,10 +4,8 @@ namespace tests\unit\app\application\actions;
 
 use app\application\actions\SendEmailsScheduled;
 use app\application\dto\SearchSubscribersForMailingDto;
-use app\application\events\CreateMailEvent;
+use app\application\events\MailCreateEvent;
 use app\application\exceptions\NotExistException;
-use app\application\services\MailService;
-use app\application\services\PublisherService;
 use app\application\services\SubscriptionService;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -68,7 +66,7 @@ class SendEmailsScheduledTest extends UnitTestCase
 
         foreach ($subscriptions as $subscription) {
             $mapInvoke['eventBus.publish']['params'][] = [
-                new CreateMailEvent($currency, $subscription)
+                new MailCreateEvent($currency, $subscription)
             ];
         }
 

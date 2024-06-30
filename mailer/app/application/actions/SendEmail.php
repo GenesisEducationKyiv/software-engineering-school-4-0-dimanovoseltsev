@@ -2,42 +2,33 @@
 
 namespace app\application\actions;
 
-use app\application\dto\SendEmailDto;
-use app\application\exceptions\NotExistException;
+use app\application\adapters\EventBusInterface;
+use app\application\dto\MailSendDto;
+use app\application\events\MailSentEvent;
 use app\application\services\MailServiceInterface;
-use app\application\services\SubscriptionServiceInterface;
-use app\domain\entities\Currency;
-use app\domain\valueObjects\Timestamp;
 
 class SendEmail extends BaseAction implements SendEmailInterface
 {
     /**
-     * @param SubscriptionServiceInterface $subscriptionService
      * @param MailServiceInterface $mailService
+     * @param EventBusInterface $eventBus
      */
     public function __construct(
-        private readonly SubscriptionServiceInterface $subscriptionService,
         private readonly MailServiceInterface $mailService,
+        private readonly EventBusInterface $eventBus,
     ) {
     }
 
     /**
-     * @param Currency $currency
-     * @param SendEmailDto $dto
+     * @param MailSendDto $dto
      * @return bool
-     * @throws NotExistException
      */
-    public function execute(Currency $currency, SendEmailDto $dto): bool
+    public function execute(MailSendDto $dto): bool
     {
-        $subscription = $this->subscriptionService->getByEmailAndNotSend($dto->getEmail());
-        if ($subscription === null) {
-            throw new NotExistException("Subscription not exit");
-        }
+        $state = $this->mailService->sendMail($dto->getCurrency(), $dto->getSubscription());
 
-        $state = $this->mailService->sendMail($currency, $subscription);
         if ($state) {
-            $subscription->setLastSendAt(new Timestamp($dto->getTimestamp()));
-            $this->subscriptionService->save($subscription);
+            $this->eventBus->publish(new MailSentEvent($dto->getSubscription(), $dto->getTimestamp()));
         }
 
         return $state;

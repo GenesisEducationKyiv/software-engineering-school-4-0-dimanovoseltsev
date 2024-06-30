@@ -2,9 +2,6 @@
 
 namespace console\controllers;
 
-use app\application\actions\RetrieveActualCurrencyRateInterface;
-use app\application\actions\SendEmailsScheduledInterface;
-use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\console\Controller;
@@ -15,23 +12,6 @@ use yii\helpers\Console;
 
 class AppController extends Controller
 {
-    /**
-     * @param $id
-     * @param $module
-     * @param SendEmailsScheduledInterface $sendEmailsScheduled
-     * @param RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate
-     * @param array $config
-     */
-    public function __construct(
-        $id,
-        $module,
-        private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
-        private readonly RetrieveActualCurrencyRateInterface $retrieveActualCurrencyRate,
-        array $config = []
-    ) {
-        parent::__construct($id, $module, $config);
-    }
-
     public array $writablePaths = [
         '@common/runtime',
         '@console/runtime',
@@ -54,7 +34,6 @@ class AppController extends Controller
         $this->runAction('set-executable', ['interactive' => $this->interactive]);
         Yii::$app->runAction('migrate/up', ['interactive' => $this->interactive]);
 
-        $this->runAction('import-currency-rates');
         return ExitCode::OK;
     }
 
@@ -81,24 +60,6 @@ class AppController extends Controller
             $path = Yii::getAlias($path);
             Console::output("Setting executable: {$path}");
             @chmod($path, 0755);
-        }
-    }
-
-
-    /**
-     * @run php yii app/send-emails
-     */
-    public function actionSendEmails(): int
-    {
-        try {
-            $count = $this->sendEmailsScheduled->execute(
-                $this->retrieveActualCurrencyRate->execute(),
-            );
-            Console::output("Send " . $count);
-            return ExitCode::OK;
-        } catch (Throwable $e) {
-            Console::error($e->getMessage());
-            return ExitCode::DATAERR;
         }
     }
 }

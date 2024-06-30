@@ -18,7 +18,6 @@ require_once(YII_APP_BASE_PATH . '/vendor/yiisoft/yii2/Yii.php');
 
 
 require_once(YII_APP_BASE_PATH . '/common/config/bootstrap.php');
-require(YII_APP_BASE_PATH . '/frontend/config/bootstrap.php');
 require(YII_APP_BASE_PATH . '/console/config/bootstrap.php');
 
 // Environment
@@ -26,7 +25,6 @@ require(YII_APP_BASE_PATH . '/common/env.php');
 
 $config = ArrayHelper::merge(
     require(YII_APP_BASE_PATH . '/common/config/main.php'),
-    // require(YII_APP_BASE_PATH . '/frontend/config/main.php'),
     require(YII_APP_BASE_PATH . '/console/config/main.php'),
     require(__DIR__ . '/../config/base.php')
 );

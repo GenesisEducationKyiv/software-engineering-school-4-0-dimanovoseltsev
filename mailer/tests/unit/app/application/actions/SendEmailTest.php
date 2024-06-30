@@ -3,25 +3,40 @@
 namespace tests\unit\app\application\actions;
 
 use app\application\actions\SendEmail;
-use app\application\dto\SendEmailDto;
-use app\application\exceptions\NotExistException;
+use app\application\dto\MailSendDto;
+use app\application\events\MailSentEvent;
 use app\application\services\MailService;
-use app\application\services\SubscriptionService;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
 class SendEmailTest extends UnitTestCase
 {
     private SendEmail $action;
-    private SubscriptionService|MockObject $service;
+    private EventBusRabbitMQ|MockObject $eventBus;
     private MailService|MockObject $mailService;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = $this->getSubscriptionServiceMock();
+        $this->eventBus = $this->getEventBusMock();
         $this->mailService = $this->getMailServiceMock();
-        $this->action = new SendEmail($this->service, $this->mailService);
+        $this->action = new SendEmail($this->mailService, $this->eventBus);
+    }
+
+    /**
+     * @return EventBusRabbitMQ|MockObject
+     */
+    protected function getEventBusMock(): EventBusRabbitMQ|MockObject
+    {
+        return $this->getMockBuilder(EventBusRabbitMQ::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'publish',
+                ]
+            )
+            ->getMock();
     }
 
     /**
@@ -40,50 +55,25 @@ class SendEmailTest extends UnitTestCase
     }
 
     /**
-     * @throws NotExistException
      */
     public function testExecute()
     {
         $currency = $this->getCurrencyEntity();
         $subscription = $this->getSubscriptionEntity();
 
-        $dto = new SendEmailDto("mail@mail.com", time());
+        $dto = new MailSendDto($currency, $subscription, time());
 
-        $this->service->expects($this->once())
-            ->method('getByEmailAndNotSend')
-            ->with($dto->getEmail())
-            ->willReturn($subscription);
+        $this->eventBus->expects($this->once())
+            ->method('publish')
+            ->with(new MailSentEvent($dto->getSubscription(), $dto->getTimestamp()));
 
         $this->mailService->expects(self::once())
             ->method('sendMail')
             ->with($currency, $subscription)
             ->willReturn(true);
 
-        $this->service->expects(self::once())
-            ->method('save')
-            ->willReturn($subscription);
-
-        $actual = $this->action->execute($currency, $dto);
+        $actual = $this->action->execute($dto);
         self::assertTrue($actual);
-    }
-
-    /**
-     * @throws NotExistException
-     */
-    public function testExecuteNotExist()
-    {
-        self::expectException(NotExistException::class);
-        self::expectExceptionMessage("Subscription not exit");
-
-        $currency = $this->getCurrencyEntity();
-        $dto = new SendEmailDto("mail@mail.com", time());
-
-        $this->service->expects($this->once())
-            ->method('getByEmailAndNotSend')
-            ->with($dto->getEmail())
-            ->willReturn(null);
-
-        $actual = $this->action->execute($currency, $dto);
     }
 }
 

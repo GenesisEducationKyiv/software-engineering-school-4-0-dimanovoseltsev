@@ -77,8 +77,6 @@ return [
     'params' => $params,
 
     'container' => [
-        'definitions' => [
-
-        ]
+        'definitions' => []
     ],
 ];

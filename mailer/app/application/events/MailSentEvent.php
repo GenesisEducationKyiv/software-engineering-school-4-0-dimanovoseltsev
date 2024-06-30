@@ -6,15 +6,15 @@ use app\application\interfaces\EventInterface;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 
-class CreateMailEvent implements EventInterface
+class MailSentEvent implements EventInterface
 {
     /**
-     * @param Currency $currency
      * @param Subscription $subscription
+     * @param int $timestamp
      */
     public function __construct(
-        private readonly Currency $currency,
-        private readonly Subscription $subscription
+        private readonly Subscription $subscription,
+        private readonly int $timestamp,
     ) {
     }
 
@@ -23,7 +23,7 @@ class CreateMailEvent implements EventInterface
      */
     public function getName(): string
     {
-        return 'mail.create';
+        return 'mail.sent';
     }
 
     /**
@@ -33,7 +33,7 @@ class CreateMailEvent implements EventInterface
     {
         return [
             'email' => $this->subscription->getEmail()->value(),
-            'currency' => $this->currency->toArray(),
+            'timestamp' => $this->timestamp,
         ];
     }
 }

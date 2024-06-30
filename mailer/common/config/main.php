@@ -1,6 +1,9 @@
 <?php
 
 
+use Interop\Amqp\AmqpTopic;
+use yii\queue\amqp_interop\Queue;
+use yii\queue\serializers\JsonSerializer;
 use yii\symfonymailer\Mailer as SymfonyMailer;
 
 return [
@@ -17,7 +20,7 @@ return [
         'cache' => [
             'class' => \yii\caching\MemCache::class,
             'useMemcached' => true,
-            'keyPrefix' => 'subscriptions',
+            'keyPrefix' => 'mailer',
             'servers' => [
                 [
                     'host' => getenv('MEMCACHE_HOST'),
@@ -36,6 +39,17 @@ return [
                 'from' => [getenv("SENDER_EMAIL") => getenv("SENDER_NAME")],
             ],
             'useFileTransport' => (bool)getenv('MAILER_DEBUG'),
+        ],
+        'eventBusQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'exchangeName' => getenv('RABBITMQ_EVENT_BUS_EXCHANGE'),
+            'exchangeType' => AmqpTopic::TYPE_TOPIC,
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
         ],
     ],
     'container' => [

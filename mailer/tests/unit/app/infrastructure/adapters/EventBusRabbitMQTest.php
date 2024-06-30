@@ -3,6 +3,7 @@
 namespace tests\unit\app\infrastructure\adapters;
 
 use app\application\events\MailCreateEvent;
+use app\application\events\MailSentEvent;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
@@ -39,9 +40,8 @@ class EventBusRabbitMQTest extends UnitTestCase
 
     public function testPublish()
     {
-        $currency = $this->getCurrencyEntity();
         $subscription = $this->getSubscriptionEntity();
-        $event = new MailCreateEvent($currency, $subscription);
+        $event = new MailSentEvent($subscription, time());
 
         $this->queue->expects($this->once())
             ->method('push')

@@ -1,6 +1,6 @@
 {
   "name": "novoseltsev/currency-rates-api",
-  "description": "Subscriptions API",
+  "description": "Mailer API",
   "version": "1.0.0",
   "type": "project",
   "license": "BSD-3-Clause",
@@ -14,7 +14,6 @@
     "vlucas/phpdotenv": "^5.5",
     "yiisoft/yii2-queue": "^2.3",
     "enqueue/amqp-lib": "^0.10.19",
-    "light/yii2-swagger": "^3.0",
     "yiisoft/yii2-symfonymailer": "~3.0.0",
     "guzzlehttp/guzzle": "^7.8",
     "webmozart/assert": "^1.11"
@@ -51,7 +50,6 @@
   ],
   "autoload": {
     "psr-4": {
-      "frontend\\": "frontend/",
       "app\\": "app/",
       "console\\": "console/",
       "tests\\": "tests/",

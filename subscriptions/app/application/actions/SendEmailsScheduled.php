@@ -4,7 +4,7 @@ namespace app\application\actions;
 
 use app\application\adapters\EventBusInterface;
 use app\application\dto\SearchSubscribersForMailingDto;
-use app\application\events\CreateMailEvent;
+use app\application\events\MailCreateEvent;
 use app\application\services\EventBus;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Currency;
@@ -40,7 +40,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
             }
 
             foreach ($subscriptions as $subscription) {
-                $this->eventBus->publish(new CreateMailEvent($currency, $subscription));
+                $this->eventBus->publish(new MailCreateEvent($currency, $subscription));
                 $lastId = (int)$subscription->getId()->value();
                 $count++;
             }
