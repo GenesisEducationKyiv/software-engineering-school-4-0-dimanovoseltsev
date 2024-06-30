@@ -7,7 +7,6 @@ use Webmozart\Assert\InvalidArgumentException;
 
 trait ValidationRulesTrait
 {
-
     /**
      * @param string $value
      * @param string $message
