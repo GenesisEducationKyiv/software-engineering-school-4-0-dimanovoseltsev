@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  fpm:
+    build: .
+    working_dir: /app
+    restart: always
+    volumes:
+      - .:/app
+    networks:
+      - currency-rate-app-network
+    environment:
+      - TZ=America/New_York
+
+  app-setup:
+    build: .
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "composer install ;sleep 10; php yii app/init --interactive=0"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
+
+#  worker-mail-send:
+#    build: .
+#    restart: always
+#    networks:
+#      - currency-rate-app-network
+#    user: root
+#    working_dir: /app
+#    tty: true
+#    stdin_open: true
+#    command: /bin/bash -c "sleep 10;  ./yii send-email-queue-worker/listen"
+#    volumes:
+#      - .:/app
+#    environment:
+#      - TZ=America/New_York
+#    deploy:
+#      replicas: 1
+
+networks:
+  currency-rate-app-network:
+    external: true

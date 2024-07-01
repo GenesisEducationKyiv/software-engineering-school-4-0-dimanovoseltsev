@@ -1,0 +1,1 @@
+*/15 * * * * /usr/local/bin/php /app/yii app/import-currency-rates >> /var/log/cron.log 2>&1
