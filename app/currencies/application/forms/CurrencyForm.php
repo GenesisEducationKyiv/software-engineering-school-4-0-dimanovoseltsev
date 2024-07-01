@@ -67,6 +67,7 @@ class CurrencyForm extends BaseForm implements FormInterface, Errorable
         } catch (InvalidArgumentException $e) {
             $this->addError('rate', $e->getMessage());
         }
+
         return !$this->hasErrors();
     }
 

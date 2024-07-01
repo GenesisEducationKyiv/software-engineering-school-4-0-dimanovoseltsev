@@ -7,72 +7,72 @@ use app\currencies\application\actions\ImportRates;
 use app\currencies\application\dto\CurrencyProviderDto;
 use app\currencies\application\enums\CurrencyIso;
 use app\currencies\application\forms\CurrencyForm;
-use app\currencies\infrastructure\providers\EuropeanCentralBankProvider;
-use app\shared\application\exceptions\InvalidCallException;
+use app\currencies\application\services\RateService;
 use app\shared\application\exceptions\NotValidException;
+use app\shared\application\exceptions\UnexpectedValueException;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
 class ImportRatesTest extends UnitTestCase
 {
     private ImportRates $action;
-    private EuropeanCentralBankProvider|MockObject $provider;
     private CreateOrUpdateCurrency|MockObject $createOrUpdateCurrency;
+    private RateService|MockObject $rateService;
+    private CurrencyIso $sourceCurrency = CurrencyIso::USD;
+    private CurrencyIso $targetCurrency = CurrencyIso::UAH;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->createOrUpdateCurrency = $this->getActionMock(CreateOrUpdateCurrency::class);
-        $this->provider = $this->getEuropeanCentralBankProviderMock();
-        $this->action = new ImportRates($this->provider, $this->createOrUpdateCurrency);
+        $this->rateService = $this->getRateServiceMock();
+        $this->action = new ImportRates(
+            $this->rateService,
+            $this->createOrUpdateCurrency,
+            $this->sourceCurrency,
+            $this->targetCurrency,
+        );
     }
 
-
     /**
-     * @return EuropeanCentralBankProvider|MockObject
+     * @return RateService|MockObject
      */
-    protected function getEuropeanCentralBankProviderMock(): EuropeanCentralBankProvider|MockObject
+    protected function getRateServiceMock(): RateService|MockObject
     {
-        return $this->getMockBuilder(EuropeanCentralBankProvider::class)
+        return $this->getMockBuilder(RateService::class)
             ->disableOriginalConstructor()
             ->onlyMethods(
                 [
-                    'getActualRates',
+                    'getRate',
                 ]
             )
             ->getMock();
     }
 
     /**
-     * @throws InvalidCallException
+     * @return void
+     * @throws UnexpectedValueException
      */
     public function testExecute()
     {
-        $rates = [
-            new CurrencyProviderDto(CurrencyIso::USD->value, 1.0),
-            new CurrencyProviderDto(CurrencyIso::UAH->value, 5.0),
-        ];
+        $rate = new CurrencyProviderDto(CurrencyIso::UAH->value, 5.0);
 
-        $this->provider->expects($this->once())
-            ->method('getActualRates')
-            ->willReturn($rates);
-
+        $this->rateService->expects($this->once())
+            ->method('getRate')
+            ->willReturn($rate);
 
         $mapInvoke = [
             'createOrUpdateCurrency.execute' => ['params' => [], 'return' => []],
         ];
 
         $entity = $this->getCurrencyEntity();
-        foreach ($rates as $rate) {
-            $mapInvoke['createOrUpdateCurrency.execute']['params'][] = [
-                new CurrencyForm(
-                    $rate->getCurrency(),
-                    $rate->getRate()
-                )
-            ];
-            $mapInvoke['createOrUpdateCurrency.execute']['return'][] = $entity;
-        }
-
+        $mapInvoke['createOrUpdateCurrency.execute']['params'][] = [
+            new CurrencyForm(
+                $rate->getCurrency(),
+                $rate->getRoundedRate()
+            )
+        ];
+        $mapInvoke['createOrUpdateCurrency.execute']['return'][] = $entity;
         $matcher = self::exactly(count($mapInvoke['createOrUpdateCurrency.execute']['params']));
         $this->createOrUpdateCurrency->expects($matcher)
             ->method('execute')
@@ -86,44 +86,27 @@ class ImportRatesTest extends UnitTestCase
 
         $actual = $this->action->execute();
         self::assertIsArray($actual);
-        self::assertCount(count($rates), $actual);
+        self::assertCount(1, $actual);
     }
 
-
     /**
-     * @throws InvalidCallException
+     * @return void
+     * @throws UnexpectedValueException
      */
     public function testExecuteNotCreated()
     {
         self::expectException(NotValidException::class);
         self::expectExceptionMessage("Validation Failed");
 
-        $rates = [
-            new CurrencyProviderDto(CurrencyIso::USD->value, 1.0),
-        ];
+        $rate = new CurrencyProviderDto(CurrencyIso::USD->value, 1.0);
 
-        $this->provider->expects($this->once())
-            ->method('getActualRates')
-            ->willReturn($rates);
+        $this->rateService->expects($this->once())
+            ->method('getRate')
+            ->willReturn($rate);
 
         $this->createOrUpdateCurrency->expects(self::once())
             ->method('execute')
             ->willThrowException(new NotValidException(["Not valid rate"]));
-
-        $actual = $this->action->execute();
-    }
-
-    /**
-     * @throws InvalidCallException
-     */
-    public function testExecuteEmptyRates()
-    {
-        self::expectException(InvalidCallException::class);
-        self::expectExceptionMessage("Currency rate provider return empty");
-
-        $this->provider->expects($this->once())
-            ->method('getActualRates')
-            ->willReturn([]);
 
         $actual = $this->action->execute();
     }

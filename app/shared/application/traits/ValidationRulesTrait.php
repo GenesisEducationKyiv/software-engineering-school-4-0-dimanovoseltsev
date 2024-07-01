@@ -15,6 +15,7 @@ trait ValidationRulesTrait
     protected function validateIdInt(int $value, string $message = 'Is not valid'): bool
     {
         Assert::positiveInteger($value, $message);
+
         return true;
     }
 
@@ -33,6 +34,7 @@ trait ValidationRulesTrait
         ) {
             throw new InvalidArgumentException($message);
         }
+
         return true;
     }
 
@@ -45,6 +47,7 @@ trait ValidationRulesTrait
     {
         Assert::notEmpty($value, $message);
         Assert::notNull($value, $message);
+
         return true;
     }
 }

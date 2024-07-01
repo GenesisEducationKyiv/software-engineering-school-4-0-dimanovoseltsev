@@ -7,6 +7,7 @@ use app\currencies\application\services\CurrencyService;
 use app\currencies\domain\entities\Currency;
 use app\currencies\infrastructure\mappers\Mapper;
 use app\currencies\infrastructure\models\Currency as ModelCurrency;
+use app\shared\infrastructure\services\YiiLogger;
 use app\subscriptions\application\services\SubscriptionService;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\infrastructure\models\Subscription as ModelSubscription;
@@ -222,6 +223,19 @@ class UnitTestCase extends TestCase
                     'getByEmailAndNotSend',
                 ]
             )
+            ->getMock();
+    }
+
+    /**
+     * @return YiiLogger|MockObject
+     */
+    protected function getLogServiceMock(): YiiLogger|MockObject
+    {
+        return $this->getMockBuilder(YiiLogger::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'log',
+            ])
             ->getMock();
     }
 }

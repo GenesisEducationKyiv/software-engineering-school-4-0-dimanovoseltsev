@@ -45,6 +45,7 @@ class SendEmailsScheduled extends BaseAction implements SendEmailsScheduledInter
                 $count++;
             }
         } while (true);
+
         return $count;
     }
 }

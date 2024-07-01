@@ -30,6 +30,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     public function findByEmail(string $email): ?Subscription
     {
         $model = $this->query->findByEmail($email);
+
         return $model === null ? null : Mapper::toEntity($model);
     }
 
@@ -42,6 +43,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     public function save(Subscription $currency): Subscription
     {
         $values = Mapper::toModelAttributes($currency);
+
         return Mapper::toEntity($this->query->save($values));
     }
 
@@ -77,6 +79,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
         $model = $this->query->clear()
             ->prepareNotSent($this->breakBetweenSending)
             ->findByEmail($email);
+
         return $model === null ? null : Mapper::toEntity($model);
     }
 }

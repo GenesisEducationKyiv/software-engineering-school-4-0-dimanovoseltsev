@@ -109,85 +109,85 @@ services:
     environment:
       - TZ=America/New_York
     deploy:
-      replicas: 2
+      replicas: 1
 
-  cron:
-    build:
-      context: .
-      dockerfile: DockerfileCron
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./docker/cron/cron.log:/var/log/cron.log
-    networks:
-      - app-network
-    depends_on:
-      - mysql
-      - memcached
-      - rabbitmq
-    environment:
-      - TZ=America/New_York
+#  cron:
+#    build:
+#      context: .
+#      dockerfile: DockerfileCron
+#    working_dir: /app
+#    volumes:
+#      - .:/app
+#      - ./docker/cron/cron.log:/var/log/cron.log
+#    networks:
+#      - app-network
+#    depends_on:
+#      - mysql
+#      - memcached
+#      - rabbitmq
+#    environment:
+#      - TZ=America/New_York
 
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - app-network
-    command:
-      - --web.enable-remote-write-receiver
-      - --enable-feature=native-histograms
-      - --config.file=/etc/prometheus/prometheus.yml
-
-  node-exporter:
-    image: prom/node-exporter:latest
-    restart: unless-stopped
-    pid: host
-    ports:
-      - "9100:9100"
-    networks:
-      - app-network
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3010:3000"
-    environment:
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_USERS_ALLOW_ORG_CREATE=false
-      - GF_AUTH_BASIC_ENABLED=false
-    depends_on:
-      - prometheus
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./docker/grafana:/etc/grafana/provisioning
-    networks:
-      - app-network
-
-  k6:
-    image: grafana/k6:latest
-    container_name: k6
-    volumes:
-      - ./tests/load-k6:/load-k6
-    entrypoint: [
-      "sh", "-c",
-      "k6 run /load-k6/subscription-currency.js \ 
-      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
-      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
-    ]
-    links:
-      - prometheus
-    depends_on:
-      - prometheus
-    networks:
-      - app-network
+#  prometheus:
+#    image: prom/prometheus:latest
+#    ports:
+#      - "9090:9090"
+#    volumes:
+#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    networks:
+#      - app-network
+#    command:
+#      - --web.enable-remote-write-receiver
+#      - --enable-feature=native-histograms
+#      - --config.file=/etc/prometheus/prometheus.yml
+#
+#  node-exporter:
+#    image: prom/node-exporter:latest
+#    restart: unless-stopped
+#    pid: host
+#    ports:
+#      - "9100:9100"
+#    networks:
+#      - app-network
+#
+#  grafana:
+#    image: grafana/grafana:latest
+#    container_name: grafana
+#    ports:
+#      - "3010:3000"
+#    environment:
+#      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+#      - GF_SECURITY_ADMIN_PASSWORD=admin
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_AUTH_ANONYMOUS_ENABLED=true
+#      - GF_USERS_ALLOW_SIGN_UP=false
+#      - GF_USERS_ALLOW_ORG_CREATE=false
+#      - GF_AUTH_BASIC_ENABLED=false
+#    depends_on:
+#      - prometheus
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#      - ./docker/grafana:/etc/grafana/provisioning
+#    networks:
+#      - app-network
+#
+#  k6:
+#    image: grafana/k6:latest
+#    container_name: k6
+#    volumes:
+#      - ./tests/load-k6:/load-k6
+#    entrypoint: [
+#      "sh", "-c",
+#      "k6 run /load-k6/subscription-currency.js \
+#      --out experimental-prometheus-rw=http://prometheus:9090/metrics/job/k6  \
+#      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write "
+#    ]
+#    links:
+#      - prometheus
+#    depends_on:
+#      - prometheus
+#    networks:
+#      - app-network
 
 networks:
   app-network:

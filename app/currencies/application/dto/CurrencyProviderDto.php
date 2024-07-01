@@ -4,6 +4,8 @@ namespace app\currencies\application\dto;
 
 readonly class CurrencyProviderDto
 {
+    public const int RATE_PRECISION = 5;
+
     /**
      * @param string $currency
      * @param float $rate
@@ -28,5 +30,13 @@ readonly class CurrencyProviderDto
     public function getRate(): float
     {
         return $this->rate;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRoundedRate(): float
+    {
+        return round($this->rate, self::RATE_PRECISION);
     }
 }

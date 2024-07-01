@@ -26,6 +26,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findByCode(string $code): ?Currency
     {
         $model = $this->query->findByCode($code);
+
         return $model === null ? null : Mapper::toEntity($model);
     }
 
@@ -38,6 +39,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function save(Currency $currency): Currency
     {
         $values = Mapper::toModelAttributes($currency);
+
         return Mapper::toEntity($this->query->save($values));
     }
 }

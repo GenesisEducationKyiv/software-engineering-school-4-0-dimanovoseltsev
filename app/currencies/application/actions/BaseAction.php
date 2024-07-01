@@ -15,6 +15,7 @@ abstract class BaseAction
         if ($entity === null) {
             throw new NotExistException("Currency not found");
         }
+
         return $entity;
     }
 }

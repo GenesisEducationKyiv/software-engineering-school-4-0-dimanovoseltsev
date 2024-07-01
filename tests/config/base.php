@@ -4,12 +4,14 @@
  */
 
 
-use app\currencies\application\providers\ProviderInterface;
+use app\currencies\application\providers\RateChain;
+use app\currencies\application\providers\RateChainProviderInterface;
 use app\currencies\domain\repositories\CurrencyRepositoryInterface;
 use app\currencies\infrastructure\models\Currency;
 use app\currencies\infrastructure\repositories\CurrencyRepository;
+use app\shared\application\services\LogServiceInterface;
 use tests\components\DummyQueue;
-use tests\components\EuropeanCentralBankProvider;
+use tests\components\ExchangeRateProvider;
 use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
@@ -54,13 +56,14 @@ return [
     ],
     'container' => [
         'definitions' => [
-            ProviderInterface::class => function (Container $container) {
-                return new EuropeanCentralBankProvider(
+            RateChainProviderInterface::class => function (Container $container) {
+                $exchangeRateProvider = new ExchangeRateProvider(
                     new GuzzleHttp\Client(['base_uri' => getenv('EXCHANGE_RATE_API_URL')]),
-                    (string)getenv("EXCHANGE_RATE_API_LEY"),
-                    (string)getenv("BASE_CURRENCY"),
-                    (string)getenv("IMPORTED_CURRENCY"),
+                    (string)getenv("EXCHANGE_RATE_API_KEY"),
+                    $container->get(LogServiceInterface::class),
                 );
+
+                return new RateChain($exchangeRateProvider);
             },
             CurrencyRepositoryInterface::class => function (Container $container) {
                 return new  CurrencyRepository(Currency::find());
