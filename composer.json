@@ -1,0 +1,68 @@
+{
+  "name": "novoseltsev/currency-rates-api",
+  "description": "Currency rates API",
+  "version": "1.3.0",
+  "type": "project",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.3",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-simplexml": "*",
+    "yiisoft/yii2": "^2.0.47",
+    "vlucas/phpdotenv": "^5.5",
+    "yiisoft/yii2-queue": "^2.3",
+    "enqueue/amqp-lib": "^0.10.19",
+    "light/yii2-swagger": "^3.0",
+    "yiisoft/yii2-symfonymailer": "~3.0.0",
+    "guzzlehttp/guzzle": "^7.8",
+    "webmozart/assert": "^1.11"
+  },
+  "require-dev": {
+    "codeception/codeception": "^5.1",
+    "codeception/module-asserts": "^3.0",
+    "codeception/module-filesystem": "^3.0",
+    "codeception/module-phpbrowser": "^3.0",
+    "codeception/module-rest": "^3.3",
+    "yiisoft/yii2-faker": "^2.0",
+    "codeception/module-yii2": "^1.1",
+    "phpstan/phpstan": "^1.10",
+    "squizlabs/php_codesniffer": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "infection/extension-installer": true
+    },
+    "process-timeout": 1800,
+    "fxp-asset": {
+      "enabled": false
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "frontend\\": "frontend/",
+      "app\\": "app/",
+      "console\\": "console/",
+      "tests\\": "tests/",
+      "common\\": "common/"
+    }
+  },
+  "provide": {
+    "bower-asset/jquery": "*",
+    "bower-asset/inputmask": "*",
+    "bower-asset/punycode": "*",
+    "bower-asset/yii2-pjax": "*",
+    "bower-asset/bootstrap": "*",
+    "bower-asset/typeahead.js": "*"
+  },
+  "audit": {},
+  "fail-abandoned": true
+}
