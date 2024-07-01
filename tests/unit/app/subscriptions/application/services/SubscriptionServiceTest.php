@@ -6,6 +6,7 @@ use app\currencies\infrastructure\repositories\CurrencyRepository;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\services\SubscriptionService;
+use app\subscriptions\domain\dto\SearchSubscribersDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\infrastructure\repositories\SubscriptionRepository;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -97,7 +98,7 @@ class SubscriptionServiceTest extends UnitTestCase
         $entity = $this->getSubscriptionEntity();
         $this->repository->expects($this->once())
             ->method('findNotSent')
-            ->with($dto)
+            ->with(new SearchSubscribersDto($dto->getLastId(), $dto->getLimit()))
             ->willReturn([$entity]);
 
         $actual = $this->service->getNotSent($dto);

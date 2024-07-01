@@ -4,7 +4,7 @@ namespace app\currencies\domain\entities;
 
 use app\currencies\domain\valueObjects\Iso3;
 use app\currencies\domain\valueObjects\Rate;
-use app\shared\application\interfaces\Arrayable;
+use app\shared\domain\interfaces\Arrayable;
 use app\shared\domain\valueObjects\Id;
 use app\shared\domain\valueObjects\Timestamp;
 
