@@ -15,7 +15,14 @@ use app\domain\valueObjects\Timestamp;
 class EventMapper
 {
     /**
-     * @param array $eventData
+     * @param array{
+     *     email?: string,
+     *     currency?: array{
+     *         iso3?: string,
+     *         rate?: float,
+     *         updatedAt?: int,
+     *       }
+     *     } $eventData
      * @return MailSendDto
      * @throws NotValidException
      */
@@ -23,7 +30,7 @@ class EventMapper
     {
         $currencyInfo = $eventData['currency'] ?? null;
         $form = new MailCreateEventForm(
-            $currencyInfo['email'] ?? null,
+            $eventData['email'] ?? null,
             $currencyInfo['iso3'] ?? null,
             $currencyInfo['rate'] ?? null,
             $currencyInfo['updatedAt'] ?? null,

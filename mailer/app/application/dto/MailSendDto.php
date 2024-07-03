@@ -6,7 +6,7 @@ use app\application\traits\TimestampTrait;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 
-readonly class MailSendDto
+class MailSendDto
 {
     use TimestampTrait;
 

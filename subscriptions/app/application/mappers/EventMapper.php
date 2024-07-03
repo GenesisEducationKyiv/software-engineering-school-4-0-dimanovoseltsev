@@ -9,7 +9,7 @@ use app\application\forms\MailSentEventForm;
 class EventMapper
 {
     /**
-     * @param array $eventData
+     * @param array{email:string, timestamp: int} $eventData
      * @return MailSentDto
      * @throws NotValidException
      */
@@ -18,7 +18,7 @@ class EventMapper
         $form = new MailSentEventForm(
             $eventData['email'] ?? null
         );
-        $form->setTimestamp((int)$eventData['timestamp'] ?? null);
+        $form->setTimestamp((int)($eventData['timestamp'] ?? 0));
 
         if(!$form->validate()){
            throw new NotValidException($form->getErrors());
