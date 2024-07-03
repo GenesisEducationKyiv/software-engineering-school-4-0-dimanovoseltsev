@@ -2,21 +2,23 @@
 
 namespace app\application\dto;
 
+use app\application\traits\TimestampTrait;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 
 readonly class MailSendDto
 {
+    use TimestampTrait;
+
     /**
      * @param Currency $currency
      * @param Subscription $subscription
-     * @param int $timestamp
      */
     public function __construct(
         private Currency $currency,
         private Subscription $subscription,
-        private int $timestamp,
     ) {
+        $this->setCurrentTimestamp();
     }
 
     /**
@@ -33,13 +35,5 @@ readonly class MailSendDto
     public function getSubscription(): Subscription
     {
         return $this->subscription;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimestamp(): int
-    {
-        return $this->timestamp;
     }
 }

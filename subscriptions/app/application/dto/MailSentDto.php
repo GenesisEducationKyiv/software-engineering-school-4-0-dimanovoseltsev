@@ -2,16 +2,18 @@
 
 namespace app\application\dto;
 
+use app\application\traits\TimestampTrait;
+
 readonly class MailSentDto
 {
+    use TimestampTrait;
+
     /**
      * @param string $email
-     * @param int $timestamp
      */
-    public function __construct(
-        private string $email,
-        private int $timestamp,
-    ) {
+    public function __construct(private string $email)
+    {
+        $this->setCurrentTimestamp();
     }
 
     /**
@@ -22,11 +24,4 @@ readonly class MailSentDto
         return $this->email;
     }
 
-    /**
-     * @return int
-     */
-    public function getTimestamp(): int
-    {
-        return $this->timestamp;
-    }
 }

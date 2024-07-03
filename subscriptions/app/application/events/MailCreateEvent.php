@@ -3,11 +3,15 @@
 namespace app\application\events;
 
 use app\application\interfaces\EventInterface;
+use app\application\traits\TimestampTrait;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
+use Ramsey\Uuid\Uuid;
 
 class MailCreateEvent implements EventInterface
 {
+    use TimestampTrait;
+
     /**
      * @param Currency $currency
      * @param Subscription $subscription
@@ -16,6 +20,7 @@ class MailCreateEvent implements EventInterface
         private readonly Currency $currency,
         private readonly Subscription $subscription
     ) {
+        $this->setCurrentTimestamp();
     }
 
     /**
@@ -32,8 +37,13 @@ class MailCreateEvent implements EventInterface
     public function getBody(): array
     {
         return [
-            'email' => $this->subscription->getEmail()->value(),
-            'currency' => $this->currency->toArray(),
+            'eventId' => Uuid::uuid7()->toString(),
+            'eventType' => $this->getName(),
+            'timestamp' => $this->getTimestamp(),
+            'data' => [
+                'email' => $this->subscription->getEmail()->value(),
+                'currency' => $this->currency->toArray(),
+            ],
         ];
     }
 }
