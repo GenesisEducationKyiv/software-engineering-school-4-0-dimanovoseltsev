@@ -28,7 +28,9 @@ class SendEmail extends BaseAction implements SendEmailInterface
         $state = $this->mailService->sendMail($dto->getCurrency(), $dto->getSubscription());
 
         if ($state) {
-            $this->eventBus->publish(new MailSentEvent($dto->getSubscription()));
+            $event = new MailSentEvent($dto->getSubscription());
+            $event->setTimestamp($dto->getTimestamp());
+            $this->eventBus->publish($event);
         }
 
         return $state;

@@ -65,7 +65,7 @@ class SendEmailTest extends UnitTestCase
 
         $this->eventBus->expects($this->once())
             ->method('publish')
-            ->with(new MailSentEvent($dto->getSubscription(), $dto->getTimestamp()));
+            ->with((new MailSentEvent($dto->getSubscription()))->setTimestamp($dto->getTimestamp()));
 
         $this->mailService->expects(self::once())
             ->method('sendMail')
