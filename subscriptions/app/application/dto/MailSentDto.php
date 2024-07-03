@@ -4,7 +4,7 @@ namespace app\application\dto;
 
 use app\application\traits\TimestampTrait;
 
-readonly class MailSentDto
+class MailSentDto
 {
     use TimestampTrait;
 
@@ -23,5 +23,4 @@ readonly class MailSentDto
     {
         return $this->email;
     }
-
 }
