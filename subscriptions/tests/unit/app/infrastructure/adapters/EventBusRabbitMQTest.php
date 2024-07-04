@@ -3,6 +3,7 @@
 namespace tests\unit\app\infrastructure\adapters;
 
 use app\application\events\MailCreateEvent;
+use app\application\events\MailSentEvent;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
@@ -39,13 +40,27 @@ class EventBusRabbitMQTest extends UnitTestCase
 
     public function testPublish()
     {
-        $currency = $this->getCurrencyEntity();
-        $subscription = $this->getSubscriptionEntity();
-        $event = new MailCreateEvent($currency, $subscription);
+        $event = $this->getMockBuilder(MailCreateEvent::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getBody', 'getName'])
+            ->getMock();
+
+        $body = [
+            'eventId' => '019079d6-5873-71b2-b2f4-ec81f737c0b0',
+            'eventType' => 'mail.create',
+            'timestamp' => 1720031008,
+            'data' => [
+                'id' => 1
+            ]
+        ];
+
+        $event->expects($this->once())
+            ->method('getBody')
+            ->willReturn($body);
 
         $this->queue->expects($this->once())
             ->method('push')
-            ->with($event->getBody());
+            ->with($body);
 
         $this->adapter->publish($event);
     }

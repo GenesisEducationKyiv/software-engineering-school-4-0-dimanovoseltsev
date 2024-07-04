@@ -40,7 +40,6 @@ class EventBusRabbitMQTest extends UnitTestCase
     public function testPublish()
     {
         $subscription = $this->getSubscriptionEntity();
-        $event = new MailSentEvent($subscription);
 
         $event = $this->getMockBuilder(MailSentEvent::class)
             ->disableOriginalConstructor()
