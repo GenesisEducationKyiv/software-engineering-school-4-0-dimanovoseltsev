@@ -58,7 +58,7 @@ class MailCreateEventForm extends BaseForm implements FormInterface, Errorable
 
         try {
             $this->validateRequired($this->currencyUpdatedAt);
-            $this->validateIdInt($this->currencyUpdatedAt);
+            $this->validateIdInt((int)$this->currencyUpdatedAt);
         } catch (InvalidArgumentException $e) {
             $this->addError('updatedAt', $e->getMessage());
         }
