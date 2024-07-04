@@ -57,7 +57,7 @@ class MailSentWorkerCest extends FunctionalCest
         $timestamp = 1720016496;
         $body = [
             "eventId" => "019078f8-2704-72ed-865f-e276f6883bf5",
-            "eventType" => "mail.sent",
+            "eventType" => "mail.create",
             "timestamp" => $timestamp,
             "data" => [
                 "email" => $email,

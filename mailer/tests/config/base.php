@@ -42,8 +42,11 @@ return [
             'transport' => [
                 'dsn' => getenv('MAILER_DSN'),
             ],
-            'useFileTransport' => (bool)getenv('MAILER_DEBUG'),
-            'viewPath' => '@themes/mails/views',
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => [getenv("SENDER_EMAIL") => getenv("SENDER_NAME")],
+            ],
+            'useFileTransport' => true,
         ],
     ],
     'container' => [

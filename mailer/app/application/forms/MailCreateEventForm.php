@@ -51,7 +51,7 @@ class MailCreateEventForm extends BaseForm implements FormInterface, Errorable
 
         try {
             $this->validateRequired($this->currencyRate);
-            Assert::integer($this->currencyRate);
+            Assert::float($this->currencyRate);
         } catch (InvalidArgumentException $e) {
             $this->addError('rate', $e->getMessage());
         }
