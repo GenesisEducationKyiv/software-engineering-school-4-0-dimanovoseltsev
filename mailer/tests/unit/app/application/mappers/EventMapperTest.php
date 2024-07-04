@@ -24,7 +24,7 @@ class EventMapperTest extends UnitTestCase
         $eventData = [
             'currency' => [
                 'iso3' => 'USD',
-                'rate' => 1,
+                'rate' => 1.0,
                 'updatedAt' => time()
             ],
             'email' => 'mail@mail.com'
