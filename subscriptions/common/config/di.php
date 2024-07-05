@@ -25,10 +25,7 @@ return [
     },
     // repositories
     SubscriptionRepositoryInterface::class => function (Container $container) {
-        return new SubscriptionRepository(
-            Subscription::find(),
-            (int)getenv("BREAK_BETWEEN_SENDING_EMAIL"),
-        );
+        return new SubscriptionRepository(Subscription::find());
     },
     EventBusInterface::class => function (Container $container) {
         return new EventBusRabbitMQ(

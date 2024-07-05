@@ -34,7 +34,7 @@ class Unsubscribe extends BaseAction implements UnsubscribeInterface
         }
 
         $entity = $this->service->getByEmail($form->getEmail());
-        $this->checkExit($entity);
+        $entity = $this->checkExit($entity);
 
         $deleted = $this->service->delete($form->getEmail());
         if ($deleted > 0) {

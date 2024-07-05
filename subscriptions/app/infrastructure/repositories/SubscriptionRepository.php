@@ -13,11 +13,9 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
 {
     /**
      * @param SubscriptionQuery $query
-     * @param int $breakBetweenSending
      */
     public function __construct(
-        private readonly SubscriptionQuery $query,
-        private readonly int $breakBetweenSending
+        private readonly SubscriptionQuery $query
     ) {
     }
 
