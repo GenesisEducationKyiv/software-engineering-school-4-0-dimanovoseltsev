@@ -35,10 +35,7 @@ class SubscriptionRepositoryTest extends UnitTestCase
                     'findByEmail',
                     'save',
                     'clear',
-                    'andFilterWhere',
-                    'limit',
-                    'orderBy',
-                    'all',
+                    'deleteByEmail',
                 ]
             )
             ->getMock();
@@ -102,6 +99,19 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
         $actual = $this->repository->save($entity);
         self::assertInstanceOf(Subscription::class, $actual);
+    }
+
+    public function testDeleteByEmail()
+    {
+        $email = "mai@mail.com";
+
+        $this->query->expects(self::once())
+            ->method('deleteByEmail')
+            ->with($email)
+            ->willReturn(1);
+
+        $actual = $this->repository->deleteByEmail($email);
+        self::assertEquals(1, $actual);
     }
 }
 

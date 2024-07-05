@@ -6,10 +6,10 @@ use app\application\actions\CreateOrUpdateCurrency;
 use app\application\actions\ImportRates;
 use app\application\dto\CurrencyProviderDto;
 use app\application\enums\CurrencyIso;
-use app\application\forms\CurrencyForm;
-use app\application\services\RateService;
 use app\application\exceptions\NotValidException;
 use app\application\exceptions\UnexpectedValueException;
+use app\application\forms\CurrencyForm;
+use app\application\services\RateService;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

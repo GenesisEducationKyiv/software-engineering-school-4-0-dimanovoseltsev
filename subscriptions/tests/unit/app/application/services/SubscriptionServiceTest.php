@@ -85,5 +85,17 @@ class SubscriptionServiceTest extends UnitTestCase
         $actual = $this->service->create($dto);
         self::assertInstanceOf(Subscription::class, $actual);
     }
+
+    public function testDelete()
+    {
+        $email = "mail@mail.com";
+        $this->repository->expects($this->once())
+            ->method('deleteByEmail')
+            ->with($email)
+            ->willReturn(1);
+
+        $actual = $this->service->delete($email);
+        self::assertEquals(1, $actual);
+    }
 }
 

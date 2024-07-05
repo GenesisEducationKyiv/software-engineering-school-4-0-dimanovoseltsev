@@ -25,6 +25,7 @@ class Unsubscribe extends BaseAction implements UnsubscribeInterface
      * @param UnsubscribeForm $form
      * @return bool
      * @throws NotValidException
+     * @throws NotExistException
      */
     public function execute(UnsubscribeForm $form): bool
     {
@@ -33,9 +34,7 @@ class Unsubscribe extends BaseAction implements UnsubscribeInterface
         }
 
         $entity = $this->service->getByEmail($form->getEmail());
-        if ($entity === null) {
-            throw new NotExistException("Not exist");
-        }
+        $this->checkExit($entity);
 
         $deleted = $this->service->delete($form->getEmail());
         if ($deleted > 0) {

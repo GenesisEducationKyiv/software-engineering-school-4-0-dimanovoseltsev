@@ -4,8 +4,8 @@ namespace tests\unit\app\infrastructure\providers;
 
 use app\application\dto\CurrencyProviderDto;
 use app\application\enums\CurrencyIso;
-use app\infrastructure\providers\ExchangeRateProvider;
 use app\application\exceptions\RemoteServiceException;
+use app\infrastructure\providers\ExchangeRateProvider;
 use app\infrastructure\services\YiiLogger;
 use Exception;
 use GuzzleHttp\Client;

@@ -12,7 +12,6 @@ use app\infrastructure\models\Currency;
 use app\infrastructure\repositories\CurrencyRepository;
 use tests\components\DummyQueue;
 use tests\components\ExchangeRateProvider;
-use tests\components\YiiMailer;
 use yii\console\controllers\MigrateController;
 use yii\db\Connection;
 use yii\di\Container;
