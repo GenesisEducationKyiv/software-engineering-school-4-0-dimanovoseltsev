@@ -5,6 +5,7 @@ namespace tests\unit;
 use app\application\enums\CurrencyIso;
 use app\application\services\CurrencyService;
 use app\domain\entities\Currency;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\mappers\Mapper;
 use app\infrastructure\models\Currency as ModelCurrency;
 use app\infrastructure\services\YiiLogger;
@@ -166,6 +167,21 @@ class UnitTestCase extends TestCase
             ->onlyMethods([
                 'log',
             ])
+            ->getMock();
+    }
+
+    /**
+     * @return EventBusRabbitMQ|MockObject
+     */
+    protected function getEventBusMock(): EventBusRabbitMQ|MockObject
+    {
+        return $this->getMockBuilder(EventBusRabbitMQ::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'publish',
+                ]
+            )
             ->getMock();
     }
 }

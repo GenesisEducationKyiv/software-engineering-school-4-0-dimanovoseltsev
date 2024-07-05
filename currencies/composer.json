@@ -1,7 +1,7 @@
 {
   "name": "novoseltsev/currency-rates-api",
   "description": "Currencies API",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "project",
   "license": "BSD-3-Clause",
   "minimum-stability": "stable",
@@ -14,7 +14,10 @@
     "vlucas/phpdotenv": "^5.5",
     "light/yii2-swagger": "^3.0",
     "guzzlehttp/guzzle": "^7.8",
-    "webmozart/assert": "^1.11"
+    "webmozart/assert": "^1.11",
+    "yiisoft/yii2-queue": "^2.3",
+    "enqueue/amqp-lib": "^0.10.19",
+    "ramsey/uuid": "^4.7"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",

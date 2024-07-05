@@ -37,6 +37,7 @@ return [
         'sendEmailQueue' => ['class' => DummyQueue::class],
         'sendEmailFailQueue' => ['class' => DummyQueue::class],
         'sendEmailQueueWorker' => ['class' => DummyQueue::class],
+        'eventBusQueue' => ['class' => DummyQueue::class],
         'mailer' => [
             'class' => YiiMailer::class,
             'transport' => [

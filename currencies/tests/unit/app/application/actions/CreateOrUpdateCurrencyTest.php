@@ -5,10 +5,11 @@ namespace tests\unit\app\application\actions;
 use app\application\actions\CreateOrUpdateCurrency;
 use app\application\dto\CreateCurrencyDto;
 use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotValidException;
 use app\application\forms\CurrencyForm;
 use app\application\services\CurrencyService;
 use app\domain\entities\Currency;
-use app\application\exceptions\NotValidException;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -16,12 +17,14 @@ class CreateOrUpdateCurrencyTest extends UnitTestCase
 {
     private CreateOrUpdateCurrency $action;
     private CurrencyService|MockObject $service;
+    private EventBusRabbitMQ|MockObject $eventBus;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->getCurrencyServiceMock();
-        $this->action = new CreateOrUpdateCurrency($this->service);
+        $this->eventBus = $this->getEventBusMock();
+        $this->action = new CreateOrUpdateCurrency($this->service, $this->eventBus);
     }
 
     /**
