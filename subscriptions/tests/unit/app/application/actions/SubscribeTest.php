@@ -9,6 +9,7 @@ use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Subscription;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -16,12 +17,14 @@ class SubscribeTest extends UnitTestCase
 {
     private Subscribe $action;
     private SubscriptionService|MockObject $service;
+    private EventBusRabbitMQ|MockObject $eventBus;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->getSubscriptionServiceMock();
-        $this->action = new Subscribe($this->service);
+        $this->eventBus = $this->getEventBusMock();
+        $this->action = new Subscribe($this->service, $this->eventBus);
     }
 
 

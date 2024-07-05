@@ -2,7 +2,9 @@
 
 namespace app\application\actions;
 
+use app\application\adapters\EventBusInterface;
 use app\application\dto\CreateSubscriptionDto;
+use app\application\events\SubscriptionCreateEvent;
 use app\application\exceptions\AlreadyException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
@@ -13,9 +15,11 @@ class Subscribe extends BaseAction implements SubscribeInterface
 {
     /**
      * @param SubscriptionServiceInterface $service
+     * @param EventBusInterface $eventBus
      */
     public function __construct(
         private readonly SubscriptionServiceInterface $service,
+        private readonly EventBusInterface $eventBus,
     ) {
     }
 
@@ -36,11 +40,12 @@ class Subscribe extends BaseAction implements SubscribeInterface
             throw new AlreadyException("Already subscribed");
         }
 
-        return $this->service->create(
-            new CreateSubscriptionDto(
-                $form->getEmail(),
-                $form->getTimestamp()
-            )
+        $entity = $this->service->create(
+            new CreateSubscriptionDto($form->getEmail(), $form->getTimestamp())
         );
+
+        $this->eventBus->publish(new SubscriptionCreateEvent($entity));
+
+        return $entity;
     }
 }

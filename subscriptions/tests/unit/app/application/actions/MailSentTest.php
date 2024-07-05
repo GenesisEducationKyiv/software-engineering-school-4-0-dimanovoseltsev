@@ -31,7 +31,7 @@ class MailSentTest extends UnitTestCase
 
         $subscription = $this->getSubscriptionEntity();
         $this->service->expects($this->once())
-            ->method('getByEmailAndNotSend')
+            ->method('getByEmail')
             ->with($dto->getEmail())
             ->willReturn($subscription);
 
@@ -54,7 +54,7 @@ class MailSentTest extends UnitTestCase
         $dto = new MailSentDto("mail@mail.com", time());
 
         $this->service->expects($this->once())
-            ->method('getByEmailAndNotSend')
+            ->method('getByEmail')
             ->with($dto->getEmail())
             ->willReturn(null);
 

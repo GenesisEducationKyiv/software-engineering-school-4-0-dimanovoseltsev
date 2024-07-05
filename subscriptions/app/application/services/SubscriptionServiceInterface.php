@@ -3,7 +3,6 @@
 namespace app\application\services;
 
 use app\application\dto\CreateSubscriptionDto;
-use app\application\dto\SearchSubscribersForMailingDto;
 use app\domain\entities\Subscription;
 
 interface SubscriptionServiceInterface
@@ -27,14 +26,8 @@ interface SubscriptionServiceInterface
     public function create(CreateSubscriptionDto $dto): Subscription;
 
     /**
-     * @param SearchSubscribersForMailingDto $dto
-     * @return Subscription[]
-     */
-    public function getNotSent(SearchSubscribersForMailingDto $dto): array;
-
-    /**
      * @param string $email
-     * @return Subscription|null
+     * @return int
      */
-    public function getByEmailAndNotSend(string $email): ?Subscription;
+    public function delete(string $email): int;
 }

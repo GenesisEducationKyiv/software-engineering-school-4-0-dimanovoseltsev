@@ -9,6 +9,7 @@ return [
     'showScriptName' => false,
     'rules' => [
         'POST /subscribe' => 'rates/subscribe',
+        'POST /unsubscribe' => 'rates/unsubscribe',
 
         'OPTIONS <opts:(.*)>' => 'rates/options',
         '' => 'rates/options',

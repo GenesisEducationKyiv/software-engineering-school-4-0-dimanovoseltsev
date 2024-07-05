@@ -18,8 +18,8 @@ use yii\web\NotFoundHttpException;
 
 #[OA\Info(version: "1.0.0", title: "Currencies API")]
 #[OA\Tag(
-    name: "Rates",
-    description: "Information on API calls, parameters and responses for the Rates API."
+    name: "Currencies",
+    description: "Information on API calls, parameters and responses for the Currencies API."
 )]
 class RatesController extends ActiveController
 {
@@ -119,7 +119,7 @@ class RatesController extends ActiveController
         path: "/rate",
         description: "This request should return the current exchange rate",
         summary: "Get the current exchange rate",
-        tags: ["Rates"],
+        tags: ["Currencies"],
         responses: [
             new OA\Response(
                 response: 200,

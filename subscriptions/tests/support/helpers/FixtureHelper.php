@@ -4,7 +4,6 @@ namespace tests\helpers;
 
 use Codeception\Module;
 use Codeception\TestInterface;
-use tests\fixtures\CurrencyFixture;
 use tests\fixtures\SubscriptionFixture;
 use yii\test\FixtureTrait;
 

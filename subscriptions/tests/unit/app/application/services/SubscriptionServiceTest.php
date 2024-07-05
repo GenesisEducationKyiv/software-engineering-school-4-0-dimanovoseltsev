@@ -3,9 +3,7 @@
 namespace tests\unit\app\application\services;
 
 use app\application\dto\CreateSubscriptionDto;
-use app\application\dto\SearchSubscribersForMailingDto;
 use app\application\services\SubscriptionService;
-use app\domain\dto\SearchSubscribersDto;
 use app\domain\entities\Subscription;
 use app\infrastructure\repositories\CurrencyRepository;
 use app\infrastructure\repositories\SubscriptionRepository;
@@ -32,7 +30,7 @@ class SubscriptionServiceTest extends UnitTestCase
         return $this->getMockBuilder(SubscriptionRepository::class)
             ->disableOriginalConstructor()
             ->onlyMethods(
-                ['findByEmail', 'save', 'findNotSent', 'findByEmailAndNotSend']
+                ['findByEmail', 'save', 'deleteByEmail']
             )
             ->getMock();
     }
@@ -62,48 +60,6 @@ class SubscriptionServiceTest extends UnitTestCase
 
         $actual = $this->service->getByEmail($email);
         self::assertNull($actual);
-    }
-
-    public function testGetByEmailAndNotSend()
-    {
-        $email = "mail@mail.com";
-
-        $entity = $this->getSubscriptionEntity();
-        $this->repository->expects($this->once())
-            ->method('findByEmailAndNotSend')
-            ->with($email)
-            ->willReturn($entity);
-
-        $actual = $this->service->getByEmailAndNotSend($email);
-        self::assertInstanceOf(Subscription::class, $actual);
-    }
-
-    public function testGetByEmailAndNotSendNull()
-    {
-        $email = "mail@mail.com";
-
-        $this->repository->expects($this->once())
-            ->method('findByEmailAndNotSend')
-            ->with($email)
-            ->willReturn(null);
-
-        $actual = $this->service->getByEmailAndNotSend($email);
-        self::assertNull($actual);
-    }
-
-    public function testGetNotSent()
-    {
-        $dto = new SearchSubscribersForMailingDto(0, 10);
-
-        $entity = $this->getSubscriptionEntity();
-        $this->repository->expects($this->once())
-            ->method('findNotSent')
-            ->with(new SearchSubscribersDto($dto->getLastId(), $dto->getLimit()))
-            ->willReturn([$entity]);
-
-        $actual = $this->service->getNotSent($dto);
-        self::assertIsArray($actual);
-        self::assertNotEmpty($actual);
     }
 
     public function testSave()
