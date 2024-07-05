@@ -16,7 +16,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 
-#[OA\Info(version: "1.0.0", title: "Currency Rates API")]
+#[OA\Info(version: "1.0.0", title: "Currencies API")]
 #[OA\Tag(
     name: "Rates",
     description: "Information on API calls, parameters and responses for the Rates API."

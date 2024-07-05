@@ -11,7 +11,7 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
-    'name' => 'Currencies Api',
+    'name' => 'Currencies',
     'language' => 'en',
     'sourceLanguage' => 'en',
     'components' => [
