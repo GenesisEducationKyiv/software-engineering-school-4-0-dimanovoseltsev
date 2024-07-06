@@ -3,6 +3,7 @@
 namespace app\domain\entities;
 
 use app\domain\interfaces\Arrayable;
+use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
@@ -44,7 +45,6 @@ class Currency implements Arrayable
     {
         return $this->updatedAt;
     }
-
 
     /**
      * @return array<string,mixed>

@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "43335e89e45893b04d342995484861dd",
+  "content-hash": "97691c80267f391de55a178b2135413f",
   "packages": [
     {
       "name": "brick/math",
@@ -4623,16 +4623,16 @@
     },
     {
       "name": "phpat/phpat",
-      "version": "0.10.17",
+      "version": "0.10.18",
       "source": {
         "type": "git",
         "url": "https://github.com/carlosas/phpat.git",
-        "reference": "ce5818b83ebe6fe59853b698ca478796db0d8724"
+        "reference": "4c29e330fb306876bca3174aa4b097d0d8611964"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/carlosas/phpat/zipball/ce5818b83ebe6fe59853b698ca478796db0d8724",
-        "reference": "ce5818b83ebe6fe59853b698ca478796db0d8724",
+        "url": "https://api.github.com/repos/carlosas/phpat/zipball/4c29e330fb306876bca3174aa4b097d0d8611964",
+        "reference": "4c29e330fb306876bca3174aa4b097d0d8611964",
         "shasum": ""
       },
       "require": {
@@ -4674,9 +4674,9 @@
       "description": "PHP Architecture Tester",
       "support": {
         "issues": "https://github.com/carlosas/phpat/issues",
-        "source": "https://github.com/carlosas/phpat/tree/0.10.17"
+        "source": "https://github.com/carlosas/phpat/tree/0.10.18"
       },
-      "time": "2024-06-22T08:40:44+00:00"
+      "time": "2024-07-05T14:56:19+00:00"
     },
     {
       "name": "phpstan/extension-installer",
@@ -4724,16 +4724,16 @@
     },
     {
       "name": "phpstan/phpstan",
-      "version": "1.11.6",
+      "version": "1.11.7",
       "source": {
         "type": "git",
         "url": "https://github.com/phpstan/phpstan.git",
-        "reference": "6ac78f1165346c83b4a753f7e4186d969c6ad0ee"
+        "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6ac78f1165346c83b4a753f7e4186d969c6ad0ee",
-        "reference": "6ac78f1165346c83b4a753f7e4186d969c6ad0ee",
+        "url": "https://api.github.com/repos/phpstan/phpstan/zipball/52d2bbfdcae7f895915629e4694e9497d0f8e28d",
+        "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d",
         "shasum": ""
       },
       "require": {
@@ -4778,7 +4778,7 @@
           "type": "github"
         }
       ],
-      "time": "2024-07-01T15:33:06+00:00"
+      "time": "2024-07-06T11:17:41+00:00"
     },
     {
       "name": "phpunit/php-code-coverage",
