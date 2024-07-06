@@ -12,7 +12,7 @@ class DeleteSubscriptionForm extends BaseForm implements FormInterface, Errorabl
     use TimestampTrait;
 
     /**
-     * @param null $email
+     * @param ?string $email
      */
     public function __construct(
         private $email = null,

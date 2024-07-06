@@ -34,7 +34,7 @@ class SubscriptionMapper
     }
 
     /**
-     * @param array{"email": string|null} $value
+     * @param array{id?: int, email?: string} $value
      * @return SubscriptionEntity
      */
     public static function fromPrimitive(array $value): SubscriptionEntity

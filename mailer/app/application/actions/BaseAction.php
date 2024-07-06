@@ -9,7 +9,7 @@ use app\domain\entities\Subscription;
 abstract class BaseAction
 {
     /**
-     * @param Subscription|null $entity
+     * @param Subscription $entity
      * @return Subscription
      * @throws NotExistException
      */
@@ -23,8 +23,8 @@ abstract class BaseAction
     }
 
     /**
-     * @param Currency|null $entity
-     * @return Subscription
+     * @param Currency $entity
+     * @return Currency
      * @throws NotExistException
      */
     protected function checkExitCurrency(?Currency $entity): Currency

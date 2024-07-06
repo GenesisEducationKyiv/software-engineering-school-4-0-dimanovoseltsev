@@ -12,7 +12,7 @@ class EventForm extends BaseForm implements FormInterface, Errorable
      * @param ?string $eventId
      * @param ?string $eventType
      * @param ?int $timestamp
-     * @param ?array $data
+     * @param ?array<string,mixed> $data
      */
     public function __construct(
         private $eventId,
@@ -86,7 +86,7 @@ class EventForm extends BaseForm implements FormInterface, Errorable
     }
 
     /**
-     * @return array
+     * @return array<string,mixed>
      */
     public function getData(): array
     {

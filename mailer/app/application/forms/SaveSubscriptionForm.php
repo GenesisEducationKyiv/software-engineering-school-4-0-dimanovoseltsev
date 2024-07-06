@@ -12,7 +12,7 @@ class SaveSubscriptionForm extends BaseForm implements FormInterface, Errorable
     use TimestampTrait;
 
     /**
-     * @param null $email
+     * @param ?string $email
      */
     public function __construct(
         private $email = null,
