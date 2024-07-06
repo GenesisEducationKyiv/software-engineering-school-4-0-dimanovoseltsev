@@ -26,7 +26,7 @@ class CurrencyWorker extends BaseWorker
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
-        $this->maxAttempt = Yii::$app->params['currency']['mail']['maxAttempt'];
+        $this->maxAttempt = Yii::$app->params['workers']['currency']['maxAttempt'];
     }
 
     /**

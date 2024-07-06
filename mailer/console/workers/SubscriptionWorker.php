@@ -7,6 +7,7 @@ use app\application\actions\SaveSubscription;
 use app\application\exceptions\NotExistException;
 use app\application\mappers\EventMapper;
 use app\application\services\LogServiceInterface;
+use BadFunctionCallException;
 use Throwable;
 use Yii;
 
@@ -29,7 +30,7 @@ class SubscriptionWorker extends BaseWorker
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
-        $this->maxAttempt = Yii::$app->params['subscription']['mail']['maxAttempt'];
+        $this->maxAttempt = Yii::$app->params['workers']['subscription']['maxAttempt'];
     }
 
     /**
@@ -52,7 +53,6 @@ class SubscriptionWorker extends BaseWorker
         try {
             $convertor = new EventMapper();
 
-            // @todo fabric
             match ($eventForm->getEventType()) {
                 'subscription.create' => $this->saveSubscription->execute(
                     $convertor->convertSubscriptionCreateToDto($eventForm->getData())
@@ -60,7 +60,7 @@ class SubscriptionWorker extends BaseWorker
                 'subscription.delete' => $this->deleteSubscription->execute(
                     $convertor->convertSubscriptionDeleteToDto($eventForm->getData())
                 ),
-                default => null
+                default => throw new BadFunctionCallException('Unknown event type')
             };
 
             return true;
