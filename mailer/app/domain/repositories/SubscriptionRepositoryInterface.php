@@ -2,6 +2,7 @@
 
 namespace app\domain\repositories;
 
+use app\domain\dto\SearchSubscribersDto;
 use app\domain\entities\Subscription;
 
 interface SubscriptionRepositoryInterface
@@ -23,4 +24,10 @@ interface SubscriptionRepositoryInterface
      * @return int
      */
     public function deleteByEmail(string $email): int;
+
+    /**
+     * @param SearchSubscribersDto $dto
+     * @return Subscription[]
+     */
+    public function findNotSent(SearchSubscribersDto $dto): array;
 }

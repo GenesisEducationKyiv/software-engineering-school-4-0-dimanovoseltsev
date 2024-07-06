@@ -2,22 +2,31 @@
 
 use app\application\actions\DeleteSubscription;
 use app\application\actions\DeleteSubscriptionInterface;
+use app\application\actions\RetrieveCurrencyByCode;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\actions\RetrieveSubscriptionByEmail;
+use app\application\actions\RetrieveSubscriptionByEmailInterface;
 use app\application\actions\SaveCurrency;
 use app\application\actions\SaveCurrencyInterface;
 use app\application\actions\SaveSubscription;
 use app\application\actions\SaveSubscriptionInterface;
 use app\application\actions\SendEmail;
 use app\application\actions\SendEmailInterface;
+use app\application\actions\SendEmailsScheduled;
+use app\application\actions\SendEmailsScheduledInterface;
 use app\application\adapters\EventBusInterface;
 use app\application\services\CurrencyService;
 use app\application\services\CurrencyServiceInterface;
 use app\application\services\LogServiceInterface;
 use app\application\services\MailService;
 use app\application\services\MailServiceInterface;
+use app\application\services\PublisherService;
+use app\application\services\PublisherServiceInterface;
 use app\application\services\SubscriptionService;
 use app\application\services\SubscriptionServiceInterface;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\adapters\Mailer;
+use app\infrastructure\adapters\RabbitMq;
 use app\infrastructure\models\Currency;
 use app\infrastructure\models\Subscription;
 use app\infrastructure\repositories\CurrencyRepository;
@@ -31,7 +40,6 @@ return [
     LogServiceInterface::class => function (Container $container) {
         return new YiiLogger(\Yii::$app->log->getLogger());
     },
-
     MailServiceInterface::class => function (Container $container) {
         return new MailService(new Mailer(\Yii::$app->mailer));
     },
@@ -51,6 +59,9 @@ return [
         return new SubscriptionService(
             new SubscriptionRepository(Subscription::find())
         );
+    },
+    PublisherServiceInterface::class => function (Container $container) {
+        return new PublisherService(new RabbitMq(Yii::$app->sendEmailQueue));
     },
 
     // actions
@@ -73,6 +84,22 @@ return [
     DeleteSubscriptionInterface::class => function (Container $container) {
         return new DeleteSubscription(
             $container->get(SubscriptionServiceInterface::class),
+        );
+    },
+    SendEmailsScheduledInterface::class => function (Container $container) {
+        return new SendEmailsScheduled(
+            $container->get(SubscriptionServiceInterface::class),
+            $container->get(PublisherServiceInterface::class),
+        );
+    },
+    RetrieveSubscriptionByEmailInterface::class => function (Container $container) {
+        return new RetrieveSubscriptionByEmail(
+            $container->get(SubscriptionServiceInterface::class),
+        );
+    },
+    RetrieveCurrencyByCodeInterface::class => function (Container $container) {
+        return new RetrieveCurrencyByCode(
+            $container->get(CurrencyServiceInterface::class),
         );
     },
 ];

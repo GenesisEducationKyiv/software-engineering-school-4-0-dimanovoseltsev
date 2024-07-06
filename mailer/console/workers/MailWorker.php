@@ -2,10 +2,12 @@
 
 namespace console\workers;
 
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\actions\RetrieveSubscriptionByEmailInterface;
 use app\application\actions\SendEmailInterface;
 use app\application\dto\MailSendDto;
+use app\application\enums\CurrencyIso;
 use app\application\exceptions\NotExistException;
-use app\application\mappers\EventMapper;
 use app\application\services\LogServiceInterface;
 use Throwable;
 use Yii;
@@ -16,6 +18,8 @@ class MailWorker extends BaseWorker
      * @param $id
      * @param $module
      * @param SendEmailInterface $sendEmail
+     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail
      * @param LogServiceInterface $logService
      * @param array $config
      */
@@ -23,6 +27,8 @@ class MailWorker extends BaseWorker
         $id,
         $module,
         private readonly SendEmailInterface $sendEmail,
+        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail,
         private readonly LogServiceInterface $logService,
         array $config = []
     ) {
@@ -40,17 +46,20 @@ class MailWorker extends BaseWorker
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
         $data = (array)json_decode($body, true);
+        $email = $data['email'] ?? null;
+        $currency = $data['currency'] ?? null;
 
-
+        if (empty($email) || empty($currency)) {
+            return true;
+        }
 
         try {
-            $convertor = new EventMapper();
-
-            // 2todo
-
-            return $this->sendEmail->execute(new MailSendDto(
-
-            ));
+            return $this->sendEmail->execute(
+                new MailSendDto(
+                    $this->retrieveCurrencyByCode->execute(CurrencyIso::from((string)$currency)),
+                    $this->retrieveSubscriptionByEmail->execute((string)$email),
+                )
+            );
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {

@@ -2,8 +2,6 @@
 
 namespace app\application\services;
 
-use app\application\dto\CreateCurrencyDto;
-use app\application\mappers\Mapper;
 use app\domain\entities\Currency;
 use app\domain\repositories\CurrencyRepositoryInterface;
 

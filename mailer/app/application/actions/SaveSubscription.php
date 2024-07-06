@@ -13,7 +13,7 @@ class SaveSubscription extends BaseAction implements SaveSubscriptionInterface
      * @param SubscriptionServiceInterface $subscriptionService
      */
     public function __construct(
-        private readonly SubscriptionServiceInterface $subscriptionService
+        private readonly SubscriptionServiceInterface $subscriptionService,
     ) {
     }
 

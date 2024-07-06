@@ -2,7 +2,7 @@
 
 namespace app\application\services;
 
-use app\domain\entities\Currency;
+use app\application\dto\SearchSubscribersForMailingDto;
 use app\domain\entities\Subscription;
 
 interface SubscriptionServiceInterface
@@ -14,14 +14,20 @@ interface SubscriptionServiceInterface
     public function getByEmail(string $email): ?Subscription;
 
     /**
-     * @param Currency $entity
+     * @param Subscription $entity
      * @return Subscription
      */
-    public function save(Currency $entity): Subscription;
+    public function save(Subscription $entity): Subscription;
 
     /**
      * @param string $email
      * @return int
      */
     public function delete(string $email): int;
+
+    /**
+     * @param SearchSubscribersForMailingDto $dto
+     * @return array
+     */
+    public function getNotSent(SearchSubscribersForMailingDto $dto): array;
 }

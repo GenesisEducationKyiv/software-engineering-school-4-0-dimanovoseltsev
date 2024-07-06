@@ -2,11 +2,8 @@
 
 namespace tests\functional\console\workers;
 
-use app\application\actions\MailSentInterface;
 use app\application\actions\SendEmailInterface;
 use app\application\services\LogServiceInterface;
-use app\application\services\SubscriptionServiceInterface;
-use console\workers\MailSentWorker;
 use console\workers\MailWorker;
 use tests\functional\FunctionalCest;
 use tests\FunctionalTester;

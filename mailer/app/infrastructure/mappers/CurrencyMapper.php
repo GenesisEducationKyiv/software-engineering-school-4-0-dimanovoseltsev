@@ -3,7 +3,6 @@
 namespace app\infrastructure\mappers;
 
 use app\domain\entities\Currency as CurrencyEntity;
-use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;

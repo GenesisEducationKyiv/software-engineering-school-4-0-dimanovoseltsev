@@ -4,7 +4,6 @@ namespace console\workers;
 
 use app\application\actions\DeleteSubscriptionInterface;
 use app\application\actions\SaveSubscription;
-use app\application\actions\SendEmailInterface;
 use app\application\exceptions\NotExistException;
 use app\application\mappers\EventMapper;
 use app\application\services\LogServiceInterface;
