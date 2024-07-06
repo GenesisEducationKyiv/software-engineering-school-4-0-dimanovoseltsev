@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2024-07-06
 - unsubscribe from event `mail.create`
 - subscribe to events: `subscription.create`, `subscription.delete` and `currency.update`
+- save currency and subscriptions in mailer
 
 ## [1.1.0] - 2024-07-03
 - change structure event `mail.create`
