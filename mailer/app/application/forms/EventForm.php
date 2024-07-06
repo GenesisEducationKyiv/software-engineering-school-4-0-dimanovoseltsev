@@ -45,8 +45,8 @@ class EventForm extends BaseForm implements FormInterface, Errorable
         }
 
         try {
-            $this->validateRequired($this->data);
             Assert::isArray($this->data);
+            Assert::notEmpty($this->data);
         } catch (InvalidArgumentException $e) {
             $this->addError('data', $e->getMessage());
         }
