@@ -2,7 +2,6 @@
 
 namespace app\application\services;
 
-
 use app\application\adapters\MessageBrokerInterface;
 
 class PublisherService implements PublisherServiceInterface
