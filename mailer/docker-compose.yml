@@ -64,7 +64,7 @@ services:
     working_dir: /app
     tty: true
     stdin_open: true
-    command: /bin/bash -c "sleep 10;  ./yii subscription-queue-worker/listen"
+    command: /bin/bash -c "sleep 10;  ./yii subscription-queue/listen"
     volumes:
       - .:/app
     environment:
@@ -81,7 +81,7 @@ services:
     working_dir: /app
     tty: true
     stdin_open: true
-    command: /bin/bash -c "sleep 10;  ./yii currency-queue-worker/listen"
+    command: /bin/bash -c "sleep 10;  ./yii currency-queue/listen"
     volumes:
       - .:/app
     environment:

@@ -19,8 +19,8 @@ return [
     'bootstrap' => [
         'log',
         'sendEmailQueueWorker',
-        'subscriptionQueueWorker',
-        'currencyQueueWorker',
+        'subscriptionQueue',
+        'currencyQueue',
     ],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
@@ -80,18 +80,6 @@ return [
             'commandClass' => MailWorker::class,
             'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
         ],
-        'subscriptionQueue' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'queueName' => getenv('RABBITMQ_SUBSCRIPTION_QUEUE'),
-            'exchangeName' => getenv('RABBITMQ_SUBSCRIPTION_EXCHANGE'),
-            'routingKey' => getenv('RABBITMQ_SUBSCRIPTION_ROUTING_KEY'),
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
-        ],
         'subscriptionFailQueue' => [
             'class' => Queue::class,
             'host' => getenv('RABBITMQ_HOST'),
@@ -104,7 +92,7 @@ return [
             'strictJobType' => false,
             'serializer' => JsonSerializer::class,
         ],
-        'subscriptionQueueWorker' => [
+        'subscriptionQueue' => [
             'class' => Queue::class,
             'host' => getenv('RABBITMQ_HOST'),
             'port' => getenv('RABBITMQ_PORT'),
@@ -118,18 +106,6 @@ return [
             'commandClass' => SubscriptionWorker::class,
             'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
         ],
-        'currencyQueue' => [
-            'class' => Queue::class,
-            'host' => getenv('RABBITMQ_HOST'),
-            'port' => getenv('RABBITMQ_PORT'),
-            'user' => getenv('RABBITMQ_USER'),
-            'password' => getenv('RABBITMQ_PASS'),
-            'queueName' => getenv('RABBITMQ_CURRENCY_QUEUE'),
-            'exchangeName' => getenv('RABBITMQ_CURRENCY_EXCHANGE'),
-            'routingKey' => getenv('RABBITMQ_CURRENCY_ROUTING_KEY'),
-            'strictJobType' => false,
-            'serializer' => JsonSerializer::class,
-        ],
         'currencyFailQueue' => [
             'class' => Queue::class,
             'host' => getenv('RABBITMQ_HOST'),
@@ -142,7 +118,7 @@ return [
             'strictJobType' => false,
             'serializer' => JsonSerializer::class,
         ],
-        'currencyQueueWorker' => [
+        'currencyQueue' => [
             'class' => Queue::class,
             'host' => getenv('RABBITMQ_HOST'),
             'port' => getenv('RABBITMQ_PORT'),
