@@ -94,6 +94,7 @@ class SubscriptionRepositoryTest extends UnitTestCase
         $this->query->expects(self::once())
             ->method('save')
             ->with([
+                'id' => $entity->getId()->value(),
                 'email' => $entity->getEmail()->value(),
             ])
             ->willReturn($model);

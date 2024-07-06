@@ -3,6 +3,7 @@
 namespace app\domain\entities;
 
 use app\domain\interfaces\Arrayable;
+use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
@@ -10,11 +11,13 @@ use app\domain\valueObjects\Timestamp;
 class Currency implements Arrayable
 {
     /**
+     * @param Id $id
      * @param Iso3 $iso3
      * @param Rate $rate
      * @param Timestamp $updatedAt
      */
     public function __construct(
+        private Id $id,
         private Iso3 $iso3,
         private Rate $rate,
         private Timestamp $updatedAt,
@@ -27,6 +30,14 @@ class Currency implements Arrayable
     public function getIso3(): Iso3
     {
         return $this->iso3;
+    }
+
+    /**
+     * @return Id
+     */
+    public function getId(): Id
+    {
+        return $this->id;
     }
 
     /**
@@ -69,6 +80,7 @@ class Currency implements Arrayable
     public function toArray(): array
     {
         return [
+            'id' => $this->getId()->value(),
             'iso3' => $this->getIso3()->value(),
             'rate' => $this->getRate()->value(),
             'updatedAt' => $this->getUpdatedAt()->value(),

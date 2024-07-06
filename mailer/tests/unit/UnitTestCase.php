@@ -2,17 +2,14 @@
 
 namespace tests\unit;
 
+use app\application\services\SubscriptionService;
+use app\domain\entities\Currency;
+use app\domain\entities\Subscription;
 use app\infrastructure\mappers\CurrencyMapper;
 use app\infrastructure\mappers\SubscriptionMapper;
 use app\infrastructure\models\Currency as ModelCurrency;
-use app\domain\entities\Currency;
-use app\domain\entities\Subscription;
-use app\domain\valueObjects\Email;
-use app\domain\valueObjects\Iso3;
-use app\domain\valueObjects\Rate;
-use app\domain\valueObjects\Timestamp;
-use app\infrastructure\services\YiiLogger;
 use app\infrastructure\models\Subscription as ModelSubscription;
+use app\infrastructure\services\YiiLogger;
 use Closure;
 use Codeception\PHPUnit\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -202,5 +199,23 @@ class UnitTestCase extends TestCase
             ->willReturn((new ModelCurrency())->attributes());
 
         return $this->setAttributes($mock, $data);
+    }
+
+    /**
+     * @return SubscriptionService|MockObject
+     */
+    protected function getSubscriptionServiceMock(): SubscriptionService|MockObject
+    {
+        return $this->getMockBuilder(SubscriptionService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByEmail',
+                    'save',
+                    'delete',
+                    'getNotSent',
+                ]
+            )
+            ->getMock();
     }
 }

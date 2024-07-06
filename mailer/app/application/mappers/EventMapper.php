@@ -14,6 +14,7 @@ use app\application\forms\SaveSubscriptionForm;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
 use app\domain\valueObjects\Email;
+use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
@@ -49,11 +50,13 @@ class EventMapper
 
         $dto = new MailSendDto(
             new Currency(
+                new Id(null),
                 new Iso3($form->getCurrencyIso3()),
                 new Rate($form->getCurrencyRate()),
                 new Timestamp($form->getCurrencyUpdatedAt()),
             ),
             new Subscription(
+                new Id(null),
                 new Email($form->getEmail())
             )
         );

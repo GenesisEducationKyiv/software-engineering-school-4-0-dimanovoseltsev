@@ -85,6 +85,7 @@ class CurrencyRepositoryTest extends UnitTestCase
         $this->query->expects(self::once())
             ->method('save')
             ->with([
+                'id' => $entity->getId()->value(),
                 'iso3' => $entity->getIso3()->value(),
                 'rate' => $entity->getRate()->value(),
                 'updated_at' => $entity->getUpdatedAt()->value(),

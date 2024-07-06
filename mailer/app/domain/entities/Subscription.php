@@ -4,13 +4,16 @@ namespace app\domain\entities;
 
 use app\domain\interfaces\Arrayable;
 use app\domain\valueObjects\Email;
+use app\domain\valueObjects\Id;
 
 class Subscription implements Arrayable
 {
     /**
+     * @param Id $id
      * @param Email $email
      */
     public function __construct(
+        private Id $id,
         private Email $email,
     ) {
     }
@@ -24,11 +27,20 @@ class Subscription implements Arrayable
     }
 
     /**
+     * @return Id
+     */
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
+    /**
      * @return array<string,mixed>
      */
     public function toArray(): array
     {
         return [
+            'id' => $this->id->value(),
             'email' => $this->email->value(),
         ];
     }
