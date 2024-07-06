@@ -3,7 +3,6 @@
 namespace app\domain\entities;
 
 use app\domain\interfaces\Arrayable;
-use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
@@ -44,6 +43,24 @@ class Currency implements Arrayable
     public function getUpdatedAt(): Timestamp
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @param Rate $rate
+     * @return void
+     */
+    public function setRate(Rate $rate): void
+    {
+        $this->rate = $rate;
+    }
+
+    /**
+     * @param Timestamp $updatedAt
+     * @return void
+     */
+    public function setUpdatedAt(Timestamp $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     /**

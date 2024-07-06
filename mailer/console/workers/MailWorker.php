@@ -3,6 +3,7 @@
 namespace console\workers;
 
 use app\application\actions\SendEmailInterface;
+use app\application\dto\MailSendDto;
 use app\application\exceptions\NotExistException;
 use app\application\mappers\EventMapper;
 use app\application\services\LogServiceInterface;
@@ -39,21 +40,17 @@ class MailWorker extends BaseWorker
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
         $data = (array)json_decode($body, true);
-        $eventId = $data['eventId'] ?? null;
-        $eventType = $data['eventType'] ?? null;
-        $timestamp = $data['timestamp'] ?? null;
-        $eventData = $data['data'] ?? null;
 
-        if (empty($eventId) || empty($eventType) || empty($timestamp) || empty($eventData)) {
-            return true;
-        }
+
 
         try {
             $convertor = new EventMapper();
-            $this->logService->log(
-                sprintf("Process event %s:%s [%d]", (string)$eventType, (string)$eventId, (int)$timestamp)
-            );
-            return $this->sendEmail->execute($convertor->convertMailCreateToDto($eventData));
+
+            // 2todo
+
+            return $this->sendEmail->execute(new MailSendDto(
+
+            ));
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {

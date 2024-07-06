@@ -2,6 +2,8 @@
 
 namespace console\workers;
 
+use app\application\actions\DeleteSubscriptionInterface;
+use app\application\actions\SaveSubscription;
 use app\application\actions\SendEmailInterface;
 use app\application\exceptions\NotExistException;
 use app\application\mappers\EventMapper;
@@ -14,14 +16,16 @@ class SubscriptionWorker extends BaseWorker
     /**
      * @param $id
      * @param $module
-     * @param SendEmailInterface $sendEmail
+     * @param SaveSubscription $saveSubscription
+     * @param DeleteSubscriptionInterface $deleteSubscription
      * @param LogServiceInterface $logService
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
-        private readonly SendEmailInterface $sendEmail,
+        private readonly SaveSubscription $saveSubscription,
+        private readonly DeleteSubscriptionInterface $deleteSubscription,
         private readonly LogServiceInterface $logService,
         array $config = []
     ) {
@@ -38,36 +42,34 @@ class SubscriptionWorker extends BaseWorker
      */
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
-        // @todo debug
-        echo '<pre>';
-        print_r(array(
-            'file' => __FILE__,
-            'line' => __LINE__,
-        ));
-        echo '</pre>';
-        die();
         $data = (array)json_decode($body, true);
-        $eventId = $data['eventId'] ?? null;
-        $eventType = $data['eventType'] ?? null;
-        $timestamp = $data['timestamp'] ?? null;
-        $eventData = $data['data'] ?? null;
-
-        if (empty($eventId) || empty($eventType) || empty($timestamp) || empty($eventData)) {
+        $eventForm = $this->loadEvent($data);
+        if ($eventForm === null) {
             return true;
         }
 
+        $this->addEventLog($eventForm, $this->logService);
 
         try {
             $convertor = new EventMapper();
-            $this->logService->log(
-                sprintf("Process event %s:%s [%d]", (string)$eventType, (string)$eventId, (int)$timestamp)
-            );
-            return $this->sendEmail->execute($convertor->convertMailCreateToDto($eventData));
+
+            // @todo fabric
+            match ($eventForm->getEventType()) {
+                'subscription.create' => $this->saveSubscription->execute(
+                    $convertor->convertSubscriptionCreateToDto($eventForm->getData())
+                ),
+                'subscription.delete' => $this->deleteSubscription->execute(
+                    $convertor->convertSubscriptionDeleteToDto($eventForm->getData())
+                ),
+                default => null
+            };
+
+            return true;
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {
             return $this->moveToFailQueue(
-                Yii::$app->sendEmailFailQueue,
+                Yii::$app->subscriptionFailQueue,
                 $this->appendError((array)$data, $e),
                 (int)$attempt
             );

@@ -2,8 +2,11 @@
 
 namespace console\workers;
 
+use app\application\forms\EventForm;
+use app\application\services\LogServiceInterface;
 use Exception;
 use Throwable;
+use Yii;
 use yii\queue\amqp_interop\Command;
 use yii\queue\amqp_interop\Queue;
 
@@ -51,5 +54,43 @@ abstract class BaseWorker extends Command
         $data['errorMessage'] = $e->getMessage();
         $data['errorClass'] = get_class($e);
         return $data;
+    }
+
+    /**
+     * @param array $body
+     * @return EventForm|null
+     */
+    protected function loadEvent(array $body): ?EventForm
+    {
+        $eventForm = new EventForm(
+            $body['eventId'] ?? null,
+            $body['eventType'] ?? null,
+            $body['timestamp'] ?? null,
+            $body['data'] ?? null,
+        );
+        if (!$eventForm->validate()) {
+            Yii::error(
+                sprintf(
+                    'Event: %s. Not valid: %s',
+                    var_export($body, true),
+                    var_export($eventForm->getErrors(), true)
+                )
+            );
+            return null;
+        }
+
+        return $eventForm;
+    }
+
+    /**
+     * @param EventForm $form
+     * @param LogServiceInterface $logService
+     * @return void
+     */
+    protected function addEventLog(EventForm $form, LogServiceInterface $logService): void
+    {
+        $logService->log(
+            sprintf("Event %s:%s [%d]", $form->getEventType(), $form->getEventId(), $form->getTimestamp())
+        );
     }
 }
