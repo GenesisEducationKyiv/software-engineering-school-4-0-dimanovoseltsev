@@ -2,6 +2,7 @@
 
 namespace tests\unit;
 
+use app\application\enums\CurrencyIso;
 use app\application\services\CurrencyService;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
@@ -89,7 +90,7 @@ class UnitTestCase extends TestCase
     protected function getCurrencyEntityDefault(): array
     {
         return [
-            'iso3' => "UAH",
+            'iso3' => CurrencyIso::UAH->value,
             'rate' => 5.02,
             'updatedAt' => strtotime('2024-05-01 00:00:00'),
         ];

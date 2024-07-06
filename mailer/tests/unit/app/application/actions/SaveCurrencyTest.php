@@ -70,6 +70,7 @@ SaveCurrencyTest extends UnitTestCase
 
         $actual = $this->action->execute($dto);
         self::assertInstanceOf(Currency::class, $actual);
+        self::assertIsArray($actual->toArray());
     }
 }
 

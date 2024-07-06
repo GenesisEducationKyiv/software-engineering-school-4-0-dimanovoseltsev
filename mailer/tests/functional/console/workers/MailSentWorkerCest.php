@@ -3,6 +3,7 @@
 namespace tests\functional\console\workers;
 
 use app\application\actions\SendEmailInterface;
+use app\application\enums\CurrencyIso;
 use app\application\services\LogServiceInterface;
 use console\workers\MailWorker;
 use tests\functional\FunctionalCest;
@@ -59,7 +60,7 @@ class MailSentWorkerCest extends FunctionalCest
             "data" => [
                 "email" => $email,
                 "currency" => [
-                    'iso3' => 'UAH',
+                    'iso3' => CurrencyIso::UAH,
                     'rate' => 5.1,
                     'updatedAt' => $timestamp,
                 ]
