@@ -2,6 +2,7 @@
 
 namespace tests\unit;
 
+use app\application\services\CurrencyService;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
@@ -214,6 +215,22 @@ class UnitTestCase extends TestCase
                     'save',
                     'delete',
                     'getNotSent',
+                ]
+            )
+            ->getMock();
+    }
+
+    /**
+     * @return CurrencyService|MockObject
+     */
+    protected function getCurrencyServiceMock(): CurrencyService|MockObject
+    {
+        return $this->getMockBuilder(CurrencyService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByCode',
+                    'save',
                 ]
             )
             ->getMock();

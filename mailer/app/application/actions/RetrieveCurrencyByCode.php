@@ -26,6 +26,6 @@ class RetrieveCurrencyByCode extends BaseAction implements RetrieveCurrencyByCod
     {
         $entity = $this->service->getByCode($currency->value);
 
-        return $this->checkExit($entity);
+        return $this->checkExitCurrency($entity);
     }
 }
