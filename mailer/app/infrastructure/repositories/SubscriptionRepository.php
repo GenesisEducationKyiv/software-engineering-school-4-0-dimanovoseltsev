@@ -6,8 +6,6 @@ use app\application\exceptions\NotValidException;
 use app\domain\dto\SearchSubscribersDto;
 use app\domain\entities\Subscription;
 use app\domain\repositories\SubscriptionRepositoryInterface;
-use app\infrastructure\mappers\CurrencyMapper;
-use app\infrastructure\mappers\Mapper;
 use app\infrastructure\mappers\SubscriptionMapper;
 use app\infrastructure\models\Subscription as SubscriptionModel;
 use app\infrastructure\models\SubscriptionQuery;
@@ -42,7 +40,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      */
     public function save(Subscription $subscription): Subscription
     {
-        $values = CurrencyMapper::toModelAttributes($subscription);
+        $values = SubscriptionMapper::toModelAttributes($subscription);
 
         return SubscriptionMapper::toEntity($this->query->save($values));
     }
@@ -72,7 +70,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
         $entities = [];
 
         foreach ($models as $model) {
-            $entities[] = Mapper::toEntity($model);
+            $entities[] = SubscriptionMapper::toEntity($model);
         }
 
         return $entities;
