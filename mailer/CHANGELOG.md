@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2024-07-03
+## [1.2.0] - 2024-07-06
+- unsubscribe from event `mail.create`
+- subscribe to events: `subscription.create`, `subscription.delete` and `currency.update`
 
+## [1.1.0] - 2024-07-03
 - change structure event `mail.create`
 
 ## [1.0.0] - 2024-06-29
-
 - init
 - subscribe to event `mail.create`
 

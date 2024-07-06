@@ -38,6 +38,12 @@ return [
         'sendEmailFailQueue' => ['class' => DummyQueue::class],
         'sendEmailQueueWorker' => ['class' => DummyQueue::class],
         'eventBusQueue' => ['class' => DummyQueue::class],
+        'subscriptionQueue' => ['class' => DummyQueue::class],
+        'subscriptionFailQueue' => ['class' => DummyQueue::class],
+        'subscriptionQueueWorker' => ['class' => DummyQueue::class],
+        'currencyQueue' => ['class' => DummyQueue::class],
+        'currencyFailQueue' => ['class' => DummyQueue::class],
+        'currencyQueueWorker' => ['class' => DummyQueue::class],
         'mailer' => [
             'class' => YiiMailer::class,
             'transport' => [

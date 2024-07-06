@@ -3,9 +3,10 @@
 use app\application\adapters\EventBusInterface;
 use yii\db\Migration;
 
-
 class m240630_170202_subscribe_to_mail_create extends Migration
 {
+    private const string EVENT = "mail.create";
+
     /**
      * @param EventBusInterface $eventBus
      * @param array $config
@@ -24,7 +25,7 @@ class m240630_170202_subscribe_to_mail_create extends Migration
     {
         $this->eventBus->subscribe(
             (string)getenv("RABBITMQ_SEND_EMAIL_QUEUE"),
-            (string)getenv("RABBITMQ_SEND_EMAIL_ROUTING_KEY"),
+            self::EVENT,
         );
     }
 
@@ -35,7 +36,7 @@ class m240630_170202_subscribe_to_mail_create extends Migration
     {
         $this->eventBus->unsubscribe(
             (string)getenv("RABBITMQ_SEND_EMAIL_QUEUE"),
-            (string)getenv("RABBITMQ_SEND_EMAIL_ROUTING_KEY"),
+            self::EVENT,
         );
     }
 }

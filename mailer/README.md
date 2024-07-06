@@ -7,7 +7,7 @@
 ![php-version]
 ![mysql-version]
 
-# 💱 Subscriptions Api
+# 💱 Mailer
 
 The migration will be carried out in the Docker container named `app-setup`.
 
@@ -22,12 +22,6 @@ docker-compose down -v --remove-orphans
 docker-compose up -d --build
 docker-compose logs -f app-setup
 ```
-
-That's all - your application is available at http://127.0.0.1:9832
-
-# Documentation
-
-For detailed documentation, check out http://127.0.0.1:9832/doc
 
 # Testing
 
@@ -65,7 +59,7 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 
 [JOBS]: https://gitlab.com/dima.novoseltsev/currency-rates-api/-/jobs
 
-[version-badge]: https://img.shields.io/badge/version-1.1.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.2.0-blue.svg
 
 [pipeline-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/pipeline.svg
 
