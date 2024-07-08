@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - remove event `mail.create`
 - move cron send message to mailer
+- add events: `subscription.create` and `subscription.delete`
 
 ## [1.1.0] - 2024-07-03
 
