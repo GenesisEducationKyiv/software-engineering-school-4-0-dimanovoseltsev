@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.0] - 2024-07-05
 - add events: `currency.update`, `subscription.create` and `subscription.delete`
+- remove event `mail.create`
+- move cron send message to mailer
 
 ## [1.6.0] - 2024-07-03
 - change structure events
