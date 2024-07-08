@@ -1,6 +1,6 @@
 <?php
 
-namespace app\shared\application\interfaces;
+namespace app\shared\domain\interfaces;
 
 interface Arrayable
 {

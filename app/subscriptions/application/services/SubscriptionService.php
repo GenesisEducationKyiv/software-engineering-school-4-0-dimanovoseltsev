@@ -5,6 +5,7 @@ namespace app\subscriptions\application\services;
 use app\subscriptions\application\dto\CreateSubscriptionDto;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
 use app\subscriptions\application\mappers\Mapper;
+use app\subscriptions\domain\dto\SearchSubscribersDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\domain\repositories\SubscriptionRepositoryInterface;
 
@@ -51,7 +52,7 @@ class SubscriptionService implements SubscriptionServiceInterface
      */
     public function getNotSent(SearchSubscribersForMailingDto $dto): array
     {
-        return $this->repository->findNotSent($dto);
+        return $this->repository->findNotSent(new SearchSubscribersDto($dto->getLastId(), $dto->getLimit()));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace tests\unit\app\subscriptions\infrastructure\repositories;
 
 use app\shared\application\exceptions\NotValidException;
 use app\subscriptions\application\dto\SearchSubscribersForMailingDto;
+use app\subscriptions\domain\dto\SearchSubscribersDto;
 use app\subscriptions\domain\entities\Subscription;
 use app\subscriptions\infrastructure\models\SubscriptionQuery;
 use app\subscriptions\infrastructure\repositories\SubscriptionRepository;
@@ -158,7 +159,7 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
     public function testFindNotSent()
     {
-        $dto = new SearchSubscribersForMailingDto(10, 20);
+        $dto = new SearchSubscribersDto(10, 20);
 
         $model = $this->getSubscriptionModelMock();
         $email = "mai@mail.com";
