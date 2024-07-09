@@ -15,25 +15,9 @@ class MailSendDto
      * @param Subscription $subscription
      */
     public function __construct(
-        private Currency $currency,
-        private Subscription $subscription,
+        public readonly Currency $currency,
+        public readonly Subscription $subscription,
     ) {
         $this->setCurrentTimestamp();
-    }
-
-    /**
-     * @return Currency
-     */
-    public function getCurrency(): Currency
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @return Subscription
-     */
-    public function getSubscription(): Subscription
-    {
-        return $this->subscription;
     }
 }
