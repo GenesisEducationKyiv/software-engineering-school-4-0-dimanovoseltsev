@@ -5,7 +5,7 @@ namespace app\application\exceptions;
 use Exception;
 use Throwable;
 
-class BadRequestException extends Exception implements Throwable
+class BadRequestException extends Exception
 {
     /**
      * ConflictException constructor.

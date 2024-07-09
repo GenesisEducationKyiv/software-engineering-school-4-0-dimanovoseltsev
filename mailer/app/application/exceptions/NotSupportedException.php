@@ -5,7 +5,7 @@ namespace app\application\exceptions;
 use Exception;
 use Throwable;
 
-class NotSupportedException extends Exception implements Throwable
+class NotSupportedException extends Exception
 {
     /**
      * NotExistException constructor.
