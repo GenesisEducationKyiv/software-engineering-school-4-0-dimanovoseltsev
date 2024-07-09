@@ -1,14 +1,19 @@
 #/bin/bash
 echo ${mysql[@]}
-if [ "$MYSQL_DATABASE2" ]; then
- echo "CREATE DATABASE IF NOT EXISTS"
- mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "create database $MYSQL_DATABASE2"
 
- fi
-#		if [ "$MYSQL_USER" -a "$MYSQL_PASSWORD" ]; then
-#			mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'"
+#!/bin/bash
 
-			if [ "$MYSQL_DATABASE2" ]; then
-				mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON \`$MYSQL_DATABASE2\`.* TO '$MYSQL_USER'@'%' "
-			fi
-#		fi
+echo "Creating databases"
+
+databases=("$MYSQL_DATABASE2" "$MYSQL_DATABASE3")
+
+for db in "${databases[@]}"; do
+    if [ -n "$db" ]; then
+        echo "Creating database $db if it doesn't exist"
+        mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS \`$db\`"
+
+        echo "Granting privileges on database $db to user $MYSQL_USER"
+        mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL ON \`$db\`.* TO '$MYSQL_USER'@'%'"
+    fi
+done
+
