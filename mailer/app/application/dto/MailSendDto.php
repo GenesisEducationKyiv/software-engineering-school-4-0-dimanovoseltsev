@@ -13,33 +13,9 @@ readonly class MailSendDto
      * @param int $timestamp
      */
     public function __construct(
-        private Currency $currency,
-        private Subscription $subscription,
-        private int $timestamp,
+        public Currency $currency,
+        public Subscription $subscription,
+        public int $timestamp,
     ) {
-    }
-
-    /**
-     * @return Currency
-     */
-    public function getCurrency(): Currency
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @return Subscription
-     */
-    public function getSubscription(): Subscription
-    {
-        return $this->subscription;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimestamp(): int
-    {
-        return $this->timestamp;
     }
 }
