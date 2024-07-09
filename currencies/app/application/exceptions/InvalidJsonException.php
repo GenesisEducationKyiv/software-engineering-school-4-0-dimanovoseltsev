@@ -8,7 +8,7 @@ use Throwable;
 /**
  * Class InvalidJsonException.
  */
-class InvalidJsonException extends Exception implements Throwable
+class InvalidJsonException extends Exception
 {
     /**
      * InvalidJsonException constructor.

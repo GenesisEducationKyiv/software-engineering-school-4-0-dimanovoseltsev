@@ -5,7 +5,7 @@ namespace app\application\exceptions;
 use Exception;
 use Throwable;
 
-class InvalidCallException extends Exception implements Throwable
+class InvalidCallException extends Exception
 {
     /**
      * InvalidCallException constructor.
