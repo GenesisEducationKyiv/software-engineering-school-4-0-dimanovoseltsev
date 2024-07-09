@@ -5,7 +5,7 @@ namespace app\application\exceptions;
 use Exception;
 use Throwable;
 
-class NotValidException extends Exception implements Throwable
+class NotValidException extends Exception
 {
     /**
      * @param array<int|string, mixed> $errors

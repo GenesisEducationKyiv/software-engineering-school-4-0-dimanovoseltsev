@@ -5,7 +5,7 @@ namespace app\application\exceptions;
 use Exception;
 use Throwable;
 
-class AlreadyException extends Exception implements Throwable
+class AlreadyException extends Exception
 {
     /**
      * ConflictException constructor.

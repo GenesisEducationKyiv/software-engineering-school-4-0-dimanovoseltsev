@@ -8,7 +8,7 @@ use Throwable;
 /**
  * Class UnexpectedValueException.
  */
-class UnexpectedValueException extends Exception implements Throwable
+class UnexpectedValueException extends Exception
 {
     /**
      * UnexpectedValueException constructor.

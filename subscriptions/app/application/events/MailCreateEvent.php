@@ -42,7 +42,7 @@ class MailCreateEvent implements EventInterface
             'timestamp' => $this->getTimestamp(),
             'data' => [
                 'email' => $this->subscription->getEmail()->value(),
-                'currency' => $this->currency->toArray(),
+            'currency' => $this->currency->toArray(),
             ],
         ];
     }
