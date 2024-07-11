@@ -2,15 +2,10 @@
 
 namespace tests\unit;
 
-use app\application\enums\CurrencyIso;
-use app\application\services\CurrencyService;
 use app\application\services\CustomerService;
-use app\domain\entities\Currency;
 use app\domain\entities\Customer;
-use app\infrastructure\mappers\CurrencyMapper;
-use app\infrastructure\mappers\SubscriptionMapper;
-use app\infrastructure\models\Currency as ModelCurrency;
-use app\infrastructure\models\Customer as ModelSubscription;
+use app\infrastructure\mappers\CustomerMapper;
+use app\infrastructure\models\Customer as ModelCustomer;
 use app\infrastructure\services\YiiLogger;
 use Closure;
 use Codeception\PHPUnit\TestCase;
@@ -84,41 +79,15 @@ class UnitTestCase extends TestCase
         return $object;
     }
 
-    /**
-     * @return array
-     */
-    protected function getCurrencyEntityDefault(): array
-    {
-        return [
-            'iso3' => CurrencyIso::UAH->value,
-            'rate' => 5.02,
-            'updatedAt' => strtotime('2024-05-01 00:00:00'),
-        ];
-    }
-
-    /**
-     * @param array $data
-     * @return Currency
-     */
-    protected function getCurrencyEntity(array $data = []): Currency
-    {
-        $data = array_merge($this->getCurrencyEntityDefault(), $data);
-
-        return CurrencyMapper::fromPrimitive($data);
-    }
-
 
     /**
      * @return array
      */
-    protected function getSubscriptionEntityDefault(): array
+    protected function getCustomerEntityDefault(): array
     {
         return [
             'id' => 1,
             'email' => 'mail@mail.com',
-            'createdAt' => strtotime('2024-01-01 00:00:00'),
-            'updatedAt' => strtotime('2024-05-01 00:00:00'),
-            'lastSendAt' => strtotime('2024-05-02 00:00:00'),
         ];
     }
 
@@ -126,11 +95,11 @@ class UnitTestCase extends TestCase
      * @param array $data
      * @return Customer
      */
-    protected function getSubscriptionEntity(array $data = []): Customer
+    protected function getCustomerEntity(array $data = []): Customer
     {
-        $data = array_merge($this->getSubscriptionEntityDefault(), $data);
+        $data = array_merge($this->getCustomerEntityDefault(), $data);
 
-        return SubscriptionMapper::fromPrimitive($data);
+        return CustomerMapper::fromPrimitive($data);
     }
 
 
@@ -161,11 +130,11 @@ class UnitTestCase extends TestCase
 
     /**
      * @param array $data
-     * @return ModelSubscription|MockObject
+     * @return ModelCustomer|MockObject
      */
-    protected function getSubscriptionModelMock(array $data = []): ModelSubscription|MockObject
+    protected function getCustomerModelMock(array $data = []): ModelCustomer|MockObject
     {
-        $mock = $this->getMockBuilder(ModelSubscription::class)
+        $mock = $this->getMockBuilder(ModelCustomer::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'attributes',
@@ -176,29 +145,7 @@ class UnitTestCase extends TestCase
 
         $mock->expects(self::any())
             ->method('attributes')
-            ->willReturn((new ModelSubscription())->attributes());
-
-        return $this->setAttributes($mock, $data);
-    }
-
-    /**
-     * @param array $data
-     * @return ModelCurrency|MockObject
-     */
-    protected function getCurrencyModelMock(array $data = []): ModelCurrency|MockObject
-    {
-        $mock = $this->getMockBuilder(ModelCurrency::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([
-                'attributes',
-                'load',
-                'save',
-            ])
-            ->getMock();
-
-        $mock->expects(self::any())
-            ->method('attributes')
-            ->willReturn((new ModelCurrency())->attributes());
+            ->willReturn((new ModelCustomer())->attributes());
 
         return $this->setAttributes($mock, $data);
     }
@@ -206,7 +153,7 @@ class UnitTestCase extends TestCase
     /**
      * @return CustomerService|MockObject
      */
-    protected function getSubscriptionServiceMock(): CustomerService|MockObject
+    protected function getCustomerServiceMock(): CustomerService|MockObject
     {
         return $this->getMockBuilder(CustomerService::class)
             ->disableOriginalConstructor()
@@ -215,23 +162,6 @@ class UnitTestCase extends TestCase
                     'getByEmail',
                     'save',
                     'delete',
-                    'getNotSent',
-                ]
-            )
-            ->getMock();
-    }
-
-    /**
-     * @return CurrencyService|MockObject
-     */
-    protected function getCurrencyServiceMock(): CurrencyService|MockObject
-    {
-        return $this->getMockBuilder(CurrencyService::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(
-                [
-                    'getByCode',
-                    'save',
                 ]
             )
             ->getMock();

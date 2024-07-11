@@ -4,8 +4,7 @@ namespace tests\helpers;
 
 use Codeception\Module;
 use Codeception\TestInterface;
-use tests\fixtures\CurrencyFixture;
-use tests\fixtures\SubscriptionFixture;
+use tests\fixtures\CustomerFixture;
 use yii\test\FixtureTrait;
 
 /**
@@ -59,13 +58,9 @@ class FixtureHelper extends Module
     public function fixtures(): array
     {
         return [
-            'currencies' => [
-                'class' => CurrencyFixture::class,
-                'dataFile' => codecept_data_dir() . 'currencies.php',
-            ],
-            'subscriptions' => [
-                'class' => SubscriptionFixture::class,
-                'dataFile' => codecept_data_dir() . 'subscriptions.php',
+            'customers' => [
+                'class' => CustomerFixture::class,
+                'dataFile' => codecept_data_dir() . 'customers.php',
             ],
         ];
     }

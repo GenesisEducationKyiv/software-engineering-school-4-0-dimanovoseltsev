@@ -2,23 +2,23 @@
 
 namespace tests\unit\app\application\actions;
 
-use app\application\actions\RetrieveSubscriptionByEmail;
+use app\application\actions\RetrieveCustomerByEmail;
 use app\application\exceptions\NotExistException;
 use app\application\services\CustomerService;
 use app\domain\entities\Customer;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
-class RetrieveSubscriptionByEmailTest extends UnitTestCase
+class RetrieveCustomerByEmailTest extends UnitTestCase
 {
-    private RetrieveSubscriptionByEmail $action;
-    private CustomerService|MockObject $subscriptionService;
+    private RetrieveCustomerByEmail $action;
+    private CustomerService|MockObject $customerService;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->subscriptionService = $this->getSubscriptionServiceMock();
-        $this->action = new RetrieveSubscriptionByEmail($this->subscriptionService);
+        $this->customerService = $this->getCustomerServiceMock();
+        $this->action = new RetrieveCustomerByEmail($this->customerService);
     }
 
     /**
@@ -26,9 +26,9 @@ class RetrieveSubscriptionByEmailTest extends UnitTestCase
     public function testExecute()
     {
         $email = 'mail.com';
-        $entity = $this->getSubscriptionEntity();
+        $entity = $this->getCustomerEntity();
 
-        $this->subscriptionService->expects($this->once())
+        $this->customerService->expects($this->once())
             ->method('getByEmail')
             ->with($email)
             ->willReturn($entity);
@@ -42,11 +42,11 @@ class RetrieveSubscriptionByEmailTest extends UnitTestCase
     public function testExecuteNotExist()
     {
         self::expectException(NotExistException::class);
-        self::expectExceptionMessage("Subscription not found");
+        self::expectExceptionMessage("Customer not found");
 
         $email = 'mail.com';
 
-        $this->subscriptionService->expects($this->once())
+        $this->customerService->expects($this->once())
             ->method('getByEmail')
             ->with($email)
             ->willReturn(null);

@@ -11,7 +11,7 @@ use app\infrastructure\repositories\CustomerRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
-class SubscriptionServiceTest extends UnitTestCase
+class CustomerServiceTest extends UnitTestCase
 {
     private CustomerService $service;
     private CustomerRepository|MockObject $repository;
@@ -19,19 +19,19 @@ class SubscriptionServiceTest extends UnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->repository = $this->getSubscriptionRepositoryMock();
+        $this->repository = $this->getCustomerRepositoryMock();
         $this->service = new CustomerService($this->repository);
     }
 
     /**
      * @return CustomerRepository|MockObject
      */
-    protected function getSubscriptionRepositoryMock(): CustomerRepository|MockObject
+    protected function getCustomerRepositoryMock(): CustomerRepository|MockObject
     {
         return $this->getMockBuilder(CustomerRepository::class)
             ->disableOriginalConstructor()
             ->onlyMethods(
-                ['findByEmail', 'save', 'findNotSent', 'deleteByEmail']
+                ['findByEmail', 'save', 'deleteByEmail']
             )
             ->getMock();
     }
@@ -40,7 +40,7 @@ class SubscriptionServiceTest extends UnitTestCase
     {
         $email = "mail@mail.com";
 
-        $entity = $this->getSubscriptionEntity();
+        $entity = $this->getCustomerEntity();
         $this->repository->expects($this->once())
             ->method('findByEmail')
             ->with($email)
@@ -63,24 +63,9 @@ class SubscriptionServiceTest extends UnitTestCase
         self::assertNull($actual);
     }
 
-    public function testGetNotSent()
-    {
-        $dto = new SearchSubscribersForMailingDto(0, 10);
-
-        $entity = $this->getSubscriptionEntity();
-        $this->repository->expects($this->once())
-            ->method('findNotSent')
-            ->with(new SearchSubscribersDto($dto->getLastId(), $dto->getLimit()))
-            ->willReturn([$entity]);
-
-        $actual = $this->service->getNotSent($dto);
-        self::assertIsArray($actual);
-        self::assertNotEmpty($actual);
-    }
-
     public function testSave()
     {
-        $entity = $this->getSubscriptionEntity();
+        $entity = $this->getCustomerEntity();
         $this->repository->expects($this->once())
             ->method('save')
             ->with($entity)

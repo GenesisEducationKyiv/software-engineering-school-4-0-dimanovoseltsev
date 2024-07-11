@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 use yii\db\Exception;
 
-class SubscriptionRepositoryTest extends UnitTestCase
+class CustomerRepositoryTest extends UnitTestCase
 {
     private CustomerRepository $repository;
     private CustomerQuery|MockObject $query;
@@ -19,14 +19,14 @@ class SubscriptionRepositoryTest extends UnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->query = $this->getSubscriptionQueryMock();
+        $this->query = $this->getCustomerQueryMock();
         $this->repository = new CustomerRepository($this->query);
     }
 
     /**
      * @return CustomerQuery|MockObject
      */
-    protected function getSubscriptionQueryMock(): CustomerQuery|MockObject
+    protected function getCustomerQueryMock(): CustomerQuery|MockObject
     {
         return $this->getMockBuilder(CustomerQuery::class)
             ->disableOriginalConstructor()
@@ -34,7 +34,6 @@ class SubscriptionRepositoryTest extends UnitTestCase
                 [
                     'findByEmail',
                     'save',
-                    'prepareNotSent',
                     'clear',
                     'andFilterWhere',
                     'limit',
@@ -48,7 +47,7 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
     public function testFindByEmail()
     {
-        $model = $this->getSubscriptionModelMock();
+        $model = $this->getCustomerModelMock();
         $email = "mai@mail.com";
 
         $model->email = $email;
@@ -64,7 +63,7 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
     public function testFindByEmailNull()
     {
-        $model = $this->getSubscriptionModelMock();
+        $model = $this->getCustomerModelMock();
         $email = "mai@mail.com";
 
         $model->email = $email;
@@ -84,10 +83,10 @@ class SubscriptionRepositoryTest extends UnitTestCase
      */
     public function testSave()
     {
-        $entity = $this->getSubscriptionEntity();
+        $entity = $this->getCustomerEntity();
         $email = "mai@mail.com";
 
-        $model = $this->getSubscriptionModelMock();
+        $model = $this->getCustomerModelMock();
         $model->id = 1;
         $model->email = $email;
 
@@ -101,47 +100,6 @@ class SubscriptionRepositoryTest extends UnitTestCase
 
         $actual = $this->repository->save($entity);
         self::assertInstanceOf(Customer::class, $actual);
-    }
-
-    public function testFindNotSent()
-    {
-        $dto = new SearchSubscribersDto(10, 20);
-
-        $model = $this->getSubscriptionModelMock();
-        $email = "mai@mail.com";
-        $model->email = $email;
-
-        $this->query->expects(self::once())
-            ->method('andFilterWhere')
-            ->with(['>', 'id', $dto->getLastId()])
-            ->willReturn($this->query);
-
-        $this->query->expects(self::once())
-            ->method('limit')
-            ->with($dto->getLimit())
-            ->willReturn($this->query);
-
-        $this->query->expects(self::once())
-            ->method('orderBy')
-            ->with(['id' => SORT_ASC])
-            ->willReturn($this->query);
-
-        $this->query->expects(self::once())
-            ->method('clear')
-            ->willReturn($this->query);
-
-        $this->query->expects(self::once())
-            ->method('all')
-            ->willReturn([$model]);
-
-        $actual = $this->repository->findNotSent($dto);
-        self::assertIsArray($actual);
-        self::assertArrayHasKey(0, $actual);
-        self::assertInstanceOf(Customer::class, $actual[0]);
-
-        $actualAsArray = $actual[0]->toArray();
-        self::assertArrayHasKey('email', $actualAsArray);
-        self::assertEquals($email, $actualAsArray['email']);
     }
 
     public function testDeleteByEmail()

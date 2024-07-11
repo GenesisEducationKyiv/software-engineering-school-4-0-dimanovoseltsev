@@ -2,6 +2,7 @@
 
 namespace tests\unit\app\infrastructure\adapters;
 
+use app\application\events\CustomerCreateEvent;
 use app\application\events\MailSentEvent;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -39,9 +40,7 @@ class EventBusRabbitMQTest extends UnitTestCase
 
     public function testPublish()
     {
-        $subscription = $this->getSubscriptionEntity();
-
-        $event = $this->getMockBuilder(MailSentEvent::class)
+        $event = $this->getMockBuilder(CustomerCreateEvent::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getBody', 'getName'])
             ->getMock();

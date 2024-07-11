@@ -34,27 +34,7 @@ return [
             'charset' => 'utf8mb4',
             'enableSchemaCache' => false,
         ],
-        'sendEmailQueue' => ['class' => DummyQueue::class],
-        'sendEmailFailQueue' => ['class' => DummyQueue::class],
-        'sendEmailQueueWorker' => ['class' => DummyQueue::class],
         'eventBusQueue' => ['class' => DummyQueue::class],
-        'subscriptionQueue' => ['class' => DummyQueue::class],
-        'subscriptionFailQueue' => ['class' => DummyQueue::class],
-        'subscriptionQueueWorker' => ['class' => DummyQueue::class],
-        'currencyQueue' => ['class' => DummyQueue::class],
-        'currencyFailQueue' => ['class' => DummyQueue::class],
-        'currencyQueueWorker' => ['class' => DummyQueue::class],
-        'mailer' => [
-            'class' => YiiMailer::class,
-            'transport' => [
-                'dsn' => getenv('MAILER_DSN'),
-            ],
-            'messageConfig' => [
-                'charset' => 'UTF-8',
-                'from' => [getenv("SENDER_EMAIL") => getenv("SENDER_NAME")],
-            ],
-            'useFileTransport' => true,
-        ],
     ],
     'container' => [
         'definitions' => []
