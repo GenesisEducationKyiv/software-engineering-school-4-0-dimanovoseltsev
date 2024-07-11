@@ -3,9 +3,7 @@
 namespace tests\unit\app\application\services;
 
 
-use app\application\dto\SearchSubscribersForMailingDto;
 use app\application\services\CustomerService;
-use app\domain\dto\SearchSubscribersDto;
 use app\domain\entities\Customer;
 use app\infrastructure\repositories\CustomerRepository;
 use PHPUnit\Framework\MockObject\MockObject;
