@@ -62,7 +62,6 @@ class MailerTest extends UnitTestCase
             ->method('compose')
             ->willReturn($message);
 
-
         $message
             ->expects(self::once())
             ->method('setTo')
