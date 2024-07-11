@@ -30,4 +30,4 @@ This project is licensed under the MIT license - see
 the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/main/LICENSE.md) file for details.
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-1.7.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.8.0-blue.svg

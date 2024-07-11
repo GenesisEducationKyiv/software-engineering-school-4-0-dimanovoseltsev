@@ -21,8 +21,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=currencies
-      - MYSQL_DATABASE2=mailer
-      - MYSQL_DATABASE3=subscriptions
+      - MYSQL_DATABASES=mailer subscriptions customers
       - MYSQL_USER=db_user
       - MYSQL_PASSWORD=db_pass
     ports:
