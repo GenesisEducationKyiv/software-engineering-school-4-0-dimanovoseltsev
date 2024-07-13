@@ -3,7 +3,7 @@
 namespace tests\unit\app\application\actions;
 
 use app\application\actions\DeleteCustomer;
-use app\application\dto\DeleteCustomerDto;
+use app\application\forms\DeleteCustomerForm;
 use app\application\services\CustomerService;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
@@ -26,7 +26,7 @@ DeleteCustomerTest extends UnitTestCase
     public function testExecute()
     {
         $email = 'mail@mail.com';
-        $dto = new DeleteCustomerDto($email);
+        $dto = new DeleteCustomerForm($email);
 
         $this->customerService->expects($this->once())
             ->method('delete')

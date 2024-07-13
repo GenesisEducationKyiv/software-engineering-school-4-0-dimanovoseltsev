@@ -7,4 +7,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2024-07-11
 - init
-
+- add endpoint `POST /customer` for create new customer
+- add endpoint `DELETE /customer` for remove new customer

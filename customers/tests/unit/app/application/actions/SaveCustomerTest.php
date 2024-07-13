@@ -4,6 +4,7 @@ namespace tests\unit\app\application\actions;
 
 use app\application\actions\SaveCustomer;
 use app\application\dto\SaveCustomerDto;
+use app\application\forms\SaveCustomerForm;
 use app\application\services\CustomerService;
 use app\domain\entities\Customer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,7 +25,7 @@ SaveCustomerTest extends UnitTestCase
 
     public function testExecute()
     {
-        $dto = new SaveCustomerDto("mail@mail.com");
+        $dto = new SaveCustomerForm("mail@mail.com");
 
         $entity = $this->getCustomerEntity();
 
