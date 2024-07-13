@@ -1,6 +1,6 @@
 <?php
 
-namespace app\saga\workflows;
+namespace app\infrastructure\saga\workflows;
 
 
 use Temporal\Workflow\WorkflowInterface;
@@ -10,5 +10,5 @@ use Temporal\Workflow\WorkflowMethod;
 interface SubscriptionWorkflowInterface
 {
     #[WorkflowMethod(name: "SubscriptionWorkflow")]
-    public function subscribe(string $email);
+    public function subscribe(string $email): \Iterator;
 }

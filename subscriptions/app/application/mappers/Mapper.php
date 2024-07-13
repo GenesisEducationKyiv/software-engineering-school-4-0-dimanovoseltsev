@@ -24,4 +24,24 @@ class Mapper
             new Timestamp(null),
         );
     }
+
+    /**
+     * @param array{
+     *     "id": int|null,
+     *     "email": string|null,
+     *     "createdAt": int|null,
+     *     "updatedAt": int|null,
+     *     "lastSendAt": int|null} $value
+     * @return Subscription
+     */
+    public static function fromPrimitive(array $value): Subscription
+    {
+        return new Subscription(
+            new Id($value['id'] ?? null),
+            new Email($value['email'] ?? ''),
+            new Timestamp($value['createdAt'] ?? null),
+            new Timestamp($value['updatedAt'] ?? null),
+            new Timestamp($value['lastSendAt'] ?? null),
+        );
+    }
 }

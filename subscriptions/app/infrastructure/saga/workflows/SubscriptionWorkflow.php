@@ -1,9 +1,10 @@
 <?php
 
-namespace app\saga\workflows;
+namespace app\infrastructure\saga\workflows;
 
-use app\saga\activities\SubscriptionActivitiesInterface;
+use app\infrastructure\saga\activities\SubscriptionActivitiesInterface;
 use Carbon\CarbonInterval;
+use Iterator;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
@@ -25,11 +26,12 @@ class SubscriptionWorkflow implements SubscriptionWorkflowInterface
         );
     }
 
-
     /**
+     * @param string $email
+     * @return Iterator
      * @throws Throwable
      */
-    public function subscribe(string $email): array|\Generator
+    public function subscribe(string $email): Iterator
     {
         $saga = new Workflow\Saga();
 
@@ -38,26 +40,14 @@ class SubscriptionWorkflow implements SubscriptionWorkflowInterface
 
         try {
             $subscription = yield $this->activities->saveSubscription($email);
-
-            // @todo debug
-            echo '<pre>';
-            print_r(array(
-                'file' => __FILE__,
-                'line' => __LINE__,
-                '$subscription' => $subscription,
-            ));
-            echo '</pre>';
-            die();
-            die();
-
             $saga->addCompensation(fn() => yield $this->activities->cancelSubscription($email));
 
             $customer = yield $this->activities->saveCustomer($email);
             $saga->addCompensation(fn() => yield $this->activities->cancelCustomer($email));
 
             return [
-                "subscription" => $subscription,
-                'customer' => $customer
+                'subscription' => $subscription,
+                'customer' => $customer,
             ];
         } catch (Throwable $e) {
             Workflow::log("Subscription {$email} failed: " . $e->getMessage());

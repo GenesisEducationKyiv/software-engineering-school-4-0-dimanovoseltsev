@@ -4,7 +4,7 @@ rpc:
   listen: tcp://127.0.0.1:6001
 
 server:
-  command: "php worker.php"
+  command: "php temporal-subscription-worker.php"
 
 temporal:
   address: ${TEMPORAL_HOST:-localhost}:${TEMPORAL_PORT:-7233}

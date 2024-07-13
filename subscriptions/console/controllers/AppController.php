@@ -2,7 +2,7 @@
 
 namespace console\controllers;
 
-use app\saga\workflows\SubscriptionWorkflowInterface;
+use app\infrastructure\saga\workflows\SubscriptionWorkflowInterface;
 use Carbon\CarbonInterval;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\WorkflowClient;
@@ -87,6 +87,20 @@ class AppController extends Controller
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
                 ->withTaskQueue('SubscriptionTaskQueue')
         );
+
+
+        // @todo debug
+        echo '<pre>';
+        print_r(array(
+            'file' => __FILE__,
+            'line' => __LINE__,
+            '$workflow' => get_class($workflow),
+            '$client' => get_class($client),
+        ));
+        echo '</pre>';
+        die();
+
+
 
         try {
             $run = $client->start($workflow, $email);

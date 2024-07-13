@@ -10,7 +10,7 @@ use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
 use app\infrastructure\adapters\EventBusRabbitMQ;
-use app\infrastructure\mappers\Mapper;
+use app\infrastructure\mappers\SubscriptionMapper;
 use app\infrastructure\models\Currency as ModelCurrency;
 use app\infrastructure\models\Subscription as ModelSubscription;
 use app\infrastructure\services\YiiLogger;
@@ -180,7 +180,7 @@ class UnitTestCase extends TestCase
     protected function getSubscriptionEntity(array $data = []): Subscription
     {
         $data = array_merge($this->getSubscriptionEntityDefault(), $data);
-        return Mapper::fromPrimitive($data);
+        return SubscriptionMapper::fromPrimitive($data);
     }
 
 

@@ -5,7 +5,7 @@ namespace app\infrastructure\repositories;
 use app\application\exceptions\NotValidException;
 use app\domain\entities\Subscription;
 use app\domain\repositories\SubscriptionRepositoryInterface;
-use app\infrastructure\mappers\Mapper;
+use app\infrastructure\mappers\SubscriptionMapper;
 use app\infrastructure\models\SubscriptionQuery;
 use yii\db\Exception;
 
@@ -27,7 +27,7 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
     {
         $model = $this->query->findByEmail($email);
 
-        return $model === null ? null : Mapper::toEntity($model);
+        return $model === null ? null : SubscriptionMapper::toEntity($model);
     }
 
     /**
@@ -38,9 +38,9 @@ class SubscriptionRepository implements SubscriptionRepositoryInterface
      */
     public function save(Subscription $currency): Subscription
     {
-        $values = Mapper::toModelAttributes($currency);
+        $values = SubscriptionMapper::toModelAttributes($currency);
 
-        return Mapper::toEntity($this->query->save($values));
+        return SubscriptionMapper::toEntity($this->query->save($values));
     }
 
     /**
