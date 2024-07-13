@@ -1,5 +1,11 @@
 <?php
 
+use app\application\actions\CreateCustomer;
+use app\application\actions\CreateCustomerInterface;
+use app\application\actions\CreateSubscription;
+use app\application\actions\CreateSubscriptionInterface;
+use app\application\actions\DeleteCustomer;
+use app\application\actions\DeleteCustomerInterface;
 use app\application\actions\MailSent;
 use app\application\actions\MailSentInterface;
 use app\application\actions\Subscribe;
@@ -7,15 +13,26 @@ use app\application\actions\SubscribeInterface;
 use app\application\actions\Unsubscribe;
 use app\application\actions\UnsubscribeInterface;
 use app\application\adapters\EventBusInterface;
+use app\application\interfaces\ActivityServiceInterface;
+use app\application\services\CustomerServiceInterface;
 use app\application\services\LogServiceInterface;
 use app\application\services\SubscriptionService;
 use app\application\services\SubscriptionServiceInterface;
+use app\domain\repositories\CustomerRepositoryInterface;
 use app\domain\repositories\SubscriptionRepositoryInterface;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\models\Subscription;
+use app\infrastructure\repositories\CustomerRepository;
 use app\infrastructure\repositories\SubscriptionRepository;
+use app\infrastructure\saga\workflows\SubscriptionWorkflowInterface;
+use app\infrastructure\services\TemporalActivityService;
 use app\infrastructure\services\YiiLogger;
+use Carbon\CarbonInterval;
+use GuzzleHttp\Client;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Temporal\Client\GRPC\ServiceClient;
+use Temporal\Client\WorkflowClient;
+use Temporal\Client\WorkflowOptions;
 use yii\di\Container;
 
 return [
@@ -23,9 +40,28 @@ return [
     LogServiceInterface::class => function (Container $container) {
         return new YiiLogger(Yii::$app->log->getLogger());
     },
+    ActivityServiceInterface::class => function (Container $container) {
+        // Create a GRPC service client with the Temporal server address
+        $serviceClient = ServiceClient::create((string)getenv("TEMPORAL_ADDRESS"));
+        // Start a Workflow
+        $client = WorkflowClient::create($serviceClient);
+        return new TemporalActivityService(
+            $client->newWorkflowStub(
+                SubscriptionWorkflowInterface::class,
+                WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
+                    ->withTaskQueue((string)getenv("TEMPORAL_SUBSCRIPTION_TASK"))
+            )
+        );
+    },
+
     // repositories
     SubscriptionRepositoryInterface::class => function (Container $container) {
         return new SubscriptionRepository(Subscription::find());
+    },
+    CustomerRepositoryInterface::class => function (Container $container) {
+        return new CustomerRepository(
+            new Client(['base_uri' => getenv('CUSTOMER_BASE_URL')]),
+        );
     },
     EventBusInterface::class => function (Container $container) {
         return new EventBusRabbitMQ(
@@ -44,7 +80,7 @@ return [
     SubscribeInterface::class => function (Container $container) {
         return new Subscribe(
             $container->get(SubscriptionServiceInterface::class),
-            $container->get(EventBusInterface::class),
+            $container->get(ActivityServiceInterface::class),
         );
     },
     MailSentInterface::class => function (Container $container) {
@@ -54,6 +90,18 @@ return [
     },
     UnsubscribeInterface::class => function (Container $container) {
         return new Unsubscribe(
+            $container->get(SubscriptionServiceInterface::class),
+            $container->get(EventBusInterface::class),
+        );
+    },
+    CreateCustomerInterface::class => function (Container $container) {
+        return new CreateCustomer($container->get(CustomerServiceInterface::class));
+    },
+    DeleteCustomerInterface::class => function (Container $container) {
+        return new DeleteCustomer($container->get(CustomerServiceInterface::class));
+    },
+    CreateSubscriptionInterface::class => function (Container $container) {
+        return new CreateSubscription(
             $container->get(SubscriptionServiceInterface::class),
             $container->get(EventBusInterface::class),
         );

@@ -40,10 +40,10 @@ class SubscribeForm extends BaseForm implements FormInterface, Errorable
     }
 
     /**
-     * @return ?string
+     * @return string
      */
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
-        return $this->email;
+        return (string)$this->email;
     }
 }
