@@ -14,11 +14,11 @@
     "vlucas/phpdotenv": "^5.5",
     "yiisoft/yii2-queue": "^2.3",
     "enqueue/amqp-lib": "^0.10.19",
+    "light/yii2-swagger": "^3.0",
     "yiisoft/yii2-symfonymailer": "~3.0.0",
     "guzzlehttp/guzzle": "^7.8",
     "webmozart/assert": "^1.11",
-    "ramsey/uuid": "^4.7",
-    "temporal/sdk": "^2.10"
+    "ramsey/uuid": "^4.7"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",
@@ -55,6 +55,7 @@
       "app\\": "app/",
       "console\\": "console/",
       "tests\\": "tests/",
+      "frontend\\": "frontend/",
       "common\\": "common/"
     }
   },

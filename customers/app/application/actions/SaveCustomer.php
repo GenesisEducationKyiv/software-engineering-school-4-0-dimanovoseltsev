@@ -2,7 +2,8 @@
 
 namespace app\application\actions;
 
-use app\application\dto\SaveCustomerDto;
+use app\application\exceptions\NotValidException;
+use app\application\forms\SaveCustomerForm;
 use app\application\services\CustomerServiceInterface;
 use app\domain\entities\Customer;
 use app\domain\valueObjects\Email;
@@ -19,18 +20,22 @@ class SaveCustomer extends BaseAction implements SaveCustomerInterface
     }
 
     /**
-     * @param SaveCustomerDto $dto
+     * @param SaveCustomerForm $form
      * @return Customer
+     * @throws NotValidException
      */
-    public function execute(SaveCustomerDto $dto): Customer
+    public function execute(SaveCustomerForm $form): Customer
     {
-        $entity = $this->subscriptionService->getByEmail($dto->getEmail());
+        if (!$form->validate()) {
+            throw new NotValidException($form->getErrors());
+        }
 
+        $entity = $this->subscriptionService->getByEmail($form->getEmail());
         if ($entity !== null) {
             return $entity;
         }
 
-        $entity = new Customer(new Id(null), new Email($dto->getEmail()));
+        $entity = new Customer(new Id(null), new Email($form->getEmail()));
 
         return $this->subscriptionService->save($entity);
     }

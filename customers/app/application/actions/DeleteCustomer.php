@@ -3,6 +3,8 @@
 namespace app\application\actions;
 
 use app\application\dto\DeleteCustomerDto;
+use app\application\exceptions\NotValidException;
+use app\application\forms\DeleteCustomerForm;
 use app\application\services\CustomerServiceInterface;
 
 class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
@@ -16,11 +18,16 @@ class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
     }
 
     /**
-     * @param DeleteCustomerDto $dto
+     * @param DeleteCustomerForm $form
      * @return int
+     * @throws NotValidException
      */
-    public function execute(DeleteCustomerDto $dto): int
+    public function execute(DeleteCustomerForm $form): int
     {
-        return $this->subscriptionService->delete($dto->getEmail());
+        if (!$form->validate()) {
+            throw new NotValidException($form->getErrors());
+        }
+
+        return $this->subscriptionService->delete($form->getEmail());
     }
 }

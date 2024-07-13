@@ -3,12 +3,13 @@
 namespace app\application\actions;
 
 use app\application\dto\DeleteCustomerDto;
+use app\application\forms\DeleteCustomerForm;
 
 interface DeleteCustomerInterface
 {
     /**
-     * @param DeleteCustomerDto $dto
+     * @param DeleteCustomerForm $form
      * @return int
      */
-    public function execute(DeleteCustomerDto $dto): int;
+    public function execute(DeleteCustomerForm $form): int;
 }
