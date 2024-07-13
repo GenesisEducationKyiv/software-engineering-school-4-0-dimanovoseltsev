@@ -22,7 +22,7 @@ class Customer extends ActiveRecord
     }
 
     /**
-     * Returns subscriptions' dictionary repository.
+     * Returns customer dictionary repository.
      *
      * @return CustomerQuery
      */

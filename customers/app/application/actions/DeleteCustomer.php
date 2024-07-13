@@ -10,10 +10,10 @@ use app\application\services\CustomerServiceInterface;
 class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
 {
     /**
-     * @param CustomerServiceInterface $subscriptionService
+     * @param CustomerServiceInterface $customerService
      */
     public function __construct(
-        private readonly CustomerServiceInterface $subscriptionService
+        private readonly CustomerServiceInterface $customerService
     ) {
     }
 
@@ -28,6 +28,6 @@ class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
             throw new NotValidException($form->getErrors());
         }
 
-        return $this->subscriptionService->delete($form->getEmail());
+        return $this->customerService->delete($form->getEmail());
     }
 }

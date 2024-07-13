@@ -151,7 +151,17 @@ class CustomersController extends ActiveController
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Email added"
+                description: "Return customer",
+                content: new OA\MediaType(
+                    mediaType: "application/json",
+                    schema: new OA\Schema(
+                        properties: [
+                            new OA\Property(property: "id", type: "int", example: "1"),
+                            new OA\Property(property: "email", type: "string", example: "mail@mail.com"),
+                        ],
+                        type: "object",
+                    )
+                )
             ),
             new OA\Response(
                 response: 422,
@@ -176,8 +186,8 @@ class CustomersController extends ActiveController
     {
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
-            $this->saveCustomer->execute(new SaveCustomerForm($bodyParams['email'] ?? null));
-            return null;
+            $entity = $this->saveCustomer->execute(new SaveCustomerForm($bodyParams['email'] ?? null));
+            return $entity->toArray();
         } catch (Throwable $e) {
             return $this->processException($e);
         }

@@ -13,13 +13,13 @@ class
 SaveCustomerTest extends UnitTestCase
 {
     private SaveCustomer $action;
-    private CustomerService|MockObject $subscriptionService;
+    private CustomerService|MockObject $customerService;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->subscriptionService = $this->getCustomerServiceMock();
-        $this->action = new SaveCustomer($this->subscriptionService);
+        $this->customerService = $this->getCustomerServiceMock();
+        $this->action = new SaveCustomer($this->customerService);
     }
 
     public function testExecute()
@@ -28,7 +28,7 @@ SaveCustomerTest extends UnitTestCase
 
         $entity = $this->getCustomerEntity();
 
-        $this->subscriptionService->expects($this->once())
+        $this->customerService->expects($this->once())
             ->method('getByEmail')
             ->with($dto->getEmail())
             ->willReturn($entity);
@@ -43,12 +43,12 @@ SaveCustomerTest extends UnitTestCase
 
         $entity = $this->getCustomerEntity();
 
-        $this->subscriptionService->expects($this->once())
+        $this->customerService->expects($this->once())
             ->method('getByEmail')
             ->with($dto->getEmail())
             ->willReturn(null);
 
-        $this->subscriptionService->expects($this->once())
+        $this->customerService->expects($this->once())
             ->method('save')
             ->willReturn($entity);
 

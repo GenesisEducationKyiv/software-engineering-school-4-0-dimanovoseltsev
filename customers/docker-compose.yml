@@ -39,6 +39,20 @@ services:
     environment:
       - TZ=America/New_York
 
+
+  #  k6:
+  #    image: grafana/k6:latest
+  #    volumes:
+  #      - ./tests/load-k6:/load-k6
+  #    entrypoint: [
+  #      "sh", "-c",
+  #      "k6 run /load-k6/createCustomer.js \
+  #      --out experimental-prometheus-rw=http://prometheus-currency-rates:9090/metrics/job/k6  \
+  #      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus-currency-rates:9090/api/v1/write "
+  #    ]
+  #    networks:
+  #      - currency-rate-app-network
+
 networks:
   currency-rate-app-network:
     external: true

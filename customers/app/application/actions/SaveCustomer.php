@@ -12,10 +12,10 @@ use app\domain\valueObjects\Id;
 class SaveCustomer extends BaseAction implements SaveCustomerInterface
 {
     /**
-     * @param CustomerServiceInterface $subscriptionService
+     * @param CustomerServiceInterface $customerService
      */
     public function __construct(
-        private readonly CustomerServiceInterface $subscriptionService,
+        private readonly CustomerServiceInterface $customerService,
     ) {
     }
 
@@ -30,13 +30,13 @@ class SaveCustomer extends BaseAction implements SaveCustomerInterface
             throw new NotValidException($form->getErrors());
         }
 
-        $entity = $this->subscriptionService->getByEmail($form->getEmail());
+        $entity = $this->customerService->getByEmail($form->getEmail());
         if ($entity !== null) {
             return $entity;
         }
 
         $entity = new Customer(new Id(null), new Email($form->getEmail()));
 
-        return $this->subscriptionService->save($entity);
+        return $this->customerService->save($entity);
     }
 }

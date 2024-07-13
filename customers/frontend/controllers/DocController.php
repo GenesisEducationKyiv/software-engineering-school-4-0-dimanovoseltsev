@@ -20,7 +20,7 @@ class DocController extends Controller
             'index' => [
                 'class' => SwaggerAction::class,
                 'restUrl' => Url::to('/doc/config', true),
-                'title' => Yii::$app->name . " 1Api",
+                'title' => Yii::$app->name . " Api",
             ],
             'config' => [
                 'class' => SwaggerApiAction::class,
