@@ -2,7 +2,6 @@
 
 namespace app\application\actions;
 
-use app\application\dto\DeleteCustomerDto;
 use app\application\exceptions\NotValidException;
 use app\application\forms\DeleteCustomerForm;
 use app\application\services\CustomerServiceInterface;

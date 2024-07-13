@@ -2,7 +2,6 @@
 
 namespace app\application\services;
 
-use app\application\dto\SearchSubscribersForMailingDto;
 use app\domain\entities\Customer;
 
 interface CustomerServiceInterface

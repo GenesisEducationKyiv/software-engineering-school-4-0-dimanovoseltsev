@@ -2,7 +2,6 @@
 
 namespace app\application\actions;
 
-use app\application\dto\SaveCustomerDto;
 use app\application\forms\SaveCustomerForm;
 use app\domain\entities\Customer;
 

@@ -3,7 +3,6 @@
 namespace app\infrastructure\repositories;
 
 use app\application\exceptions\NotValidException;
-use app\domain\dto\SearchSubscribersDto;
 use app\domain\entities\Customer;
 use app\domain\repositories\CustomerRepositoryInterface;
 use app\infrastructure\mappers\CustomerMapper;

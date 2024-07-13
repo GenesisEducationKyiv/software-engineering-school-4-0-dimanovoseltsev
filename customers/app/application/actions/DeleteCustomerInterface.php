@@ -2,7 +2,6 @@
 
 namespace app\application\actions;
 
-use app\application\dto\DeleteCustomerDto;
 use app\application\forms\DeleteCustomerForm;
 
 interface DeleteCustomerInterface
