@@ -1,10 +1,10 @@
-name: Customer CI Pipeline
+name: Customers CI Pipeline
 
 on: [ push ]
 
 defaults:
   run:
-    working-directory: ./customer
+    working-directory: ./customers
 
 
 jobs:

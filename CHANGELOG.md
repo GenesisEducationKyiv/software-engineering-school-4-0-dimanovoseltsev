@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.0] - 2024-07-11
 - add service customers
+- add temporal saga on create subscription
 
 ## [1.7.0] - 2024-07-05
 - add events: `currency.update`, `subscription.create` and `subscription.delete`
