@@ -19,7 +19,12 @@
     "guzzlehttp/guzzle": "^7.8",
     "webmozart/assert": "^1.11",
     "ramsey/uuid": "^4.7",
-    "temporal/sdk": "^2.10"
+    "temporal/sdk": "^2.10",
+    "spiral/tokenizer": "^3.7",
+    "temporal/open-telemetry-interceptors": "dev-master",
+    "open-telemetry/exporter-otlp": "^0.0.17",
+    "open-telemetry/transport-grpc": "^0.0.17",
+    "php-http/httplug": "^2.4"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",
@@ -38,7 +43,8 @@
     "allow-plugins": {
       "yiisoft/yii2-composer": true,
       "infection/extension-installer": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "php-http/discovery": true
     },
     "process-timeout": 1800,
     "fxp-asset": {
