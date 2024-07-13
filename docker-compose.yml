@@ -102,6 +102,7 @@ services:
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - xpack.security.enabled=false
     image: elasticsearch:7.16.2
+    restart: always
     networks:
       - currency-rate-app-network
     expose:
@@ -129,6 +130,7 @@ services:
       - frontend.enableUpdateWorkflowExecution=true
       - frontend.enableUpdateWorkflowExecutionAsyncAccepted=true
     image: temporalio/auto-setup:1.24.2
+    restart: always
     networks:
       - currency-rate-app-network
     ports:
@@ -145,6 +147,7 @@ services:
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:1.21.0
+    restart: always
     networks:
       - currency-rate-app-network
     stdin_open: true
@@ -158,6 +161,7 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:2.16.1
+    restart: always
     networks:
       - currency-rate-app-network
     ports:
@@ -169,6 +173,7 @@ services:
     networks:
       - currency-rate-app-network
     command: [ "--config=/etc/otel-collector-config.yml" ]
+    restart: always
     ports:
       - 4317:4317
       - 4318:4318
@@ -177,6 +182,7 @@ services:
 
   zipkin:
     container_name: zipkin
+    restart: always
     image: openzipkin/zipkin-slim
     networks:
       - currency-rate-app-network
