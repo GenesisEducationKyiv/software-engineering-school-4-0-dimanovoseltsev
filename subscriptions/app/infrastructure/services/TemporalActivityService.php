@@ -19,7 +19,7 @@ class TemporalActivityService implements ActivityServiceInterface
 
     /**
      * @param string $email
-     * @return array
+     * @return array<string, mixed>
      * @throws InvalidCallException
      */
     public function subscribe(string $email): array

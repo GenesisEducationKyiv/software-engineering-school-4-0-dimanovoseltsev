@@ -6,19 +6,7 @@ interface ActivityServiceInterface
 {
     /**
      * @param string $email
-     * @return array{
-     *   customer: {
-     *     id?: integer,
-     *     email?: string
-     *   },
-     *   subscription: {
-     *     id?: integer,
-     *     email?: integer,
-     *     createdAt?: integer,
-     *     updatedAt?: string,
-     *     lastSendAt?: integer
-     *   }
-     * }
+     * @return array<string, mixed>
      */
     public function subscribe(string $email): array;
 }

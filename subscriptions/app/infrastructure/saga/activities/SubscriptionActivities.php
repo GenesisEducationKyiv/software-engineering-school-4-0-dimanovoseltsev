@@ -32,7 +32,7 @@ class SubscriptionActivities implements SubscriptionActivitiesInterface
 
     /**
      * @param string $email
-     * @return array{id: int, email: string}
+     * @return array<string, mixed>
      * @throws AlreadyException
      * @throws NotValidException
      */
@@ -52,7 +52,7 @@ class SubscriptionActivities implements SubscriptionActivitiesInterface
 
     /**
      * @param string $email
-     * @return array{id: int, email: string}
+     * @return array<string, mixed>
      * @throws NotValidException
      */
     #[ActivityMethod] public function createCustomer(string $email): array
