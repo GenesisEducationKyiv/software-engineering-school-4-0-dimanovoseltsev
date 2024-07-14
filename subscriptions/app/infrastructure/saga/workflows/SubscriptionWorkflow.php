@@ -7,13 +7,13 @@ use Carbon\CarbonInterval;
 use Iterator;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
-use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
 use Throwable;
+use Yii;
 
 class SubscriptionWorkflow implements SubscriptionWorkflowInterface
 {
-    private ActivityProxy|SubscriptionActivitiesInterface $activities;
+    private SubscriptionActivitiesInterface $activities;
 
     public function __construct()
     {
@@ -50,7 +50,7 @@ class SubscriptionWorkflow implements SubscriptionWorkflowInterface
                 'customer' => $customer,
             ];
         } catch (Throwable $e) {
-            Workflow::log("Subscription {$email} failed: " . $e->getMessage());
+            Yii::error("Subscription {$email} failed: " . $e->getMessage());
             yield $saga->compensate();
             throw $e;
         }
