@@ -3,13 +3,16 @@
 namespace tests\unit;
 
 use app\application\services\CurrencyService;
+use app\application\services\CustomerService;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
+use app\domain\entities\Customer;
 use app\domain\entities\Subscription;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
 use app\infrastructure\adapters\EventBusRabbitMQ;
+use app\infrastructure\mappers\CustomerMapper;
 use app\infrastructure\mappers\SubscriptionMapper;
 use app\infrastructure\models\Currency as ModelCurrency;
 use app\infrastructure\models\Subscription as ModelSubscription;
@@ -172,6 +175,16 @@ class UnitTestCase extends TestCase
             'lastSendAt' => strtotime('2024-05-02 00:00:00'),
         ];
     }
+    /**
+     * @return array
+     */
+    protected function geCustomerEntityDefault(): array
+    {
+        return [
+            'id' => 1,
+            'email' => 'mail@mail.com',
+        ];
+    }
 
     /**
      * @param array $data
@@ -181,6 +194,16 @@ class UnitTestCase extends TestCase
     {
         $data = array_merge($this->getSubscriptionEntityDefault(), $data);
         return SubscriptionMapper::fromPrimitive($data);
+    }
+
+    /**
+     * @param array $data
+     * @return Customer
+     */
+    protected function getCustomerEntity(array $data = []): Customer
+    {
+        $data = array_merge($this->geCustomerEntityDefault(), $data);
+        return CustomerMapper::fromPrimitive($data);
     }
 
 
@@ -222,6 +245,22 @@ class UnitTestCase extends TestCase
                 [
                     'getByEmail',
                     'save',
+                    'create',
+                    'delete',
+                ]
+            )
+            ->getMock();
+    }
+
+    /**
+     * @return CustomerService|MockObject
+     */
+    protected function getCustomerServiceMock(): CustomerService|MockObject
+    {
+        return $this->getMockBuilder(CustomerService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
                     'create',
                     'delete',
                 ]
