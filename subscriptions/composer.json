@@ -37,7 +37,8 @@
     "phpstan/phpstan": "^1.10",
     "squizlabs/php_codesniffer": "*",
     "phpat/phpat": "^0.10.17",
-    "phpstan/extension-installer": "^1.4"
+    "phpstan/extension-installer": "^1.4",
+    "dg/bypass-finals": "^1.8"
   },
   "config": {
     "allow-plugins": {
