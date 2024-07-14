@@ -39,6 +39,20 @@ class Subscribe extends BaseAction implements SubscribeInterface
             throw new AlreadyException("Already subscribed");
         }
 
+        /** @var array{
+         *    customer: array{
+         *      id: int,
+         *      email: string
+         *    },
+         *    subscription: array{
+         *      id: int,
+         *      email: string,
+         *      createdAt: int,
+         *      updatedAt: int,
+         *      lastSendAt: int
+         *    }
+         * } $transactionResult
+         */
         $transactionResult = $this->activityService->subscribe($form->getEmail());
         return Mapper::fromPrimitive($transactionResult['subscription']);
     }

@@ -26,12 +26,11 @@ class CreateSubscription extends BaseAction implements CreateSubscriptionInterfa
     /**
      * @param SubscribeForm $form
      * @return Subscription
-     * @throws AlreadyException
      * @throws NotValidException
      */
     public function execute(SubscribeForm $form): Subscription
     {
-        if (!$form->validate() || $form->getEmail() === null) {
+        if (!$form->validate()) {
             throw new NotValidException($form->getErrors());
         }
 

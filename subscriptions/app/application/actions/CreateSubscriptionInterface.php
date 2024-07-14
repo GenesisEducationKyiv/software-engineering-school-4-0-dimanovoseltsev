@@ -12,10 +12,8 @@ use app\domain\entities\Subscription;
 interface CreateSubscriptionInterface
 {
     /**
-     * @param CreateCustomerForm $form
-     * @return Customer
-     * @throws AlreadyException
-     * @throws NotValidException
+     * @param SubscribeForm $form
+     * @return Subscription
      */
     public function execute(SubscribeForm $form): Subscription;
 }
