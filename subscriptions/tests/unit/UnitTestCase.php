@@ -175,15 +175,27 @@ class UnitTestCase extends TestCase
             'lastSendAt' => strtotime('2024-05-02 00:00:00'),
         ];
     }
+
     /**
      * @return array
      */
-    protected function geCustomerEntityDefault(): array
+    protected function getCustomerEntityDefault(): array
     {
         return [
             'id' => 1,
             'email' => 'mail@mail.com',
         ];
+    }
+
+    /**
+     * @param array $data
+     * @return Customer
+     */
+    protected function getCustomerEntity(array $data = []): Customer
+    {
+        $data = array_merge($this->getCustomerEntityDefault(), $data);
+
+        return CustomerMapper::fromPrimitive($data);
     }
 
     /**
@@ -195,17 +207,6 @@ class UnitTestCase extends TestCase
         $data = array_merge($this->getSubscriptionEntityDefault(), $data);
         return SubscriptionMapper::fromPrimitive($data);
     }
-
-    /**
-     * @param array $data
-     * @return Customer
-     */
-    protected function getCustomerEntity(array $data = []): Customer
-    {
-        $data = array_merge($this->geCustomerEntityDefault(), $data);
-        return CustomerMapper::fromPrimitive($data);
-    }
-
 
     /**
      * @return CurrencyService|MockObject
