@@ -19,10 +19,12 @@ For detailed documentation, check out
 
 # Events
 
-| Event            | Description                  | Publisher     | Consumer      | Serializer | Example                                                                                                                                                                                                |
-|------------------|------------------------------|---------------|---------------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| mail.sent        | email sent                   | mailer        | subscriptions | Json       | `{"eventId":"019078f8-2704-72ed-865f-e276f6883bf5","eventType":"mail.sent","timestamp":1720016496,"data":{"email":"mail1@mail.com","timestamp":1720016496}}`                                           |
-| currency.update  | after create/update currency | mailer        | currencies    | Json       | `{"eventId":"019079d6-5873-71b2-b2f4-ec81f737c0b0","eventType":"currency.update","timestamp":1720031008,"data":{"rate":5.1,"iso3":"UAH","updatedAt":1720031008}}`                                      |
+| Event               | Description                  | Publisher     | Consumer      | Serializer | Example                                                                                                                                                                                                                       |
+|---------------------|------------------------------|---------------|---------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mail.sent           | email sent                   | mailer        | subscriptions | Json       | `{"eventId":"019078f8-2704-72ed-865f-e276f6883bf5","eventType":"mail.sent","timestamp":1720016496,"data":{"email":"mail1@mail.com","timestamp":1720016496}}`                                                                  |
+| currency.update     | after create/update currency | mailer        | mailer        | Json       | `{"eventId":"019079d6-5873-71b2-b2f4-ec81f737c0b0","eventType":"currency.update","timestamp":1720031008,"data":{"rate":5.1,"iso3":"UAH","updatedAt":1720031008}}`                                                             |
+| subscription.create | after create subscription    | subscriptions | mailer        | Json       | `{"eventId":"019079d6-5873-71b2-b2f4-ec81f737c0b1","eventType":"subscription.create","timestamp":1720031008,"data":{"id":1,"email":"mail@mail.com","createdAt": 1720031008,"updatedAt":1720031008, "lastSendAt":1720031008}}` |
+| subscription.delete | after delete subscription    | subscriptions | mailer        | Json       | `{"eventId":"019079d6-5873-71b2-b2f4-ec81f737c0b2","eventType":"subscription.delete","timestamp":1720031008,"data":{"id":1,"email":"mail@mail.com","createdAt": 1720031008,"updatedAt":1720031008, "lastSendAt":1720031008}}` |
 
 
 # License
