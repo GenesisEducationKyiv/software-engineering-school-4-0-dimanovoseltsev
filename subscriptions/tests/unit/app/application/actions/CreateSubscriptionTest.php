@@ -1,0 +1,66 @@
+<?php
+
+namespace tests\unit\app\application\actions;
+
+use app\application\actions\CreateSubscription;
+use app\application\dto\CreateSubscriptionDto;
+use app\application\exceptions\AlreadyException;
+use app\application\exceptions\NotValidException;
+use app\application\forms\SubscribeForm;
+use app\application\services\SubscriptionService;
+use app\domain\entities\Subscription;
+use app\infrastructure\adapters\EventBusRabbitMQ;
+use PHPUnit\Framework\MockObject\MockObject;
+use tests\unit\UnitTestCase;
+
+class CreateSubscriptionTest extends UnitTestCase
+{
+    private CreateSubscription $action;
+    private SubscriptionService|MockObject $service;
+    private EventBusRabbitMQ|MockObject $eventBus;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = $this->getSubscriptionServiceMock();
+        $this->eventBus = $this->getEventBusMock();
+        $this->action = new CreateSubscription($this->service, $this->eventBus);
+    }
+
+
+    /**
+     * @throws NotValidException
+     * @throws AlreadyException
+     */
+    public function testExecute()
+    {
+        $form = new SubscribeForm("mail@mail.com");
+        $entity = $this->getSubscriptionEntity();
+
+        $this->service->expects($this->once())
+            ->method('create')
+            ->with(
+                new CreateSubscriptionDto(
+                    $form->getEmail(),
+                    $form->getTimestamp()
+                )
+            )
+            ->willReturn($entity);
+
+        $actual = $this->action->execute($form);
+        self::assertInstanceOf(Subscription::class, $actual);
+    }
+
+    /**
+     * @throws AlreadyException|NotValidException
+     */
+    public function testExecuteNotValid()
+    {
+        self::expectException(NotValidException::class);
+
+        $form = new SubscribeForm("mail");
+
+        $actual = $this->action->execute($form);
+    }
+}
+

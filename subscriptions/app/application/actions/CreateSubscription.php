@@ -4,6 +4,7 @@ namespace app\application\actions;
 
 use app\application\adapters\EventBusInterface;
 use app\application\dto\CreateSubscriptionDto;
+use app\application\events\SubscriptionCreateEvent;
 use app\application\exceptions\AlreadyException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
