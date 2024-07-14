@@ -14,7 +14,6 @@ class TemporalActivityService implements ActivityServiceInterface
      */
     public function __construct(
         private readonly WorkflowProxy $subscribeWorkflow,
-
     ) {
     }
 

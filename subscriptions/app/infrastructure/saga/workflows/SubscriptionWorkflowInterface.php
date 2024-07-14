@@ -2,7 +2,6 @@
 
 namespace app\infrastructure\saga\workflows;
 
-
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 

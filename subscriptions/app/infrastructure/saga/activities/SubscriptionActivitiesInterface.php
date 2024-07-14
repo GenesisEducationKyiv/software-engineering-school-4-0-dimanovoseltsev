@@ -5,7 +5,6 @@ namespace app\infrastructure\saga\activities;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
-
 #[ActivityInterface(prefix: "SubscriptionActivities.")]
 interface SubscriptionActivitiesInterface
 {
