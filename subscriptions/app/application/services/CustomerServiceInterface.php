@@ -8,9 +8,9 @@ interface CustomerServiceInterface
 {
     /**
      * @param string $email
-     * @return Customer|null
+     * @return Customer
      */
-    public function create(string $email): ?Customer;
+    public function create(string $email): Customer;
 
     /**
      * @param string $email

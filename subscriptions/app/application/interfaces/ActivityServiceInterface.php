@@ -6,7 +6,7 @@ interface ActivityServiceInterface
 {
     /**
      * @param string $email
-     * @return array {
+     * @return array{
      *   customer: {
      *     id?: integer,
      *     email?: string

@@ -8,7 +8,7 @@ interface CustomerRepositoryInterface
 {
     /**
      * @param string $email
-     * @return Customer|null
+     * @return Customer
      */
     public function create(string $email): Customer;
 

@@ -17,9 +17,9 @@ class CustomerService implements CustomerServiceInterface
 
     /**
      * @param string $email
-     * @return Customer|null
+     * @return Customer
      */
-    public function create(string $email): ?Customer
+    public function create(string $email): Customer
     {
         return $this->repository->create($email);
     }
