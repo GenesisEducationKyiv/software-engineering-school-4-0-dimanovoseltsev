@@ -4,13 +4,14 @@ namespace app\infrastructure\services;
 
 use app\application\exceptions\InvalidCallException;
 use app\application\interfaces\ActivityServiceInterface;
+use Temporal\Client\WorkflowClient;
 use Temporal\Internal\Client\WorkflowProxy;
 use Throwable;
 
 class TemporalActivityService implements ActivityServiceInterface
 {
     /**
-     * @param WorkflowProxy $subscribeWorkflow
+     * @param WorkflowProxy<WorkflowClient> $subscribeWorkflow
      */
     public function __construct(
         private readonly WorkflowProxy $subscribeWorkflow,
