@@ -10,14 +10,14 @@ use Temporal\Activity\ActivityMethod;
 interface SubscriptionActivitiesInterface
 {
     #[ActivityMethod]
-    public function saveSubscription(string $email): array;
+    public function createSubscription(string $email): array;
 
     #[ActivityMethod]
     public function cancelSubscription(string $email): bool;
 
     #[ActivityMethod]
-    public function saveCustomer(string $email): array;
+    public function createCustomer(string $email): array;
 
     #[ActivityMethod]
-    public function cancelCustomer(string $email): bool;
+    public function deleteCustomer(string $email): bool;
 }

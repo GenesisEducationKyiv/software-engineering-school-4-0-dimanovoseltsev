@@ -12,6 +12,7 @@ use app\application\exceptions\NotValidException;
 use app\application\forms\CreateCustomerForm;
 use app\application\forms\DeleteCustomerForm;
 use app\application\forms\SaveCustomerForm;
+use app\application\forms\SubscribeForm;
 use app\application\forms\UnsubscribeForm;
 use Temporal\Activity\ActivityMethod;
 
@@ -37,9 +38,9 @@ class SubscriptionActivities implements SubscriptionActivitiesInterface
      * @throws AlreadyException
      * @throws NotValidException
      */
-    #[ActivityMethod] public function saveSubscription(string $email): array
+    #[ActivityMethod] public function createSubscription(string $email): array
     {
-        return $this->createSubscription->execute(new CreateCustomerForm($email))->toArray();
+        return $this->createSubscription->execute(new SubscribeForm($email))->toArray();
     }
 
     /**
@@ -56,9 +57,9 @@ class SubscriptionActivities implements SubscriptionActivitiesInterface
      * @return array{id: int, email: string}
      * @throws NotValidException
      */
-    #[ActivityMethod] public function saveCustomer(string $email): array
+    #[ActivityMethod] public function createCustomer(string $email): array
     {
-        return $this->createCustomer->execute(new SaveCustomerForm($email))->toArray();
+        return $this->createCustomer->execute(new CreateCustomerForm($email))->toArray();
     }
 
     /**
@@ -66,7 +67,7 @@ class SubscriptionActivities implements SubscriptionActivitiesInterface
      * @return bool
      * @throws NotValidException
      */
-    #[ActivityMethod] public function cancelCustomer(string $email): bool
+    #[ActivityMethod] public function deleteCustomer(string $email): bool
     {
         return $this->deleteCustomer->execute(new DeleteCustomerForm($email));
     }

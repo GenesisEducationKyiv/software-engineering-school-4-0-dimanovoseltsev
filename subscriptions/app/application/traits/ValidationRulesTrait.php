@@ -30,7 +30,7 @@ trait ValidationRulesTrait
         if (
             !filter_var($value, FILTER_VALIDATE_EMAIL)
             || !isset($explodeEmail[1])
-            || !checkdnsrr($explodeEmail[1], 'MX')
+            //|| !checkdnsrr($explodeEmail[1], 'MX') // @todo unc
         ) {
             throw new InvalidArgumentException($message);
         }

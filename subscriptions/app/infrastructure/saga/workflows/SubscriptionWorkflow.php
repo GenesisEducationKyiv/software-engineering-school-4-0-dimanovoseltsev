@@ -39,11 +39,11 @@ class SubscriptionWorkflow implements SubscriptionWorkflowInterface
         $saga->setParallelCompensation(true);
 
         try {
-            $subscription = yield $this->activities->saveSubscription($email);
+            $subscription = yield $this->activities->createSubscription($email);
             $saga->addCompensation(fn() => yield $this->activities->cancelSubscription($email));
 
-            $customer = yield $this->activities->saveCustomer($email);
-            $saga->addCompensation(fn() => yield $this->activities->cancelCustomer($email));
+            $customer = yield $this->activities->createCustomer($email);
+            $saga->addCompensation(fn() => yield $this->activities->deleteCustomer($email));
 
             return [
                 'subscription' => $subscription,
