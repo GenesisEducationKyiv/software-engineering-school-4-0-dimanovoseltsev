@@ -12,19 +12,19 @@ services:
     environment:
       - TZ=America/New_York
 
-#  app-setup:
-#    build: .
-#    networks:
-#      - currency-rate-app-network
-#    user: root
-#    working_dir: /app
-#    tty: true
-#    stdin_open: true
-#    command: /bin/bash -c "composer install ;sleep 10; php yii app/init --interactive=0"
-#    volumes:
-#      - .:/app
-#    environment:
-#      - TZ=America/New_York
+  app-setup:
+    build: .
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "composer install ;sleep 10; php yii app/init --interactive=0"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
 
   nginx:
     container_name: nginx-subscriptions
@@ -39,32 +39,27 @@ services:
     networks:
       - currency-rate-app-network
 
-#  worker-mail-sent:
-#    build: .
-#    restart: always
-#    networks:
-#      - currency-rate-app-network
-#    user: root
-#    working_dir: /app
-#    tty: true
-#    stdin_open: true
-#    command: /bin/bash -c "sleep 10;  ./yii mail-sent-queue/listen"
-#    volumes:
-#      - .:/app
-#    environment:
-#      - TZ=America/New_York
-#    deploy:
-#      replicas: 1
-
+  worker-mail-sent:
+    build: .
+    restart: always
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "sleep 10;  ./yii mail-sent-queue/listen"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
+    deploy:
+      replicas: 1
 
   app-temporal:
     build:
       dockerfile: DockerfileTemporal
       context: ./
-    # volumes:
-    #  - ./app:/var/app
-#    depends_on:
-#      - temporal
     networks:
       - currency-rate-app-network
     working_dir: /app
