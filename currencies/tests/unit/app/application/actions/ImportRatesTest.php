@@ -6,10 +6,10 @@ use app\application\actions\CreateOrUpdateCurrency;
 use app\application\actions\ImportRates;
 use app\application\dto\CurrencyProviderDto;
 use app\application\enums\CurrencyIso;
-use app\application\forms\CurrencyForm;
-use app\application\services\RateService;
 use app\application\exceptions\NotValidException;
 use app\application\exceptions\UnexpectedValueException;
+use app\application\forms\CurrencyForm;
+use app\application\services\RateService;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -56,6 +56,7 @@ class ImportRatesTest extends UnitTestCase
     public function testExecute()
     {
         $rate = new CurrencyProviderDto(CurrencyIso::UAH->value, 5.0);
+        $timestamp = time();
 
         $this->rateService->expects($this->once())
             ->method('getRate')
@@ -67,10 +68,10 @@ class ImportRatesTest extends UnitTestCase
 
         $entity = $this->getCurrencyEntity();
         $mapInvoke['createOrUpdateCurrency.execute']['params'][] = [
-            new CurrencyForm(
+            (new CurrencyForm(
                 $rate->getCurrency(),
                 $rate->getRoundedRate()
-            )
+            ))->setTimestamp($timestamp)
         ];
         $mapInvoke['createOrUpdateCurrency.execute']['return'][] = $entity;
         $matcher = self::exactly(count($mapInvoke['createOrUpdateCurrency.execute']['params']));

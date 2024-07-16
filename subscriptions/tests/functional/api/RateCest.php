@@ -83,4 +83,77 @@ class RateCest extends FunctionalCest
         $I->assertNotNull($model);
         $I->assertEquals(null, $model->last_send_at);
     }
+
+    /**
+     * @param FunctionalTester $I
+     * @throws Exception
+     */
+    public function testUnsubscribeEmptyEmail(FunctionalTester $I): void
+    {
+        $this->attachHeaderAcceptJson($I);
+        $I->sendPost('/unsubscribe', []);
+        $I->seeResponseIsJson();
+        $I->seeResponseCodeIs(422);
+
+        $response = json_decode($I->grabResponse(), true);
+        $I->assertNotEmpty($response);
+        $I->assertEquals([
+            ["field" => "email", "message" => "Cannot be blank"]
+        ], $response);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @throws Exception
+     */
+    public function testUnsubscribeBadEmail(FunctionalTester $I): void
+    {
+        $this->attachHeaderAcceptJson($I);
+        $I->sendPost('/unsubscribe', ['email' => 'email']);
+        $I->seeResponseIsJson();
+        $I->seeResponseCodeIs(422);
+
+        $response = json_decode($I->grabResponse(), true);
+        $I->assertNotEmpty($response);
+        $I->assertEquals([
+            ["field" => "email", "message" => "Is not a valid email address"]
+        ], $response);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @throws Exception
+     */
+    public function testUnsubscribeAlready(FunctionalTester $I): void
+    {
+        $email = 'mail-' . time() . '@mail.com';
+        $this->attachHeaderAcceptJson($I);
+        $I->sendPost('/unsubscribe', ['email' => $email]);
+        $I->seeResponseIsJson();
+        $I->seeResponseCodeIs(404);
+
+        $response = json_decode($I->grabResponse(), true);
+        $I->assertNotEmpty($response);
+        $I->assertArrayHasKey('message', $response);
+        $I->assertEquals('Subscription not exist', $response['message']);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @throws Exception
+     */
+    public function testUnsubscribe(FunctionalTester $I): void
+    {
+        $subscription = Subscription::find()->one();
+        $this->attachHeaderAcceptJson($I);
+        $I->sendPost('/unsubscribe', ['email' => $subscription->email]);
+        $I->seeResponseIsJson();
+        $I->seeResponseCodeIs(200);
+
+        $response = json_decode($I->grabResponse(), true);
+        $I->assertEmpty($response);
+
+        $model = Subscription::findOne(['email' => $subscription->email]);
+        $I->assertNull($model);
+    }
 }

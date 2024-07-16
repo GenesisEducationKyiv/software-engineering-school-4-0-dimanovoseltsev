@@ -25,7 +25,7 @@ class MailSentEventTest extends UnitTestCase
                 "eventId" => "event1",
                 "eventType" => $event->getName(),
                 "timestamp" => $event->getTimestamp(),
-                "data" => ["email" => "mail@mail.com", "timestamp" =>  $event->getTimestamp()]
+                "data" => ["email" => "mail@mail.com", "timestamp" => $event->getTimestamp()]
             ],
             $body
         );

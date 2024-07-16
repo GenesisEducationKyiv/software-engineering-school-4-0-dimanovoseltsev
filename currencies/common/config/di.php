@@ -6,6 +6,7 @@ use app\application\actions\ImportRates;
 use app\application\actions\ImportRatesInterface;
 use app\application\actions\RetrieveCurrencyByCode;
 use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\adapters\EventBusInterface;
 use app\application\enums\CurrencyIso;
 use app\application\providers\RateChain;
 use app\application\providers\RateChainProviderInterface;
@@ -15,6 +16,7 @@ use app\application\services\LogServiceInterface;
 use app\application\services\RateService;
 use app\application\services\RateServiceInterface;
 use app\domain\repositories\CurrencyRepositoryInterface;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\models\Currency;
 use app\infrastructure\providers\CoinbaseProvider;
 use app\infrastructure\providers\ExchangeRateProvider;
@@ -22,6 +24,7 @@ use app\infrastructure\repositories\CurrencyCacheRepository;
 use app\infrastructure\repositories\CurrencyRepository;
 use app\infrastructure\services\YiiLogger;
 use GuzzleHttp\Client as GuzzleClient;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 use yii\di\Container;
 
 
@@ -60,12 +63,23 @@ return [
         return $chain;
     },
 
+    EventBusInterface::class => function (Container $container) {
+        return new EventBusRabbitMQ(
+            Yii::$app->eventBusQueue,
+            (string)getenv("RABBITMQ_EVENT_BUS_EXCHANGE"),
+            AMQPExchangeType::TOPIC
+        );
+    },
+
     // actions
     RetrieveCurrencyByCodeInterface::class => function (Container $container) {
         return new RetrieveCurrencyByCode($container->get(CurrencyServiceInterface::class));
     },
     CreateOrUpdateCurrencyInterface::class => function (Container $container) {
-        return new CreateOrUpdateCurrency($container->get(CurrencyServiceInterface::class));
+        return new CreateOrUpdateCurrency(
+            $container->get(CurrencyServiceInterface::class),
+            $container->get(EventBusInterface::class),
+        );
     },
     ImportRatesInterface::class => function (Container $container) {
         return new ImportRates(

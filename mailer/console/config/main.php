@@ -1,6 +1,8 @@
 <?php
 
+use console\workers\CurrencyWorker;
 use console\workers\MailWorker;
+use console\workers\SubscriptionWorker;
 use yii\console\controllers\MigrateController;
 use yii\log\FileTarget;
 use yii\queue\amqp_interop\Queue;
@@ -14,7 +16,12 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'sendEmailQueueWorker'],
+    'bootstrap' => [
+        'log',
+        'sendEmailQueueWorker',
+        'subscriptionQueue',
+        'currencyQueue',
+    ],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -71,6 +78,58 @@ return [
             'strictJobType' => false,
             'serializer' => JsonSerializer::class,
             'commandClass' => MailWorker::class,
+            'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
+        ],
+        'subscriptionFailQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_SUBSCRIPTION_FAIL_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_SUBSCRIPTION_FAIL_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_SUBSCRIPTION_FAIL_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+        ],
+        'subscriptionQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_SUBSCRIPTION_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_SUBSCRIPTION_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_SUBSCRIPTION_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+            'commandClass' => SubscriptionWorker::class,
+            'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
+        ],
+        'currencyFailQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_CURRENCY_FAIL_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_CURRENCY_FAIL_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_CURRENCY_FAIL_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+        ],
+        'currencyQueue' => [
+            'class' => Queue::class,
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASS'),
+            'queueName' => getenv('RABBITMQ_CURRENCY_QUEUE'),
+            'exchangeName' => getenv('RABBITMQ_CURRENCY_EXCHANGE'),
+            'routingKey' => getenv('RABBITMQ_CURRENCY_ROUTING_KEY'),
+            'strictJobType' => false,
+            'serializer' => JsonSerializer::class,
+            'commandClass' => CurrencyWorker::class,
             'heartbeat' => (int)getenv('RABBITMQ_DEFAULT_HEARTBEAT'),
         ],
     ],

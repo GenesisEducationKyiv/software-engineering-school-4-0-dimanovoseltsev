@@ -3,10 +3,10 @@
 namespace tests\unit\app\infrastructure\repositories;
 
 use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotValidException;
 use app\domain\entities\Currency;
 use app\infrastructure\models\CurrencyQuery;
 use app\infrastructure\repositories\CurrencyRepository;
-use app\application\exceptions\NotValidException;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 use yii\db\Exception;

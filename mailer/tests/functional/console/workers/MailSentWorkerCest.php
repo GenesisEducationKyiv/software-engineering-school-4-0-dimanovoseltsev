@@ -2,11 +2,12 @@
 
 namespace tests\functional\console\workers;
 
-use app\application\actions\MailSentInterface;
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\actions\RetrieveSubscriptionByEmailInterface;
 use app\application\actions\SendEmailInterface;
 use app\application\services\LogServiceInterface;
-use app\application\services\SubscriptionServiceInterface;
-use console\workers\MailSentWorker;
+use app\infrastructure\models\Currency;
+use app\infrastructure\models\Subscription;
 use console\workers\MailWorker;
 use tests\functional\FunctionalCest;
 use tests\FunctionalTester;
@@ -27,6 +28,8 @@ class MailSentWorkerCest extends FunctionalCest
             'id',
             Yii::$app->module,
             Yii::$container->get(SendEmailInterface::class),
+            Yii::$container->get(RetrieveCurrencyByCodeInterface::class),
+            Yii::$container->get(RetrieveSubscriptionByEmailInterface::class),
             Yii::$container->get(LogServiceInterface::class),
             []
         );
@@ -53,20 +56,15 @@ class MailSentWorkerCest extends FunctionalCest
      */
     public function testProcessMessage(FunctionalTester $I): void
     {
-        $email = 'user1@gmail.com';
-        $timestamp = 1720016496;
+        /** @var Subscription $subscription */
+        $subscription = Subscription::find()->one();
+
+        /** @var Currency $currency */
+        $currency = Currency::find()->one();
+
         $body = [
-            "eventId" => "019078f8-2704-72ed-865f-e276f6883bf5",
-            "eventType" => "mail.create",
-            "timestamp" => $timestamp,
-            "data" => [
-                "email" => $email,
-                "currency" => [
-                    'iso3' => 'UAH',
-                    'rate' => 5.1,
-                    'updatedAt' => $timestamp,
-                ]
-            ]
+            'email' => $subscription->email,
+            'currency' => $currency->iso3,
         ];
         $actual = $this->getWorker()->processMessage('id', json_encode($body), 1, 1);
         $I->assertEquals(true, $actual);

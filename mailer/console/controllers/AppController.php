@@ -2,6 +2,9 @@
 
 namespace console\controllers;
 
+use app\application\actions\SendEmailsScheduledInterface;
+use app\application\enums\CurrencyIso;
+use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\console\Controller;
@@ -22,6 +25,21 @@ class AppController extends Controller
     public array $executablePaths = [
         '@root/yii',
     ];
+
+    /**
+     * @param $id
+     * @param $module
+     * @param SendEmailsScheduledInterface $sendEmailsScheduled
+     * @param array $config
+     */
+    public function __construct(
+        $id,
+        $module,
+        private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
+        array $config = []
+    ) {
+        parent::__construct($id, $module, $config);
+    }
 
     /**
      * @throws InvalidRouteException
@@ -60,6 +78,21 @@ class AppController extends Controller
             $path = Yii::getAlias($path);
             Console::output("Setting executable: {$path}");
             @chmod($path, 0755);
+        }
+    }
+
+    /**
+     * @run php yii app/send-emails
+     */
+    public function actionSendEmails(): int
+    {
+        try {
+            $count = $this->sendEmailsScheduled->execute(CurrencyIso::UAH);
+            Console::output("Send " . $count);
+            return ExitCode::OK;
+        } catch (Throwable $e) {
+            Console::error($e->getMessage());
+            return ExitCode::DATAERR;
         }
     }
 }

@@ -9,6 +9,7 @@ use app\domain\entities\Subscription;
 use app\domain\valueObjects\Iso3;
 use app\domain\valueObjects\Rate;
 use app\domain\valueObjects\Timestamp;
+use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\mappers\Mapper;
 use app\infrastructure\models\Currency as ModelCurrency;
 use app\infrastructure\models\Subscription as ModelSubscription;
@@ -222,8 +223,7 @@ class UnitTestCase extends TestCase
                     'getByEmail',
                     'save',
                     'create',
-                    'getNotSent',
-                    'getByEmailAndNotSend',
+                    'delete',
                 ]
             )
             ->getMock();
@@ -238,6 +238,19 @@ class UnitTestCase extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'log',
+            ])
+            ->getMock();
+    }
+
+    /**
+     * @return EventBusRabbitMQ|MockObject
+     */
+    protected function getEventBusMock(): EventBusRabbitMQ|MockObject
+    {
+        return $this->getMockBuilder(EventBusRabbitMQ::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'publish',
             ])
             ->getMock();
     }

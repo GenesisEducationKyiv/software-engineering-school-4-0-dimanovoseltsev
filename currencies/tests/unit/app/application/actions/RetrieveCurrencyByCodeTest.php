@@ -4,9 +4,9 @@ namespace tests\unit\app\application\actions;
 
 use app\application\actions\RetrieveCurrencyByCode;
 use app\application\enums\CurrencyIso;
+use app\application\exceptions\NotExistException;
 use app\application\services\CurrencyService;
 use app\domain\entities\Currency;
-use app\application\exceptions\NotExistException;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

@@ -4,9 +4,9 @@ namespace tests\unit\app\application\providers;
 
 use app\application\dto\CurrencyProviderDto;
 use app\application\enums\CurrencyIso;
+use app\application\exceptions\InvalidCallException;
 use app\application\providers\RateChain;
 use app\infrastructure\providers\ExchangeRateProvider;
-use app\application\exceptions\InvalidCallException;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 

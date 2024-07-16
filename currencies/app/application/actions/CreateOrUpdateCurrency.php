@@ -2,7 +2,9 @@
 
 namespace app\application\actions;
 
+use app\application\adapters\EventBusInterface;
 use app\application\dto\CreateCurrencyDto;
+use app\application\events\CurrencyUpdateEvent;
 use app\application\exceptions\NotValidException;
 use app\application\forms\CurrencyForm;
 use app\application\services\CurrencyServiceInterface;
@@ -14,10 +16,21 @@ class CreateOrUpdateCurrency extends BaseAction implements CreateOrUpdateCurrenc
 {
     /**
      * @param CurrencyServiceInterface $service
+     * @param EventBusInterface $eventBus
      */
     public function __construct(
         private readonly CurrencyServiceInterface $service,
+        private readonly EventBusInterface $eventBus,
     ) {
+    }
+
+    /**
+     * @param Currency $currency
+     * @return void
+     */
+    private function pushEventUpdate(Currency $currency): void
+    {
+        $this->eventBus->publish(new CurrencyUpdateEvent($currency));
     }
 
     /**
@@ -37,18 +50,24 @@ class CreateOrUpdateCurrency extends BaseAction implements CreateOrUpdateCurrenc
 
         $entity = $this->service->getByCode($form->getCode());
         if ($entity === null) {
-            return $this->service->create(
+            $entity = $this->service->create(
                 new CreateCurrencyDto(
                     $form->getCode(),
                     $form->getRate(),
                     $form->getTimestamp(),
                 )
             );
+            $this->pushEventUpdate($entity);
+
+            return $entity;
         }
 
         $entity->setRate(new Rate($form->getRate()));
         $entity->setUpdatedAt(new Timestamp($form->getTimestamp()));
 
-        return $this->service->save($entity);
+        $entity = $this->service->save($entity);
+        $this->pushEventUpdate($entity);
+
+        return $entity;
     }
 }

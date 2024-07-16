@@ -12,7 +12,7 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
-    'name' => 'Currency Rates Api',
+    'name' => 'Mailer',
     'language' => 'en',
     'sourceLanguage' => 'en',
     'components' => [

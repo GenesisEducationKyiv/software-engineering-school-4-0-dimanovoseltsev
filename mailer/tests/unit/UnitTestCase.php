@@ -2,12 +2,15 @@
 
 namespace tests\unit;
 
+use app\application\enums\CurrencyIso;
+use app\application\services\CurrencyService;
+use app\application\services\SubscriptionService;
 use app\domain\entities\Currency;
 use app\domain\entities\Subscription;
-use app\domain\valueObjects\Email;
-use app\domain\valueObjects\Iso3;
-use app\domain\valueObjects\Rate;
-use app\domain\valueObjects\Timestamp;
+use app\infrastructure\mappers\CurrencyMapper;
+use app\infrastructure\mappers\SubscriptionMapper;
+use app\infrastructure\models\Currency as ModelCurrency;
+use app\infrastructure\models\Subscription as ModelSubscription;
 use app\infrastructure\services\YiiLogger;
 use Closure;
 use Codeception\PHPUnit\TestCase;
@@ -87,7 +90,7 @@ class UnitTestCase extends TestCase
     protected function getCurrencyEntityDefault(): array
     {
         return [
-            'iso3' => "UAH",
+            'iso3' => CurrencyIso::UAH->value,
             'rate' => 5.02,
             'updatedAt' => strtotime('2024-05-01 00:00:00'),
         ];
@@ -101,11 +104,7 @@ class UnitTestCase extends TestCase
     {
         $data = array_merge($this->getCurrencyEntityDefault(), $data);
 
-        return new Currency(
-            new Iso3($data['iso3'] ?? null),
-            new Rate($data['rate'] ?? null),
-            new Timestamp($data['updatedAt'] ?? null),
-        );
+        return CurrencyMapper::fromPrimitive($data);
     }
 
 
@@ -130,9 +129,8 @@ class UnitTestCase extends TestCase
     protected function getSubscriptionEntity(array $data = []): Subscription
     {
         $data = array_merge($this->getSubscriptionEntityDefault(), $data);
-        return new Subscription(
-            new Email($data['email'] ?? null),
-        );
+
+        return SubscriptionMapper::fromPrimitive($data);
     }
 
 
@@ -158,6 +156,84 @@ class UnitTestCase extends TestCase
             ->onlyMethods([
                 'log',
             ])
+            ->getMock();
+    }
+
+    /**
+     * @param array $data
+     * @return ModelSubscription|MockObject
+     */
+    protected function getSubscriptionModelMock(array $data = []): ModelSubscription|MockObject
+    {
+        $mock = $this->getMockBuilder(ModelSubscription::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'attributes',
+                'load',
+                'save',
+            ])
+            ->getMock();
+
+        $mock->expects(self::any())
+            ->method('attributes')
+            ->willReturn((new ModelSubscription())->attributes());
+
+        return $this->setAttributes($mock, $data);
+    }
+
+    /**
+     * @param array $data
+     * @return ModelCurrency|MockObject
+     */
+    protected function getCurrencyModelMock(array $data = []): ModelCurrency|MockObject
+    {
+        $mock = $this->getMockBuilder(ModelCurrency::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'attributes',
+                'load',
+                'save',
+            ])
+            ->getMock();
+
+        $mock->expects(self::any())
+            ->method('attributes')
+            ->willReturn((new ModelCurrency())->attributes());
+
+        return $this->setAttributes($mock, $data);
+    }
+
+    /**
+     * @return SubscriptionService|MockObject
+     */
+    protected function getSubscriptionServiceMock(): SubscriptionService|MockObject
+    {
+        return $this->getMockBuilder(SubscriptionService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByEmail',
+                    'save',
+                    'delete',
+                    'getNotSent',
+                ]
+            )
+            ->getMock();
+    }
+
+    /**
+     * @return CurrencyService|MockObject
+     */
+    protected function getCurrencyServiceMock(): CurrencyService|MockObject
+    {
+        return $this->getMockBuilder(CurrencyService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                [
+                    'getByCode',
+                    'save',
+                ]
+            )
             ->getMock();
     }
 }

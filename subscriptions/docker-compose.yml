@@ -39,19 +39,6 @@ services:
     networks:
       - currency-rate-app-network
 
-  cron:
-    build:
-      context: .
-      dockerfile: DockerfileCron
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./docker/cron/cron.log:/var/log/cron.log
-    networks:
-      - currency-rate-app-network
-    environment:
-      - TZ=America/New_York
-
   worker-mail-sent:
     build: .
     restart: always

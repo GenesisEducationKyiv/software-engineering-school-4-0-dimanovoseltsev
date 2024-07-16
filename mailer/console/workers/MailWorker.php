@@ -2,9 +2,12 @@
 
 namespace console\workers;
 
+use app\application\actions\RetrieveCurrencyByCodeInterface;
+use app\application\actions\RetrieveSubscriptionByEmailInterface;
 use app\application\actions\SendEmailInterface;
+use app\application\dto\MailSendDto;
+use app\application\enums\CurrencyIso;
 use app\application\exceptions\NotExistException;
-use app\application\mappers\EventMapper;
 use app\application\services\LogServiceInterface;
 use Throwable;
 use Yii;
@@ -15,6 +18,8 @@ class MailWorker extends BaseWorker
      * @param $id
      * @param $module
      * @param SendEmailInterface $sendEmail
+     * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail
      * @param LogServiceInterface $logService
      * @param array $config
      */
@@ -22,6 +27,8 @@ class MailWorker extends BaseWorker
         $id,
         $module,
         private readonly SendEmailInterface $sendEmail,
+        private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail,
         private readonly LogServiceInterface $logService,
         array $config = []
     ) {
@@ -39,21 +46,20 @@ class MailWorker extends BaseWorker
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
         $data = (array)json_decode($body, true);
-        $eventId = $data['eventId'] ?? null;
-        $eventType = $data['eventType'] ?? null;
-        $timestamp = $data['timestamp'] ?? null;
-        $eventData = $data['data'] ?? null;
+        $email = $data['email'] ?? null;
+        $currency = $data['currency'] ?? null;
 
-        if (empty($eventId) || empty($eventType) || empty($timestamp) || empty($eventData)) {
+        if (empty($email) || empty($currency)) {
             return true;
         }
 
         try {
-            $convertor = new EventMapper();
-            $this->logService->log(
-                sprintf("Process event %s:%s [%d]", (string)$eventType, (string)$eventId, (int)$timestamp)
+            return $this->sendEmail->execute(
+                new MailSendDto(
+                    $this->retrieveCurrencyByCode->execute(CurrencyIso::from((string)$currency)),
+                    $this->retrieveSubscriptionByEmail->execute((string)$email),
+                )
             );
-            return $this->sendEmail->execute($convertor->convertMailCreateToDto($eventData));
         } catch (NotExistException $e) {
             return true;
         } catch (Throwable $e) {

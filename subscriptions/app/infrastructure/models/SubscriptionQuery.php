@@ -40,12 +40,11 @@ class SubscriptionQuery extends BaseQuery
     }
 
     /**
-     * @param int $break
-     * @return SubscriptionQuery
+     * @param string $email
+     * @return int
      */
-    public function prepareNotSent(int $break): SubscriptionQuery
+    public function deleteByEmail(string $email): int
     {
-        return $this->andWhere(['<=', 'last_send_at', time() - $break])
-            ->orWhere(['IS', 'last_send_at', null]);
+        return Subscription::deleteAll(['email' => $email]);
     }
 }

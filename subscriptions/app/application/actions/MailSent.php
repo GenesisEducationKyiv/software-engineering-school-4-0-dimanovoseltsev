@@ -25,7 +25,7 @@ class MailSent extends BaseAction implements MailSentInterface
      */
     public function execute(MailSentDto $dto): Subscription
     {
-        $subscription = $this->subscriptionService->getByEmailAndNotSend($dto->getEmail());
+        $subscription = $this->subscriptionService->getByEmail($dto->getEmail());
         $subscription = $this->checkExit($subscription);
 
         $subscription->setLastSendAt(new Timestamp($dto->getTimestamp()));
