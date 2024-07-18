@@ -50,5 +50,10 @@ $factory
         );
     });
 
+try {
 // start primary loop
-$factory->run();
+    $factory->run();
+} catch (Throwable $e) {
+    Yii::error('Temporal Exception: ' . $e->getMessage());
+}
+
