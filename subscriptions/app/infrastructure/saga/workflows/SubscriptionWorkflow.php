@@ -2,6 +2,7 @@
 
 namespace app\infrastructure\saga\workflows;
 
+use app\application\services\LogServiceInterface;
 use app\infrastructure\saga\activities\SubscriptionActivitiesInterface;
 use Carbon\CarbonInterval;
 use Iterator;
@@ -10,20 +11,17 @@ use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
 use Throwable;
-use Yii;
 
 class SubscriptionWorkflow implements SubscriptionWorkflowInterface
 {
-    private SubscriptionActivitiesInterface|ActivityProxy $activities;
+    private ActivityProxy $activities;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->activities = Workflow::newActivityStub(
             SubscriptionActivitiesInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::minute(1))
-                // disable retries for example to run faster
-                ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(1))
+                ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(2))
         );
     }
 
@@ -39,12 +37,14 @@ class SubscriptionWorkflow implements SubscriptionWorkflowInterface
         // Configure SAGA to run compensation activities in parallel
         $saga->setParallelCompensation(true);
 
+        /** @var SubscriptionActivitiesInterface $activities */
+        $activities = $this->activities;
         try {
-            $subscription = yield $this->activities->createSubscription($email);
-            $saga->addCompensation(fn() => yield $this->activities->cancelSubscription($email));
+            $subscription = yield $activities->createSubscription($email);
+            $saga->addCompensation(fn() => yield $activities->cancelSubscription($email));
 
-            $customer = yield $this->activities->createCustomer($email);
-            $saga->addCompensation(fn() => yield $this->activities->deleteCustomer($email));
+            $customer = yield $activities->createCustomer($email);
+            $saga->addCompensation(fn() => yield $activities->deleteCustomer($email));
 
             return [
                 'subscription' => $subscription,

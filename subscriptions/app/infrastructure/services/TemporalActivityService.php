@@ -41,17 +41,17 @@ class TemporalActivityService implements ActivityServiceInterface
         try {
             $process = $this->subscribeWorkflow->client->start($this->subscribeWorkflow, $email);
             /** @var array{
-             * customer: array{
-             * id: int,
-             * email: string
-             * },
-             * subscription: array{
-             * id: int,
-             * email: string,
-             * createdAt: int,
-             * updatedAt: int,
-             * lastSendAt: int
-             * }
+             *   customer: array{
+             *     id: int,
+             *     email: string
+             *   },
+             *   subscription: array{
+             *     id: int,
+             *     email: string,
+             *     createdAt: int,
+             *     updatedAt: int,
+             *     lastSendAt: int
+             *   }
              * } */
             return (array)$process->getResult(Type::TYPE_ARRAY);
         } catch (Throwable $e) {
