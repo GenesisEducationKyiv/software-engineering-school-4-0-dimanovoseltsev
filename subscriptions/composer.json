@@ -19,6 +19,7 @@
     "guzzlehttp/guzzle": "^7.8",
     "webmozart/assert": "^1.11",
     "ramsey/uuid": "^4.7",
+    "spiral/roadrunner": "^2024.1",
     "temporal/sdk": "^2.10"
   },
   "require-dev": {

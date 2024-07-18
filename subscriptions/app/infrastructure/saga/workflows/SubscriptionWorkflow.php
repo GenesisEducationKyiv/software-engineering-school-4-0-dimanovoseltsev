@@ -7,13 +7,14 @@ use Carbon\CarbonInterval;
 use Iterator;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
+use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
 use Throwable;
 use Yii;
 
 class SubscriptionWorkflow implements SubscriptionWorkflowInterface
 {
-    private SubscriptionActivitiesInterface $activities;
+    private SubscriptionActivitiesInterface|ActivityProxy $activities;
 
     public function __construct()
     {

@@ -3,12 +3,14 @@
 namespace app\application\actions;
 
 use app\application\exceptions\AlreadyException;
+use app\application\exceptions\InvalidCallException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
 use app\application\interfaces\ActivityServiceInterface;
 use app\application\mappers\Mapper;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Subscription;
+use Throwable;
 
 class Subscribe extends BaseAction implements SubscribeInterface
 {
@@ -26,7 +28,9 @@ class Subscribe extends BaseAction implements SubscribeInterface
      * @param SubscribeForm $form
      * @return Subscription
      * @throws AlreadyException
+     * @throws InvalidCallException
      * @throws NotValidException
+     * @throws Throwable
      */
     public function execute(SubscribeForm $form): Subscription
     {
@@ -53,7 +57,14 @@ class Subscribe extends BaseAction implements SubscribeInterface
          *    }
          * } $transactionResult
          */
-        $transactionResult = $this->activityService->subscribe($form->getEmail());
+        try {
+            $transactionResult = $this->activityService->subscribe($form->getEmail());
+        } catch (InvalidCallException $e) {
+            throw new InvalidCallException( previous: $e);
+        } catch (Throwable $e) {
+            throw $e;
+        }
+
         return Mapper::fromPrimitive($transactionResult['subscription']);
     }
 }

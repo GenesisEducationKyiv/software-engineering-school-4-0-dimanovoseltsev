@@ -14,6 +14,7 @@ use app\application\actions\Unsubscribe;
 use app\application\actions\UnsubscribeInterface;
 use app\application\adapters\EventBusInterface;
 use app\application\interfaces\ActivityServiceInterface;
+use app\application\services\CustomerService;
 use app\application\services\CustomerServiceInterface;
 use app\application\services\LogServiceInterface;
 use app\application\services\SubscriptionService;
@@ -39,6 +40,12 @@ return [
     // services
     LogServiceInterface::class => function (Container $container) {
         return new YiiLogger(Yii::$app->log->getLogger());
+    },
+    // services
+    CustomerServiceInterface::class => function (Container $container) {
+        return new CustomerService(
+            $container->get(CustomerRepositoryInterface::class)
+        );
     },
     ActivityServiceInterface::class => function (Container $container) {
         // Create a GRPC service client with the Temporal server address

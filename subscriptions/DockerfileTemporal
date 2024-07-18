@@ -1,21 +1,18 @@
 FROM php:8.3-cli
 
-# Set working directory
-WORKDIR /app
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    nano \
-    bash \
-    libzip-dev \
-    unzip \
-    libonig-dev \
-    git \
-    unzip \
-    libicu-dev \
-    zlib1g-dev \
-    libsqlite3-dev \
-    libbz2-dev \
-    && rm -rf /var/lib/apt/lists/*
+  nano \
+  bash \
+  libzip-dev \
+  unzip \
+  libonig-dev
+
+# Install PHP extensions
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    zip \
+    sockets
 
 # Install PHP Extensions
 ENV CFLAGS="$CFLAGS -D_GNU_SOURCE"
@@ -35,13 +32,13 @@ COPY --from=temporalio/admin-tools /usr/local/bin/tctl /usr/local/bin/tctl
 # Install Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
+# Copy application codebase
+WORKDIR /var/app
+COPY ./ /var/app
+
 # Wait for Temporal service to star up
 COPY wait-for-temporal.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/wait-for-temporal.sh
-
-# Copy application codebase
-#WORKDIR /var/app
-COPY ./ /app
 
 RUN composer install
 

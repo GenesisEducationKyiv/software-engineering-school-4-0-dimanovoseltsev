@@ -62,9 +62,6 @@ services:
       context: ./
     networks:
       - currency-rate-app-network
-    working_dir: /app
-    volumes:
-      - ./:/app
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
       - TELEMETRY_DRIVER=otel
@@ -75,7 +72,7 @@ services:
       - TEMPORAL_HOST=temporal
       - OTEL_HOST=collector
       - INTERCEPTORS_RR_PATH=/usr/local/bin/rr
-    command: [ "/usr/local/bin/wait-for-temporal.sh", "temporal", "/usr/local/bin/rr", "serve", "-c", "/app/.rr.yaml" ]
+    command: [ "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
 
 #  k6:
 #    image: grafana/k6:latest
