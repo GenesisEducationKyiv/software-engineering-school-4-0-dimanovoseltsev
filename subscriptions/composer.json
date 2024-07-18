@@ -9,6 +9,7 @@
     "php": ">=8.3",
     "ext-json": "*",
     "ext-pdo": "*",
+    "ext-memcached": "*",
     "ext-simplexml": "*",
     "yiisoft/yii2": "^2.0.47",
     "vlucas/phpdotenv": "^5.5",

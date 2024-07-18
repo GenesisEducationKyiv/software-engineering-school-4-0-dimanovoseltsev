@@ -2,7 +2,6 @@
 
 namespace app\infrastructure\saga\workflows;
 
-use app\application\services\LogServiceInterface;
 use app\infrastructure\saga\activities\SubscriptionActivitiesInterface;
 use Carbon\CarbonInterval;
 use Iterator;
@@ -11,12 +10,17 @@ use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
 use Throwable;
+use Yii;
 
+/**
+ * @property ActivityProxy|SubscriptionActivitiesInterface $activities
+ */
 class SubscriptionWorkflow implements SubscriptionWorkflowInterface
 {
     private ActivityProxy $activities;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->activities = Workflow::newActivityStub(
             SubscriptionActivitiesInterface::class,
             ActivityOptions::new()
