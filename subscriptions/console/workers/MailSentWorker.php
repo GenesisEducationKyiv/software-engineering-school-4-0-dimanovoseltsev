@@ -50,7 +50,7 @@ class MailSentWorker extends BaseWorker
         }
 
         try {
-            $this->logService->log(
+            $this->logService->error(
                 sprintf("Process event %s:%s [%d]", (string)$eventType, (string)$eventId, (int)$timestamp)
             );
 

@@ -4,9 +4,11 @@ namespace app\application\services;
 
 interface LogServiceInterface
 {
-    /**
-     * @param string $message
-     * @return void
-     */
-    public function log(string $message): void;
+    public function error(string $message): void;
+
+    public function info(string $message): void;
+
+    public function warn(string $message): void;
+
+    public function debug(string $message): void;
 }

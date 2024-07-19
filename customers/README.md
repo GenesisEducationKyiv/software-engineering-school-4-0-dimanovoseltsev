@@ -57,7 +57,7 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 
 [JOBS]: https://gitlab.com/dima.novoseltsev/currency-rates-api/-/jobs
 
-[version-badge]: https://img.shields.io/badge/version-1.0.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.1.0-blue.svg
 
 [pipeline-badge]: https://gitlab.com/dima.novoseltsev/currency-rates-api/badges/main/pipeline.svg
 
