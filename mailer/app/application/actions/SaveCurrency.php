@@ -4,6 +4,7 @@ namespace app\application\actions;
 
 use app\application\dto\SaveCurrencyDto;
 use app\application\services\CurrencyServiceInterface;
+use app\application\services\LogServiceInterface;
 use app\domain\entities\Currency;
 use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Iso3;
@@ -14,9 +15,12 @@ class SaveCurrency extends BaseAction implements SaveCurrencyInterface
 {
     /**
      * @param CurrencyServiceInterface $currencyService
+     * @param LogServiceInterface $logService
      */
     public function __construct(
-        private readonly CurrencyServiceInterface $currencyService
+        private readonly CurrencyServiceInterface $currencyService,
+        private readonly LogServiceInterface $logService,
+
     ) {
     }
 
@@ -38,6 +42,14 @@ class SaveCurrency extends BaseAction implements SaveCurrencyInterface
 
         $entity->setRate(new Rate($dto->getRate()));
         $entity->setUpdatedAt(new Timestamp($dto->getUpdatedAt()));
+
+        $this->logService->debug(
+            sprintf(
+                "Save currency %s %f",
+                $entity->getIso3()->value(),
+                $entity->getRate()->value(),
+            )
+        );
 
         return $this->currencyService->save($entity);
     }

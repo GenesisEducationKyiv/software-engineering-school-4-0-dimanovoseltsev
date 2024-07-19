@@ -47,7 +47,7 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
         } catch (RemoteServiceException $e) {
             throw $e;
         } catch (Throwable $e) {
-            Yii::error($e);
+            $this->logService->error(sprintf("Error in %s. Error: %s", self::PROVIDER, $e->getMessage() ));
             throw new RemoteServiceException("Service unavailable: {$e->getMessage()}", previous: $e);
         }
     }

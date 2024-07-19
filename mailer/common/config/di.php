@@ -74,11 +74,13 @@ return [
     SaveCurrencyInterface::class => function (Container $container) {
         return new SaveCurrency(
             $container->get(CurrencyServiceInterface::class),
+            $container->get(LogServiceInterface::class),
         );
     },
     SaveSubscriptionInterface::class => function (Container $container) {
         return new SaveSubscription(
             $container->get(SubscriptionServiceInterface::class),
+            $container->get(LogServiceInterface::class),
         );
     },
     DeleteSubscriptionInterface::class => function (Container $container) {

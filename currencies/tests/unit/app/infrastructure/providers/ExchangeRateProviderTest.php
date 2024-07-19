@@ -80,6 +80,10 @@ class ExchangeRateProviderTest extends UnitTestCase
             ->method('get')
             ->willThrowException(new Exception('Service down'));
 
+        $this->logService->expects(self::once())
+            ->method('error')
+            ->with(sprintf("Error in %s. Error: %s", "exchangerate-api.com", "Service down"));
+
         $this->provider->getRate($this->baseCurrency, $this->importCurrency);
     }
 

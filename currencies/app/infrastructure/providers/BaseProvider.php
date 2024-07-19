@@ -36,7 +36,7 @@ abstract class BaseProvider
     protected function parseJsonBody(ResponseInterface $response): array
     {
         $body = (string)$response->getBody()->getContents();
-        $this->logService->error(sprintf("%s - Response: %s", static::PROVIDER, $body));
+        $this->logService->info(sprintf("%s - Response: %s", static::PROVIDER, $body));
 
         if (!json_validate($body)) {
             throw new InvalidJsonException('Invalid JSON response');

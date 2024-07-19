@@ -35,11 +35,11 @@ return [
         );
     },
 
-
     // actions
     DeleteCustomerInterface::class => function (Container $container) {
         return new DeleteCustomer(
             $container->get(CustomerServiceInterface::class),
+            $container->get(LogServiceInterface::class),
         );
     },
     RetrieveCustomerByEmailInterface::class => function (Container $container) {

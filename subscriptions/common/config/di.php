@@ -88,6 +88,7 @@ return [
         return new Subscribe(
             $container->get(SubscriptionServiceInterface::class),
             $container->get(ActivityServiceInterface::class),
+            $container->get(LogServiceInterface::class),
         );
     },
     MailSentInterface::class => function (Container $container) {
@@ -105,7 +106,10 @@ return [
         return new CreateCustomer($container->get(CustomerServiceInterface::class));
     },
     DeleteCustomerInterface::class => function (Container $container) {
-        return new DeleteCustomer($container->get(CustomerServiceInterface::class));
+        return new DeleteCustomer(
+            $container->get(CustomerServiceInterface::class),
+            $container->get(LogServiceInterface::class),
+        );
     },
     CreateSubscriptionInterface::class => function (Container $container) {
         return new CreateSubscription(
