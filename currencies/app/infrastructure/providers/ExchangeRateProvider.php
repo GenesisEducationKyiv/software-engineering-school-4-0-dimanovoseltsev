@@ -10,7 +10,6 @@ use app\application\services\LogServiceInterface;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
-use Yii;
 
 class ExchangeRateProvider extends BaseProvider implements ProviderInterface
 {
@@ -47,7 +46,7 @@ class ExchangeRateProvider extends BaseProvider implements ProviderInterface
         } catch (RemoteServiceException $e) {
             throw $e;
         } catch (Throwable $e) {
-            $this->logService->error(sprintf("Error in %s. Error: %s", self::PROVIDER, $e->getMessage() ));
+            $this->logService->error(sprintf("Error in %s. Error: %s", self::PROVIDER, $e->getMessage()));
             throw new RemoteServiceException("Service unavailable: {$e->getMessage()}", previous: $e);
         }
     }

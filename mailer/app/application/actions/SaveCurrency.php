@@ -20,7 +20,6 @@ class SaveCurrency extends BaseAction implements SaveCurrencyInterface
     public function __construct(
         private readonly CurrencyServiceInterface $currencyService,
         private readonly LogServiceInterface $logService,
-
     ) {
     }
 
