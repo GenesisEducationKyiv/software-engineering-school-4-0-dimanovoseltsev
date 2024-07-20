@@ -10,11 +10,15 @@ use app\application\adapters\EventBusInterface;
 use app\application\services\CustomerService;
 use app\application\services\CustomerServiceInterface;
 use app\application\services\LogServiceInterface;
+use app\application\services\MetricServiceInterface;
 use app\infrastructure\adapters\EventBusRabbitMQ;
 use app\infrastructure\models\Customer;
 use app\infrastructure\repositories\CustomerRepository;
+use app\infrastructure\services\PrometheusMetricService;
 use app\infrastructure\services\YiiLogger;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
 use yii\di\Container;
 
 return [
@@ -32,6 +36,17 @@ return [
     CustomerServiceInterface::class => function (Container $container) {
         return new CustomerService(
             new CustomerRepository(Customer::find())
+        );
+    },
+
+    MetricServiceInterface::class => function (Container $container) {
+        return new PrometheusMetricService(
+            new CollectorRegistry(new \Prometheus\Storage\Redis([
+                'host' => (string)getenv("REDIS_HOST"),
+                'port' =>  (string)getenv("REDIS_PORT"),
+            ])),
+            new RenderTextFormat(),
+            'app'
         );
     },
 

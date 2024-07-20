@@ -21,7 +21,8 @@
     "webmozart/assert": "^1.11",
     "ramsey/uuid": "^4.7",
     "spiral/roadrunner": "^2024.1",
-    "temporal/sdk": "^2.10"
+    "temporal/sdk": "^2.10",
+    "promphp/prometheus_client_php": "^2.10"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",

@@ -17,6 +17,7 @@ use app\application\interfaces\ActivityServiceInterface;
 use app\application\services\CustomerService;
 use app\application\services\CustomerServiceInterface;
 use app\application\services\LogServiceInterface;
+use app\application\services\MetricServiceInterface;
 use app\application\services\SubscriptionService;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\repositories\CustomerRepositoryInterface;
@@ -26,11 +27,14 @@ use app\infrastructure\models\Subscription;
 use app\infrastructure\repositories\CustomerRepository;
 use app\infrastructure\repositories\SubscriptionRepository;
 use app\infrastructure\saga\workflows\SubscriptionWorkflowInterface;
+use app\infrastructure\services\PrometheusMetricService;
 use app\infrastructure\services\TemporalActivityService;
 use app\infrastructure\services\YiiLogger;
 use Carbon\CarbonInterval;
 use GuzzleHttp\Client;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowOptions;
@@ -58,6 +62,17 @@ return [
                 WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
                     ->withTaskQueue((string)getenv("TEMPORAL_SUBSCRIPTION_TASK"))
             )
+        );
+    },
+
+    MetricServiceInterface::class => function (Container $container) {
+        return new PrometheusMetricService(
+            new CollectorRegistry(new \Prometheus\Storage\Redis([
+                'host' => (string)getenv("REDIS_HOST"),
+                'port' => (string)getenv("REDIS_PORT"),
+            ])),
+            new RenderTextFormat(),
+            'app'
         );
     },
 

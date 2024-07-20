@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "887631c29210ab7ca2d05396ef763a1f",
+  "content-hash": "102e5299071429c7e7d782df42d41c0b",
   "packages": [
     {
       "name": "bower-asset/swagger-ui",
@@ -877,16 +877,16 @@
     },
     {
       "name": "guzzlehttp/guzzle",
-      "version": "7.9.0",
+      "version": "7.9.1",
       "source": {
         "type": "git",
         "url": "https://github.com/guzzle/guzzle.git",
-        "reference": "84ac2b2afc44e40d3e8e658a45d68d6d20437612"
+        "reference": "a629e5b69db96eb4939c1b34114130077dd4c6fc"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/guzzle/guzzle/zipball/84ac2b2afc44e40d3e8e658a45d68d6d20437612",
-        "reference": "84ac2b2afc44e40d3e8e658a45d68d6d20437612",
+        "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a629e5b69db96eb4939c1b34114130077dd4c6fc",
+        "reference": "a629e5b69db96eb4939c1b34114130077dd4c6fc",
         "shasum": ""
       },
       "require": {
@@ -983,7 +983,7 @@
       ],
       "support": {
         "issues": "https://github.com/guzzle/guzzle/issues",
-        "source": "https://github.com/guzzle/guzzle/tree/7.9.0"
+        "source": "https://github.com/guzzle/guzzle/tree/7.9.1"
       },
       "funding": [
         {
@@ -999,7 +999,7 @@
           "type": "tidelift"
         }
       ],
-      "time": "2024-07-18T11:52:56+00:00"
+      "time": "2024-07-19T16:19:57+00:00"
     },
     {
       "name": "guzzlehttp/promises",
@@ -1742,6 +1742,73 @@
         }
       ],
       "time": "2024-06-24T06:27:33+00:00"
+    },
+    {
+      "name": "promphp/prometheus_client_php",
+      "version": "v2.10.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/PromPHP/prometheus_client_php.git",
+        "reference": "a09ea80ec1ec26dd1d4853e9af2a811e898dbfeb"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/PromPHP/prometheus_client_php/zipball/a09ea80ec1ec26dd1d4853e9af2a811e898dbfeb",
+        "reference": "a09ea80ec1ec26dd1d4853e9af2a811e898dbfeb",
+        "shasum": ""
+      },
+      "require": {
+        "ext-json": "*",
+        "php": "^7.2|^8.0"
+      },
+      "replace": {
+        "endclothing/prometheus_client_php": "*",
+        "jimdo/prometheus_client_php": "*",
+        "lkaemmerling/prometheus_client_php": "*"
+      },
+      "require-dev": {
+        "guzzlehttp/guzzle": "^6.3|^7.0",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^1.5.4",
+        "phpstan/phpstan-phpunit": "^1.1.0",
+        "phpstan/phpstan-strict-rules": "^1.1.0",
+        "phpunit/phpunit": "^9.4",
+        "squizlabs/php_codesniffer": "^3.6",
+        "symfony/polyfill-apcu": "^1.6"
+      },
+      "suggest": {
+        "ext-apc": "Required if using APCu.",
+        "ext-redis": "Required if using Redis.",
+        "promphp/prometheus_push_gateway_php": "An easy client for using Prometheus PushGateway.",
+        "symfony/polyfill-apcu": "Required if you use APCu on PHP8.0+"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.0-dev"
+        }
+      },
+      "autoload": {
+        "psr-4": {
+          "Prometheus\\": "src/Prometheus/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "Apache-2.0"
+      ],
+      "authors": [
+        {
+          "name": "Lukas Kämmerling",
+          "email": "kontakt@lukas-kaemmerling.de"
+        }
+      ],
+      "description": "Prometheus instrumentation library for PHP applications.",
+      "support": {
+        "issues": "https://github.com/PromPHP/prometheus_client_php/issues",
+        "source": "https://github.com/PromPHP/prometheus_client_php/tree/v2.10.0"
+      },
+      "time": "2024-02-01T13:28:34+00:00"
     },
     {
       "name": "psr/cache",
@@ -5564,16 +5631,16 @@
     },
     {
       "name": "yiisoft/yii2",
-      "version": "2.0.50",
+      "version": "2.0.51",
       "source": {
         "type": "git",
         "url": "https://github.com/yiisoft/yii2-framework.git",
-        "reference": "a90b6638cce84e78ed8f681a5cad4a14c76464b4"
+        "reference": "ea1f112f4dc9a9824e77b788019e2d53325d823c"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/a90b6638cce84e78ed8f681a5cad4a14c76464b4",
-        "reference": "a90b6638cce84e78ed8f681a5cad4a14c76464b4",
+        "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/ea1f112f4dc9a9824e77b788019e2d53325d823c",
+        "reference": "ea1f112f4dc9a9824e77b788019e2d53325d823c",
         "shasum": ""
       },
       "require": {
@@ -5682,7 +5749,7 @@
           "type": "tidelift"
         }
       ],
-      "time": "2024-05-30T17:23:31+00:00"
+      "time": "2024-07-18T19:50:00+00:00"
     },
     {
       "name": "yiisoft/yii2-composer",
@@ -9410,6 +9477,7 @@
     "php": ">=8.3",
     "ext-json": "*",
     "ext-pdo": "*",
+    "ext-memcached": "*",
     "ext-simplexml": "*"
   },
   "platform-dev": [],

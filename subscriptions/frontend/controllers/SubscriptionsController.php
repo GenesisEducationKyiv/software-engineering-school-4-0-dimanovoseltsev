@@ -25,7 +25,7 @@ use yii\web\NotFoundHttpException;
     name: "Subscriptions",
     description: "Information on API calls, parameters and responses for the Subscriptions API."
 )]
-class RatesController extends ActiveController
+class SubscriptionsController extends ActiveController
 {
     public $modelClass = "";
 
