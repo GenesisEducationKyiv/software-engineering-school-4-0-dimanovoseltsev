@@ -3,7 +3,9 @@
 namespace console\controllers;
 
 use app\application\actions\ImportRatesInterface;
+use app\application\enums\State;
 use app\application\exceptions\NotValidException;
+use app\application\services\MetricServiceInterface;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -12,19 +14,20 @@ use yii\console\Exception;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 
-
 class AppController extends Controller
 {
     /**
      * @param $id
      * @param $module
      * @param ImportRatesInterface $importRates
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
         private readonly ImportRatesInterface $importRates,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -88,18 +91,34 @@ class AppController extends Controller
      */
     public function actionImportCurrencyRates(): int
     {
+        $command = 'app/import-currency-rates';
+        $start = (float)microtime(true);
+
         try {
             $currencies = $this->importRates->execute();
+            $imported = count($currencies);
+
             Console::output(
-                sprintf('%s updated %d currencies.', date('Y-m-d H:i:s'), count($currencies))
+                sprintf('%s updated %d currencies.', date('Y-m-d H:i:s'), $imported)
             );
+
+            $this->metricService->trackCommands($command, State::SUCCESSFUL);
+            $this->metricService->trackCurrencyImportsTotal($imported);
+            $this->metricService->trackCommandsDurations($command, round((float)microtime(true) - $start));
+
             return ExitCode::OK;
         } catch (NotValidException $e) {
             Console::error($e->getMessage());
             Console::error('Model errors: ' . var_export($e->getErrorsAsResponse(), true));
+            $this->metricService->trackCommands($command, State::FAILURE);
+            $this->metricService->trackCommandsDurations($command, round((float)microtime(true) - $start));
+
             return ExitCode::DATAERR;
         } catch (Throwable $e) {
             Console::error($e->getMessage());
+            $this->metricService->trackCommands($command, State::FAILURE);
+            $this->metricService->trackCommandsDurations($command, round((float)microtime(true) - $start));
+
             return ExitCode::DATAERR;
         }
     }

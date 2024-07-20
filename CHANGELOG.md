@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.0] - 2024-07-19
 - added different levels of logs
+- add redis
 
 ## [1.8.0] - 2024-07-11
 - add service customers

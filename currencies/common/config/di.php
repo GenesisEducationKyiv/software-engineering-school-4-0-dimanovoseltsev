@@ -13,6 +13,7 @@ use app\application\providers\RateChainProviderInterface;
 use app\application\services\CurrencyService;
 use app\application\services\CurrencyServiceInterface;
 use app\application\services\LogServiceInterface;
+use app\application\services\MetricServiceInterface;
 use app\application\services\RateService;
 use app\application\services\RateServiceInterface;
 use app\domain\repositories\CurrencyRepositoryInterface;
@@ -22,9 +23,13 @@ use app\infrastructure\providers\CoinbaseProvider;
 use app\infrastructure\providers\ExchangeRateProvider;
 use app\infrastructure\repositories\CurrencyCacheRepository;
 use app\infrastructure\repositories\CurrencyRepository;
+use app\infrastructure\services\PrometheusMetricService;
 use app\infrastructure\services\YiiLogger;
 use GuzzleHttp\Client as GuzzleClient;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
+use Prometheus\Storage\Redis;
 use yii\di\Container;
 
 
@@ -61,6 +66,17 @@ return [
         $chain = new RateChain($exchangeRateProvider, $retries);
         $chain->setNext(new RateChain($coinbaseProvider, $retries));
         return $chain;
+    },
+
+    MetricServiceInterface::class => function (Container $container) {
+        return new PrometheusMetricService(
+            new CollectorRegistry(new Redis([
+                'host' => (string)getenv("REDIS_HOST"),
+                'port' =>  (string)getenv("REDIS_PORT"),
+            ])),
+            new RenderTextFormat(),
+            'app'
+        );
     },
 
     EventBusInterface::class => function (Container $container) {

@@ -6,6 +6,7 @@
 [![coverage][coverage-badge]][JOBS]
 ![php-version]
 ![mysql-version]
+![redis-version]
 
 # 💱 Customer
 
@@ -66,3 +67,4 @@ the [LICENSE.md](https://gitlab.com/dima.novoseltsev/currency-rates-api/-/blob/m
 [php-version]:https://img.shields.io/static/v1?label=php&message=8.3&color=green
 
 [mysql-version]:https://img.shields.io/static/v1?label=mysql&message=8.0&color=green
+[redis-version]:https://img.shields.io/static/v1?label=redis&message=7.2&color=green

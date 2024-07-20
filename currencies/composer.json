@@ -10,6 +10,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-simplexml": "*",
+    "ext-redis": "*",
     "yiisoft/yii2": "^2.0.47",
     "vlucas/phpdotenv": "^5.5",
     "light/yii2-swagger": "^3.0",
@@ -17,7 +18,8 @@
     "webmozart/assert": "^1.11",
     "yiisoft/yii2-queue": "^2.3",
     "enqueue/amqp-lib": "^0.10.19",
-    "ramsey/uuid": "^4.7"
+    "ramsey/uuid": "^4.7",
+    "promphp/prometheus_client_php": "^2.10"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",

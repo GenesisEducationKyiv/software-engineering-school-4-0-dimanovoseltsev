@@ -10,6 +10,17 @@ services:
     environment:
       - TZ=America/New_York
 
+  redis:
+    image: redis:latest
+    container_name: redis-currency-rates
+    networks:
+      - currency-rate-app-network
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_currency_rates_api:/data
+    restart: always
+
   mysql:
     container_name: mysql-currency-rates
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
@@ -45,19 +56,19 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
       - TZ=America/New_York
 
-  #  prometheus:
-  #    container_name: prometheus-currency-rates
-  #    image: prom/prometheus:latest
-  #    ports:
-  #      - "9090:9090"
-  #    volumes:
-  #      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #    networks:
-  #      - currency-rate-app-network
-  #    command:
-  #      - --web.enable-remote-write-receiver
-  #      - --enable-feature=native-histograms
-  #      - --config.file=/etc/prometheus/prometheus.yml
+  prometheus:
+    container_name: prometheus-currency-rates
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - currency-rate-app-network
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
   #
   #  node-exporter:
   #    container_name: node-exporter-currency-rates
@@ -69,27 +80,27 @@ services:
   #    networks:
   #      - currency-rate-app-network
   #
-  #  grafana:
-  #    image: grafana/grafana:latest
-  #    container_name: grafana-currency-rates
-  #    ports:
-  #      - "3010:3000"
-  #    environment:
-  #      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-  #      - GF_SECURITY_ADMIN_PASSWORD=admin
-  #      - GF_SECURITY_ADMIN_USER=admin
-  #      - GF_AUTH_ANONYMOUS_ENABLED=true
-  #      - GF_USERS_ALLOW_SIGN_UP=false
-  #      - GF_USERS_ALLOW_ORG_CREATE=false
-  #      - GF_AUTH_BASIC_ENABLED=false
-  #    depends_on:
-  #      - prometheus
-  #    volumes:
-  #      - grafana_currency_rates_api:/var/lib/grafana
-  #      - ./docker/grafana:/etc/grafana/provisioning
-  #    networks:
-  #      - currency-rate-app-network
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-currency-rates
+    ports:
+      - "3010:3000"
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_BASIC_ENABLED=false
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_currency_rates_api:/var/lib/grafana
+      - ./docker/grafana:/etc/grafana/provisioning
+    networks:
+      - currency-rate-app-network
 
   elasticsearch:
     container_name: temporal-elasticsearch
@@ -199,3 +210,4 @@ volumes:
   mysql_currency_rates_api:
   rabbitmq_currency_rates_api:
   grafana_currency_rates_api:
+  redis_currency_rates_api:
