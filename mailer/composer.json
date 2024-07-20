@@ -18,7 +18,8 @@
     "guzzlehttp/guzzle": "^7.8",
     "webmozart/assert": "^1.11",
     "ramsey/uuid": "^4.7",
-    "promphp/prometheus_client_php": "^2.10"
+    "promphp/prometheus_client_php": "^2.10",
+    "light/yii2-swagger": "^3.0"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",
@@ -53,6 +54,7 @@
   "autoload": {
     "psr-4": {
       "app\\": "app/",
+      "frontend\\": "frontend/",
       "console\\": "console/",
       "tests\\": "tests/",
       "common\\": "common/"

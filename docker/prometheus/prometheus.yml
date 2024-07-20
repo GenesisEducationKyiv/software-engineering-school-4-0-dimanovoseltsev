@@ -9,7 +9,7 @@ scrape_configs:
 
   - job_name: 'apis'
     static_configs:
-      - targets: [ 'nginx-currencies:80', "nginx-customers:80", "nginx-subscriptions:80" ]
+      - targets: [ 'nginx-currencies:80', "nginx-customers:80", "nginx-subscriptions:80", "nginx-mailer:80" ]
         labels:
           __metrics_path__: /metrics
 

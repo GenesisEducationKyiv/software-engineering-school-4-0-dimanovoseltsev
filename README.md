@@ -16,6 +16,7 @@ For detailed documentation, check out
 | Currencies    | http://127.0.0.1:9822 | http://127.0.0.1:9822/doc |
 | Subscriptions | http://127.0.0.1:9832 | http://127.0.0.1:9832/doc |
 | Customers     | http://127.0.0.1:9842 | http://127.0.0.1:9842/doc |
+| Mailer        | http://127.0.0.1:9852 | http://127.0.0.1:9852/doc |
 
 # Events
 
