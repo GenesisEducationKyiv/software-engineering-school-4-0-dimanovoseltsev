@@ -75,7 +75,7 @@ return [
                 'port' =>  (string)getenv("REDIS_PORT"),
             ])),
             new RenderTextFormat(),
-            'app'
+            'currencies'
         );
     },
 
