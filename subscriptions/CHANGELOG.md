@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.0] - 2024-07-19
 - added different levels of logs
+- add metrics
 
 ## [1.3.0] - 2024-07-14
 - add temporal saga on create subscription

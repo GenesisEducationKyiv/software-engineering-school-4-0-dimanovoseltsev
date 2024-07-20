@@ -34,7 +34,7 @@ class PrometheusMetricService implements MetricServiceInterface
             'Total number of HTTP requests',
             ['method', 'endpoint', 'status']
         );
-        $counter->inc([$method, $endpoint, $statusCode]);
+        $counter->inc([$method, $endpoint, (string)$statusCode]);
     }
 
     /**
@@ -76,7 +76,7 @@ class PrometheusMetricService implements MetricServiceInterface
             $this->namespace,
             'console_command_durations',
             'Duration of run console commands in milliseconds',
-            ['method'],
+            ['command'],
             [100, 500, 1000, 5000]
         );
 
@@ -113,6 +113,6 @@ class PrometheusMetricService implements MetricServiceInterface
             'Total number of currencies imported',
             ['imported']
         );
-        $counter->inc([$imported]);
+        $counter->inc([(string)$imported]);
     }
 }

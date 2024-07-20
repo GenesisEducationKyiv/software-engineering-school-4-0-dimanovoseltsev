@@ -9,6 +9,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
 use Prometheus\Exception\MetricsRegistrationException;
+use Prometheus\Histogram;
 use Prometheus\RenderTextFormat;
 use tests\unit\UnitTestCase;
 
@@ -63,6 +64,19 @@ class PrometheusMetricServiceTest extends UnitTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(
                 ['inc']
+            )
+            ->getMock();
+    }
+
+    /**
+     * @return Histogram|MockObject
+     */
+    protected function getHistogramMock(): Histogram|MockObject
+    {
+        return $this->getMockBuilder(Histogram::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                ['observe']
             )
             ->getMock();
     }
@@ -167,5 +181,76 @@ class PrometheusMetricServiceTest extends UnitTestCase
             ->willReturn($counter);
 
         $this->service->trackCurrencyRateRequestTotal($currency, $state);
+    }
+
+    /**
+     * @throws MetricsRegistrationException
+     */
+    public function testTrackHttpRequestDurations()
+    {
+        $method = 'GET';
+        $endpoint = '/a1';
+        $duration = 50;
+
+        $histogram = $this->getHistogramMock();
+        $histogram->expects($this->once())
+            ->method('observe')
+            ->with($duration, [$method, $endpoint]);
+
+        $this->registry->expects($this->once())
+            ->method('getOrRegisterHistogram')
+            ->with(
+                $this->namespace,
+                'http_request_durations',
+                'Duration of HTTP requests in milliseconds',
+                ['method', 'endpoint'],
+                [10, 50, 100, 250, 500, 1000]
+            )
+            ->willReturn($histogram);
+
+        $this->service->trackHttpRequestDurations($method, $endpoint, $duration);
+    }
+
+    /**
+     * @throws MetricsRegistrationException
+     */
+    public function testTrackCommandsDurations()
+    {
+        $command = 'app/a1';
+        $duration = 50;
+
+        $histogram = $this->getHistogramMock();
+        $histogram->expects($this->once())
+            ->method('observe')
+            ->with($duration, [$command]);
+
+        $this->registry->expects($this->once())
+            ->method('getOrRegisterHistogram')
+            ->with(
+                $this->namespace,
+                'console_command_durations',
+                'Duration of run console commands in milliseconds',
+                ['command'],
+                [100, 500, 1000, 5000]
+            )
+            ->willReturn($histogram);
+
+        $this->service->trackCommandsDurations($command, $duration);
+    }
+
+    /**
+     */
+    public function testExport()
+    {
+        $this->render->expects($this->once())
+            ->method('render')
+            ->willReturn('test');
+
+        $this->registry->expects($this->once())
+            ->method('getMetricFamilySamples')
+            ->willReturn([]);
+
+        $actual = $this->service->export();
+        self::assertIsString($actual);
     }
 }
