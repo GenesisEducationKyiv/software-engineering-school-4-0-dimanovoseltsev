@@ -4,15 +4,18 @@ namespace frontend\controllers;
 
 use app\application\actions\DeleteCustomerInterface;
 use app\application\actions\SaveCustomerInterface;
+use app\application\enums\State;
 use app\application\exceptions\AlreadyException;
 use app\application\exceptions\NotExistException;
 use app\application\exceptions\NotSupportedException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\DeleteCustomerForm;
 use app\application\forms\SaveCustomerForm;
+use app\application\services\MetricServiceInterface;
 use OpenApi\Attributes as OA;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
@@ -34,6 +37,7 @@ class CustomersController extends ActiveController
      * @param $module
      * @param SaveCustomerInterface $saveCustomer
      * @param DeleteCustomerInterface $deleteCustomer
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
@@ -41,6 +45,7 @@ class CustomersController extends ActiveController
         $module,
         private readonly SaveCustomerInterface $saveCustomer,
         private readonly DeleteCustomerInterface $deleteCustomer,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -91,9 +96,8 @@ class CustomersController extends ActiveController
 
 
     /**
-     * @throws \yii\base\NotSupportedException
-     * @throws NotFoundHttpException
-     * @throws BadRequestHttpException
+     * @param Throwable $e
+     * @return mixed
      */
     protected function processException(Throwable $e): mixed
     {
@@ -103,21 +107,36 @@ class CustomersController extends ActiveController
         }
 
         return match (true) {
-            $e instanceof NotExistException => throw new NotFoundHttpException(
+            $e instanceof NotExistException => new NotFoundHttpException(
                 $e->getMessage(), (int)$e->getCode(), $e
             ),
-            $e instanceof NotSupportedException => throw new \yii\base\NotSupportedException(
+            $e instanceof NotSupportedException => new \yii\base\NotSupportedException(
                 $e->getMessage(),
                 (int)$e->getCode(),
                 $e
             ),
-            $e instanceof AlreadyException => throw new ConflictHttpException(
+            $e instanceof AlreadyException => new ConflictHttpException(
                 $e->getMessage(),
                 (int)$e->getCode(),
                 $e
             ),
-            default => throw new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
+            default => new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
         };
+    }
+
+    /**
+     * @param float $start
+     * @param int $statusCode
+     * @return void
+     * @throws InvalidConfigException
+     */
+    private function trackHttpCalls(float $start, int $statusCode): void
+    {
+        $endpoint = Yii::$app->request->getUrl();
+        $method = Yii::$app->request->getMethod();
+
+        $this->metricService->trackHttRequest($method, $endpoint, $statusCode);
+        $this->metricService->trackHttpRequestDurations($method, $endpoint, round((float)microtime(true) - $start));
     }
 
     /**
@@ -184,18 +203,31 @@ class CustomersController extends ActiveController
     )]
     public function actionCreate()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $entity = $this->saveCustomer->execute(new SaveCustomerForm($bodyParams['email'] ?? null));
+
+            $this->trackHttpCalls($requestStart, 200);
+
             return $entity->toArray();
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result =  $this->processException($e);
+
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw  $e;
         }
     }
 
 
     /**
-     * @return void
+     * @return array|null
+     * @throws InvalidConfigException
+     * @throws Throwable
      */
     #[OA\Delete(
         path: "/customer",
@@ -257,12 +289,22 @@ class CustomersController extends ActiveController
     )]
     public function actionDelete()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $this->deleteCustomer->execute(new DeleteCustomerForm($bodyParams['email'] ?? null));
+            $this->trackHttpCalls($requestStart, 200);
+
             return null;
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result =  $this->processException($e);
+
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw  $e;
         }
     }
 }

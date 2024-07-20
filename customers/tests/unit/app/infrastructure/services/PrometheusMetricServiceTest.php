@@ -134,58 +134,6 @@ class PrometheusMetricServiceTest extends UnitTestCase
     /**
      * @throws MetricsRegistrationException
      */
-    public function testTrackCurrencyImportsTotal()
-    {
-        $imported = 10;
-
-        $counter = $this->getCounterMock();
-        $counter->expects($this->once())
-            ->method('inc')
-            ->with([$imported]);
-
-        $this->registry->expects($this->once())
-            ->method('getOrRegisterCounter')
-            ->with(
-                $this->namespace,
-                'currency_import_totals',
-                'Total number of currencies imported',
-                ['imported']
-            )
-            ->willReturn($counter);
-
-        $this->service->trackCurrencyImportsTotal($imported);
-    }
-
-
-    /**
-     * @throws MetricsRegistrationException
-     */
-    public function testTrackCurrencyRateRequestTotal()
-    {
-        $currency = CurrencyIso::from('USD');
-        $state = State::from('successful');
-
-        $counter = $this->getCounterMock();
-        $counter->expects($this->once())
-            ->method('inc')
-            ->with([$currency->value, $state->value]);
-
-        $this->registry->expects($this->once())
-            ->method('getOrRegisterCounter')
-            ->with(
-                $this->namespace,
-                'currency_rate_requests',
-                'Total number of currency rate requests',
-                ['currency', 'result']
-            )
-            ->willReturn($counter);
-
-        $this->service->trackCurrencyRateRequestTotal($currency, $state);
-    }
-
-    /**
-     * @throws MetricsRegistrationException
-     */
     public function testTrackHttpRequestDurations()
     {
         $method = 'GET';
