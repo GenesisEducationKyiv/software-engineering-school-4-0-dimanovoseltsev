@@ -87,32 +87,4 @@ class PrometheusMetricService implements MetricServiceInterface
     {
         return $this->renderer->render($this->registry->getMetricFamilySamples());
     }
-
-    /**
-     * @throws MetricsRegistrationException
-     */
-    public function trackCurrencyRateRequestTotal(CurrencyIso $currency, State $state): void
-    {
-        $counter = $this->registry->getOrRegisterCounter(
-            $this->namespace,
-            'currency_rate_requests',
-            'Total number of currency rate requests',
-            ['currency', 'result']
-        );
-        $counter->inc([$currency->value, $state->value]);
-    }
-
-    /**
-     * @throws MetricsRegistrationException
-     */
-    public function trackCurrencyImportsTotal(int $imported): void
-    {
-        $counter = $this->registry->getOrRegisterCounter(
-            $this->namespace,
-            'currency_import_totals',
-            'Total number of currencies imported',
-            ['imported']
-        );
-        $counter->inc([(string)$imported]);
-    }
 }

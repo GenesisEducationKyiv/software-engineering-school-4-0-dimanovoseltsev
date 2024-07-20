@@ -10,9 +10,11 @@ use app\application\exceptions\NotSupportedException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
 use app\application\forms\UnsubscribeForm;
+use app\application\services\MetricServiceInterface;
 use OpenApi\Attributes as OA;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
@@ -34,6 +36,7 @@ class SubscriptionsController extends ActiveController
      * @param $module
      * @param SubscribeInterface $subscribe
      * @param UnsubscribeInterface $unsubscribe
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
@@ -41,6 +44,7 @@ class SubscriptionsController extends ActiveController
         $module,
         private readonly SubscribeInterface $subscribe,
         private readonly UnsubscribeInterface $unsubscribe,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -89,11 +93,24 @@ class SubscriptionsController extends ActiveController
         return $behaviors;
     }
 
+    /**
+     * @param float $start
+     * @param int $statusCode
+     * @return void
+     * @throws InvalidConfigException
+     */
+    private function trackHttpCalls(float $start, int $statusCode): void
+    {
+        $endpoint = Yii::$app->request->getUrl();
+        $method = Yii::$app->request->getMethod();
+
+        $this->metricService->trackHttRequest($method, $endpoint, $statusCode);
+        $this->metricService->trackHttpRequestDurations($method, $endpoint, round((float)microtime(true) - $start));
+    }
 
     /**
-     * @throws \yii\base\NotSupportedException
-     * @throws NotFoundHttpException
-     * @throws BadRequestHttpException
+     * @param Throwable $e
+     * @return mixed
      */
     protected function processException(Throwable $e): mixed
     {
@@ -103,20 +120,20 @@ class SubscriptionsController extends ActiveController
         }
 
         return match (true) {
-            $e instanceof NotExistException => throw new NotFoundHttpException(
+            $e instanceof NotExistException => new NotFoundHttpException(
                 $e->getMessage(), (int)$e->getCode(), $e
             ),
-            $e instanceof NotSupportedException => throw new \yii\base\NotSupportedException(
+            $e instanceof NotSupportedException => new \yii\base\NotSupportedException(
                 $e->getMessage(),
                 (int)$e->getCode(),
                 $e
             ),
-            $e instanceof AlreadyException => throw new ConflictHttpException(
+            $e instanceof AlreadyException => new ConflictHttpException(
                 $e->getMessage(),
                 (int)$e->getCode(),
                 $e
             ),
-            default => throw new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
+            default => new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
         };
     }
 
@@ -191,18 +208,29 @@ class SubscriptionsController extends ActiveController
     )]
     public function actionSubscribe()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $this->subscribe->execute(new SubscribeForm($bodyParams['email'] ?? null));
+            $this->trackHttpCalls($requestStart, 200);
+
             return null;
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result = $this->processException($e);
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw $e;
         }
     }
 
 
     /**
-     * @return void
+     * @return array|null
+     * @throws InvalidConfigException
+     * @throws Throwable
      */
     #[OA\Delete(
         path: "/unsubscribe",
@@ -264,12 +292,21 @@ class SubscriptionsController extends ActiveController
     )]
     public function actionUnsubscribe()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $this->unsubscribe->execute(new UnsubscribeForm($bodyParams['email'] ?? null));
+            $this->trackHttpCalls($requestStart, 200);
+
             return null;
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result = $this->processException($e);
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw $e;
         }
     }
 }

@@ -11,13 +11,9 @@ interface MetricServiceInterface
 
     public function trackHttpRequestDurations(string $method, string $endpoint, int $duration): void;
 
-    public function trackCurrencyRateRequestTotal(CurrencyIso $currency, State $state): void;
-
     public function export(): string;
 
     public function trackCommands(string $command, State $state): void;
 
     public function trackCommandsDurations(string $command, int $duration): void;
-
-    public function trackCurrencyImportsTotal(int $imported): void;
 }
