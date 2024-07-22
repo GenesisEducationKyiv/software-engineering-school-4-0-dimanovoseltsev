@@ -26,6 +26,9 @@ trait ValidationRulesTrait
      */
     protected function validateEmail(string $value, string $message = 'Is not a valid email address'): bool
     {
+        Assert::email($value, $message);
+        return true;
+        
         $explodeEmail = explode('@', $value);
         if (
             !filter_var($value, FILTER_VALIDATE_EMAIL)

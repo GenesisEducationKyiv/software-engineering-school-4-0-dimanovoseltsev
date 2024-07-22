@@ -26,11 +26,16 @@ trait ValidationRulesTrait
      */
     protected function validateEmail(string $value, string $message = 'Is not a valid email address'): bool
     {
+        Assert::email($value, $message);
+        return true;
+
+        // @todo del
         $explodeEmail = explode('@', $value);
         if (
             !filter_var($value, FILTER_VALIDATE_EMAIL)
-            || !isset($explodeEmail[1])
-            || !checkdnsrr($explodeEmail[1], 'MX')
+            || Assert::email($value, $message)
+            //|| !isset($explodeEmail[1])
+            //|| !checkdnsrr($explodeEmail[1], 'MX')
         ) {
             throw new InvalidArgumentException($message);
         }
