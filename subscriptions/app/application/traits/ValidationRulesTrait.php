@@ -3,7 +3,6 @@
 namespace app\application\traits;
 
 use Webmozart\Assert\Assert;
-use Webmozart\Assert\InvalidArgumentException;
 
 trait ValidationRulesTrait
 {
@@ -27,16 +26,6 @@ trait ValidationRulesTrait
     protected function validateEmail(string $value, string $message = 'Is not a valid email address'): bool
     {
         Assert::email($value, $message);
-        return true;
-        
-        $explodeEmail = explode('@', $value);
-        if (
-            !filter_var($value, FILTER_VALIDATE_EMAIL)
-            || !isset($explodeEmail[1])
-            //|| !checkdnsrr($explodeEmail[1], 'MX') // @todo unc
-        ) {
-            throw new InvalidArgumentException($message);
-        }
 
         return true;
     }
