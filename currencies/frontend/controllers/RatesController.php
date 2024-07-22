@@ -13,6 +13,7 @@ use Yii;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+use yii\web\ConflictHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 
@@ -86,9 +87,8 @@ class RatesController extends ActiveController
 
 
     /**
-     * @throws \yii\base\NotSupportedException
-     * @throws NotFoundHttpException
-     * @throws BadRequestHttpException
+     * @param Throwable $e
+     * @return mixed
      */
     protected function processException(Throwable $e): mixed
     {
@@ -97,17 +97,13 @@ class RatesController extends ActiveController
             return $e->getErrorsAsResponse();
         }
 
-        return match (true) {
-            $e instanceof NotExistException => throw new NotFoundHttpException(
-                $e->getMessage(), (int)$e->getCode(), $e
-            ),
-            $e instanceof NotSupportedException => throw new \yii\base\NotSupportedException(
-                $e->getMessage(),
-                (int)$e->getCode(),
-                $e
-            ),
-            default => throw new BadRequestHttpException($e->getMessage(), (int)$e->getCode(), $e)
+        $exceptionClass = match ($e::class) {
+            NotExistException::class => NotFoundHttpException::class,
+            NotSupportedException::class => NotSupportedException::class,
+            default => BadRequestHttpException::class
         };
+
+        throw new $exceptionClass($e->getMessage(), (int)$e->getCode(), $e);
     }
 
 
