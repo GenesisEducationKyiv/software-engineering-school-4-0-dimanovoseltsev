@@ -9,7 +9,6 @@ use yii\console\Exception;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 
-
 class AppController extends Controller
 {
     public array $writablePaths = [

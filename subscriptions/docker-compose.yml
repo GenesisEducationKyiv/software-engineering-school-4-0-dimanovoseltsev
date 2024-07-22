@@ -56,6 +56,24 @@ services:
     deploy:
       replicas: 1
 
+  app-temporal:
+    build:
+      dockerfile: DockerfileTemporal
+      context: ./
+    networks:
+      - currency-rate-app-network
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - TELEMETRY_DRIVER=otel
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+      - OTEL_PHP_TRACES_PROCESSOR=simple
+      - TEMPORAL_HOST=temporal
+      - OTEL_HOST=collector
+      - INTERCEPTORS_RR_PATH=/usr/local/bin/rr
+    command: [ "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
+
 #  k6:
 #    image: grafana/k6:latest
 #    volumes:

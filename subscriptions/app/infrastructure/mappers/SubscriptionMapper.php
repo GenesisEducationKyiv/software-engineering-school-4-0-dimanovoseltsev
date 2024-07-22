@@ -8,7 +8,7 @@ use app\domain\valueObjects\Id;
 use app\domain\valueObjects\Timestamp;
 use app\infrastructure\models\Subscription;
 
-class Mapper
+class SubscriptionMapper
 {
     /**
      * @param Subscription $model

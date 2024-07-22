@@ -1,5 +1,8 @@
 FROM php:8.3-fpm
 
+# Set the PHP version variable
+ENV PHP_VERSION 8.3
+
 # Create a non-root user and group
 RUN groupadd -r app && useradd -r -g app app
 
@@ -7,20 +10,24 @@ RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 
 # Install system dependencies, update, and upgrade packages
-RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends \
-        git \
-        unzip \
-        librabbitmq-dev \
-        libzip-dev \
-        libicu-dev \
-        libmemcached-dev \
-        zlib1g-dev \
-        libsqlite3-dev \
-        libbz2-dev \
-        && pecl install memcached \
-        && docker-php-ext-enable memcached \
-        && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y --no-install-recommends
+
+RUN apt-get install -y --no-install-recommends git
+RUN apt-get install -y --no-install-recommends unzip
+RUN apt-get install -y --no-install-recommends librabbitmq-dev
+RUN apt-get install -y --no-install-recommends libzip-dev
+RUN apt-get install -y --no-install-recommends libicu-dev
+RUN apt-get install -y --no-install-recommends libmemcached-dev
+RUN apt-get install -y --no-install-recommends zlib1g-dev
+RUN apt-get install -y --no-install-recommends libsqlite3-dev
+RUN apt-get install -y --no-install-recommends libbz2-dev
+
+RUN pecl install memcached && docker-php-ext-enable memcached
+RUN pecl install grpc &&  docker-php-ext-enable grpc
+RUN pecl install protobuf && docker-php-ext-enable protobuf
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \

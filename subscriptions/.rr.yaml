@@ -1,0 +1,33 @@
+version: "3"
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+server:
+  command: "php /var/app/temporal-subscription-worker.php"
+
+temporal:
+  address: ${TEMPORAL_HOST:-localhost}:${TEMPORAL_PORT:-7233}
+  task_queue: "SubscriptionTaskQueue"
+  activities:
+    num_workers: 4
+  workflows:
+    num_workers: 2
+
+service:
+  interceptors:
+    command: "${INTERCEPTORS_RR_PATH:-./rr} serve -c /var/app/.rr.yaml"
+
+logs:
+  level: info
+  mode: development
+
+#otel:
+ # insecure: true
+  #compress: false
+  #client: http
+  #exporter: otlp
+  #resource:
+   # service_name: rr-temporal-samples
+    #service_version: 1.0.0
+  #endpoint: ${OTEL_HOST:-localhost}:${OTEL_PORT:-4318}

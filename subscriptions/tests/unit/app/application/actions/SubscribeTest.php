@@ -10,6 +10,7 @@ use app\application\forms\SubscribeForm;
 use app\application\services\SubscriptionService;
 use app\domain\entities\Subscription;
 use app\infrastructure\adapters\EventBusRabbitMQ;
+use app\infrastructure\services\TemporalActivityService;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -17,14 +18,27 @@ class SubscribeTest extends UnitTestCase
 {
     private Subscribe $action;
     private SubscriptionService|MockObject $service;
-    private EventBusRabbitMQ|MockObject $eventBus;
+    private TemporalActivityService|MockObject $activityService;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->getSubscriptionServiceMock();
-        $this->eventBus = $this->getEventBusMock();
-        $this->action = new Subscribe($this->service, $this->eventBus);
+        $this->activityService = $this->getActivityServiceMock();
+        $this->action = new Subscribe($this->service, $this->activityService);
+    }
+
+    /**
+     * @return TemporalActivityService|MockObject
+     */
+    protected function getActivityServiceMock(): TemporalActivityService|MockObject
+    {
+        return $this->getMockBuilder(TemporalActivityService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'subscribe',
+            ])
+            ->getMock();
     }
 
 
@@ -41,15 +55,12 @@ class SubscribeTest extends UnitTestCase
             ->with($form->getEmail())
             ->willReturn(null);
 
-        $this->service->expects($this->once())
-            ->method('create')
-            ->with(
-                new CreateSubscriptionDto(
-                    $form->getEmail(),
-                    $form->getTimestamp()
-                )
-            )
-            ->willReturn($entity);
+        $this->activityService->expects($this->once())
+            ->method('subscribe')
+            ->with($form->getEmail())
+            ->willReturn([
+                'subscription' => $entity->toArray()
+            ]);
 
         $actual = $this->action->execute($form);
         self::assertInstanceOf(Subscription::class, $actual);

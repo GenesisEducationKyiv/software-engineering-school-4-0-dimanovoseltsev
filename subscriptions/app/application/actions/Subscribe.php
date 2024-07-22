@@ -2,24 +2,25 @@
 
 namespace app\application\actions;
 
-use app\application\adapters\EventBusInterface;
-use app\application\dto\CreateSubscriptionDto;
-use app\application\events\SubscriptionCreateEvent;
 use app\application\exceptions\AlreadyException;
+use app\application\exceptions\InvalidCallException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
+use app\application\interfaces\ActivityServiceInterface;
+use app\application\mappers\Mapper;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Subscription;
+use Throwable;
 
 class Subscribe extends BaseAction implements SubscribeInterface
 {
     /**
      * @param SubscriptionServiceInterface $service
-     * @param EventBusInterface $eventBus
+     * @param ActivityServiceInterface $activityService
      */
     public function __construct(
         private readonly SubscriptionServiceInterface $service,
-        private readonly EventBusInterface $eventBus,
+        private readonly ActivityServiceInterface $activityService,
     ) {
     }
 
@@ -27,11 +28,13 @@ class Subscribe extends BaseAction implements SubscribeInterface
      * @param SubscribeForm $form
      * @return Subscription
      * @throws AlreadyException
+     * @throws InvalidCallException
      * @throws NotValidException
+     * @throws Throwable
      */
     public function execute(SubscribeForm $form): Subscription
     {
-        if (!$form->validate() || $form->getEmail() === null) {
+        if (!$form->validate()) {
             throw new NotValidException($form->getErrors());
         }
 
@@ -40,12 +43,14 @@ class Subscribe extends BaseAction implements SubscribeInterface
             throw new AlreadyException("Already subscribed");
         }
 
-        $entity = $this->service->create(
-            new CreateSubscriptionDto($form->getEmail(), $form->getTimestamp())
-        );
+        try {
+            $transactionResult = $this->activityService->subscribe($form->getEmail());
+        } catch (InvalidCallException $e) {
+            throw new InvalidCallException(previous: $e);
+        } catch (Throwable $e) {
+            throw $e;
+        }
 
-        $this->eventBus->publish(new SubscriptionCreateEvent($entity));
-
-        return $entity;
+        return Mapper::fromPrimitive($transactionResult['subscription']);
     }
 }

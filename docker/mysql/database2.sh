@@ -5,7 +5,7 @@ echo ${mysql[@]}
 
 echo "Creating databases"
 
-databases=("$MYSQL_DATABASE2" "$MYSQL_DATABASE3")
+databases=($MYSQL_DATABASES)
 
 for db in "${databases[@]}"; do
     if [ -n "$db" ]; then
