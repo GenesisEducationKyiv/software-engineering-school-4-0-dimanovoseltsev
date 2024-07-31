@@ -1,0 +1,1 @@
+0 9 * * * /usr/local/bin/php /app/yii app/send-emails >> /var/log/cron.log 2>&1

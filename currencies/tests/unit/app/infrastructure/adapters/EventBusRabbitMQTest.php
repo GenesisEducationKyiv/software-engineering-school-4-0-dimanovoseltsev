@@ -1,0 +1,140 @@
+<?php
+
+namespace tests\unit\app\infrastructure\adapters;
+
+use app\application\events\CurrencyUpdateEvent;
+use app\infrastructure\adapters\EventBusRabbitMQ;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
+use PHPUnit\Framework\MockObject\MockObject;
+use tests\unit\UnitTestCase;
+use yii\queue\amqp_interop\Queue;
+
+class EventBusRabbitMQTest extends UnitTestCase
+{
+    private EventBusRabbitMQ $adapter;
+    private Queue|MockObject $queue;
+    private string $exchangeName = 'exchange';
+    private string $exchangeType = AMQPExchangeType::TOPIC;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->queue = $this->getQueueMock();
+        $this->adapter = new EventBusRabbitMQ($this->queue, $this->exchangeName, $this->exchangeType);
+    }
+
+    /**
+     * @return Queue|MockObject
+     */
+    protected function getQueueMock(): Queue|MockObject
+    {
+        return $this->getMockBuilder(Queue::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                ['push', 'getContext']
+            )
+            ->getMock();
+    }
+
+    public function testPublish()
+    {
+        $event = $this->getMockBuilder(CurrencyUpdateEvent::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getBody', 'getName'])
+            ->getMock();
+
+        $body = [
+            'eventId' => '019079d6-5873-71b2-b2f4-ec81f737c0b0',
+            'eventType' => 'currency.update',
+            'timestamp' => 1720031008,
+            'data' => [
+                'rate' => 5.1,
+                'iso3' => "UAH",
+                "updatedAt" => 1720031008,
+            ]
+        ];
+
+        $event->expects($this->once())
+            ->method('getBody')
+            ->willReturn($body);
+
+
+        $this->queue->expects($this->once())
+            ->method('push')
+            ->with($body);
+
+        $this->adapter->publish($event);
+    }
+
+    /**
+     * @return AMQPChannel|MockObject
+     */
+    private function getAMQPChannelMock(): AMQPChannel|MockObject
+    {
+        $context = $this->getMockBuilder(\Enqueue\AmqpLib\AmqpContext::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                ['getLibChannel']
+            )
+            ->getMock();
+
+        $chanel = $this->getMockBuilder(AMQPChannel::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(
+                ['exchange_declare', 'queue_declare', 'queue_bind', 'queue_unbind', 'queue_delete']
+            )
+            ->getMock();
+
+        $this->queue->expects($this->any())
+            ->method('getContext')
+            ->willReturn($context);
+
+        $context->expects($this->any())
+            ->method('getLibChannel')
+            ->willReturn($chanel);
+
+        return $chanel;
+    }
+
+    public function testSubscribe()
+    {
+        $queue = 'q1';
+        $routing = '1';
+
+        $chanel = $this->getAMQPChannelMock();
+
+        $chanel->expects(self::once())
+            ->method('exchange_declare')
+            ->with($this->exchangeName, $this->exchangeType, false, true, false);
+
+        $chanel->expects(self::once())
+            ->method('queue_declare')
+            ->with($queue, false, true, false, false, false, [], null);
+
+        $chanel->expects(self::once())
+            ->method('queue_bind')
+            ->with($queue, $this->exchangeName, $routing);
+
+        $this->adapter->subscribe($queue, $routing);
+    }
+
+    public function testUnsubscribe()
+    {
+        $queue = 'q1';
+        $routing = '1';
+
+        $chanel = $this->getAMQPChannelMock();
+
+        $chanel->expects(self::once())
+            ->method('queue_unbind')
+            ->with($queue, $this->exchangeName, $routing);
+
+        $chanel->expects(self::once())
+            ->method('queue_delete')
+            ->with($queue);
+
+        $this->adapter->unsubscribe($queue, $routing);
+    }
+}
+

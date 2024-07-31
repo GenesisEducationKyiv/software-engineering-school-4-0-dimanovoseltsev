@@ -1,0 +1,92 @@
+version: '3.7'
+
+services:
+  fpm:
+    build: .
+    working_dir: /app
+    restart: always
+    volumes:
+      - .:/app
+    networks:
+      - currency-rate-app-network
+    environment:
+      - TZ=America/New_York
+
+  app-setup:
+    build: .
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "composer install ;sleep 10; php yii app/init --interactive=0"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
+
+  nginx:
+    container_name: nginx-subscriptions
+    image: nginx:latest
+    restart: always
+    ports:
+      - "9832:80"
+      - "9833:8080"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./:/app
+    networks:
+      - currency-rate-app-network
+
+  worker-mail-sent:
+    build: .
+    restart: always
+    networks:
+      - currency-rate-app-network
+    user: root
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: /bin/bash -c "sleep 10;  ./yii mail-sent-queue/listen"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=America/New_York
+    deploy:
+      replicas: 1
+
+  app-temporal:
+    build:
+      dockerfile: DockerfileTemporal
+      context: ./
+    networks:
+      - currency-rate-app-network
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - TELEMETRY_DRIVER=otel
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+      - OTEL_PHP_TRACES_PROCESSOR=simple
+      - TEMPORAL_HOST=temporal
+      - OTEL_HOST=collector
+      - INTERCEPTORS_RR_PATH=/usr/local/bin/rr
+    command: [ "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
+
+#  k6:
+#    image: grafana/k6:latest
+#    volumes:
+#      - ./tests/load-k6:/load-k6
+#    entrypoint: [
+#      "sh", "-c",
+#      "k6 run /load-k6/subscription.js \
+#      --out experimental-prometheus-rw=http://prometheus-currency-rates:9090/metrics/job/k6  \
+#      -e K6_PROMETHEUS_RW_SERVER_URL=http://prometheus-currency-rates:9090/api/v1/write "
+#    ]
+#    networks:
+#      - currency-rate-app-network
+
+networks:
+  currency-rate-app-network:
+    external: true

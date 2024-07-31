@@ -1,0 +1,50 @@
+<?php
+
+namespace app\infrastructure\models;
+
+use app\application\exceptions\NotValidException;
+use yii\db\Exception;
+
+/**
+ * @method SubscriptionQuery clear()
+ */
+class SubscriptionQuery extends BaseQuery
+{
+    /**
+     * @param string $code
+     * @return Subscription|null
+     */
+    public function findByEmail(string $code): ?Subscription
+    {
+        /** @var Subscription */
+        return $this->findOne(['email' => $code]);
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     * @throws NotValidException|Exception
+     */
+    public function save(array $values): Subscription
+    {
+        $id = $values['id'] ?? null;
+
+        $model = $id === null
+            ? $this->createModel($values)
+            : $this->populateModel($values);
+
+        if (!$model->save()) {
+            throw new NotValidException($model->getErrors(), 'Subscription not saved');
+        }
+        /** @var Subscription */
+        return $model;
+    }
+
+    /**
+     * @param string $email
+     * @return int
+     */
+    public function deleteByEmail(string $email): int
+    {
+        return Subscription::deleteAll(['email' => $email]);
+    }
+}

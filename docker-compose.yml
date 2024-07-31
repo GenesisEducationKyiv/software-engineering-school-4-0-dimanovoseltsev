@@ -1,0 +1,213 @@
+version: '3.7'
+
+services:
+  memcached:
+    container_name: memcached-currency-rates
+    networks:
+      - currency-rate-app-network
+    restart: always
+    image: memcached
+    environment:
+      - TZ=America/New_York
+
+  redis:
+    image: redis:latest
+    container_name: redis-currency-rates
+    networks:
+      - currency-rate-app-network
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_currency_rates_api:/data
+    restart: always
+
+  mysql:
+    container_name: mysql-currency-rates
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d/
+      - ./docker/mysql/data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=currencies
+      - MYSQL_DATABASES=mailer subscriptions customers temporal temporal_visibility
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_pass
+    ports:
+      - "3320:3306"
+    networks:
+      - currency-rate-app-network
+
+  rabbitmq:
+    container_name: rabbitmq-currency-rates
+    image: "rabbitmq:3-management"
+    restart: always
+    volumes:
+      - rabbitmq_currency_rates_api:/var/lib/rabbitmq
+    ports:
+      - "5670:5672"
+      - "15670:15672"
+    networks:
+      - currency-rate-app-network
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - TZ=America/New_York
+
+  prometheus:
+    container_name: prometheus-currency-rates
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - currency-rate-app-network
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+  #
+  #  node-exporter:
+  #    container_name: node-exporter-currency-rates
+  #    image: prom/node-exporter:latest
+  #    restart: unless-stopped
+  #    pid: host
+  #    ports:
+  #      - "9100:9100"
+  #    networks:
+  #      - currency-rate-app-network
+  #
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-currency-rates
+    ports:
+      - "3010:3000"
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_BASIC_ENABLED=false
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_currency_rates_api:/var/lib/grafana
+      - ./docker/grafana:/etc/grafana/provisioning
+    networks:
+      - currency-rate-app-network
+
+  elasticsearch:
+    container_name: temporal-elasticsearch
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    image: elasticsearch:7.16.2
+    restart: always
+    networks:
+      - currency-rate-app-network
+    expose:
+      - 9200
+    volumes:
+      - /var/lib/elasticsearch/data
+
+  temporal:
+    container_name: temporal
+    depends_on:
+      - mysql
+      - elasticsearch
+    environment:
+      - DB=mysql8
+      - DB_PORT=3306
+      - DBNAME=temporal
+      - VISIBILITY_DBNAME=temporal_visibility
+      - MYSQL_SEEDS=mysql
+      - MYSQL_USER=db_user
+      - MYSQL_PWD=db_pass
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - frontend.enableUpdateWorkflowExecution=true
+      - frontend.enableUpdateWorkflowExecutionAsyncAccepted=true
+    image: temporalio/auto-setup:1.24.2
+    restart: always
+    networks:
+      - currency-rate-app-network
+    ports:
+      - 7233:7233
+    labels:
+      kompose.volume.type: configMap
+    volumes:
+      - ./docker/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:1.21.0
+    restart: always
+    networks:
+      - currency-rate-app-network
+    stdin_open: true
+    tty: true
+
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:2.16.1
+    restart: always
+    networks:
+      - currency-rate-app-network
+    ports:
+      - 8080:8080
+
+  collector:
+    container_name: collector
+    image: otel/opentelemetry-collector-contrib:0.79.0
+    networks:
+      - currency-rate-app-network
+    command: [ "--config=/etc/otel-collector-config.yml" ]
+    restart: always
+    ports:
+      - 4317:4317
+      - 4318:4318
+    volumes:
+      - ./docker/otel/otel-collector-config.yml:/etc/otel-collector-config.yml
+
+  zipkin:
+    container_name: zipkin
+    restart: always
+    image: openzipkin/zipkin-slim
+    networks:
+      - currency-rate-app-network
+    ports:
+      - 9411:9411
+
+
+networks:
+  currency-rate-app-network:
+    name: "currency-rate-app-network"
+    driver: bridge
+
+volumes:
+  mysql_currency_rates_api:
+  rabbitmq_currency_rates_api:
+  grafana_currency_rates_api:
+  redis_currency_rates_api:
