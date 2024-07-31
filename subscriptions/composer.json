@@ -1,7 +1,7 @@
 {
   "name": "novoseltsev/currency-rates-api",
   "description": "Subscriptions API",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "project",
   "license": "BSD-3-Clause",
   "minimum-stability": "stable",
@@ -21,7 +21,8 @@
     "webmozart/assert": "^1.11",
     "ramsey/uuid": "^4.7",
     "spiral/roadrunner": "^2024.1",
-    "temporal/sdk": "^2.10"
+    "temporal/sdk": "^2.10",
+    "promphp/prometheus_client_php": "^2.10"
   },
   "require-dev": {
     "codeception/codeception": "^5.1",

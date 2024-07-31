@@ -4,6 +4,8 @@ namespace console\controllers;
 
 use app\application\actions\SendEmailsScheduledInterface;
 use app\application\enums\CurrencyIso;
+use app\application\enums\State;
+use app\application\services\MetricServiceInterface;
 use Throwable;
 use Yii;
 use yii\base\InvalidRouteException;
@@ -30,12 +32,14 @@ class AppController extends Controller
      * @param $id
      * @param $module
      * @param SendEmailsScheduledInterface $sendEmailsScheduled
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
         private readonly SendEmailsScheduledInterface $sendEmailsScheduled,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -86,12 +90,21 @@ class AppController extends Controller
      */
     public function actionSendEmails(): int
     {
+        $command = 'app/send-emails';
+        $start = (float)microtime(true);
+
         try {
             $count = $this->sendEmailsScheduled->execute(CurrencyIso::UAH);
             Console::output("Send " . $count);
+
+            $this->metricService->trackCommands($command, State::SUCCESSFUL);
             return ExitCode::OK;
         } catch (Throwable $e) {
             Console::error($e->getMessage());
+
+            $this->metricService->trackCommands($command, State::FAILURE);
+            $this->metricService->trackCommandsDurations($command, round((float)microtime(true) - $start));
+
             return ExitCode::DATAERR;
         }
     }

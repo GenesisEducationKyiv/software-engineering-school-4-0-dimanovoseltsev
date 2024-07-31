@@ -10,6 +10,8 @@ return [
         'POST customer' => 'customers/create',
         'DELETE customer' => 'customers/delete',
 
+        'GET /metrics' => 'metrics/index',
+
         'OPTIONS <opts:(.*)>' => 'customers/options',
         '' => 'customers/options',
         [

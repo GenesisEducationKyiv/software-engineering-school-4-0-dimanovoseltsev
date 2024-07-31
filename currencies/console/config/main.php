@@ -28,7 +28,7 @@ return [
             'targets' => [
                 [
                     'class' => FileTarget::class,
-                    'levels' => ['error', 'warning', 'info'],
+                    'levels' => ['error', 'warning', 'info', 'trace'],
                 ],
             ],
         ],

@@ -10,9 +10,11 @@ use app\application\exceptions\NotSupportedException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
 use app\application\forms\UnsubscribeForm;
+use app\application\services\MetricServiceInterface;
 use OpenApi\Attributes as OA;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
@@ -25,7 +27,7 @@ use yii\web\NotFoundHttpException;
     name: "Subscriptions",
     description: "Information on API calls, parameters and responses for the Subscriptions API."
 )]
-class RatesController extends ActiveController
+class SubscriptionsController extends ActiveController
 {
     public $modelClass = "";
 
@@ -34,6 +36,7 @@ class RatesController extends ActiveController
      * @param $module
      * @param SubscribeInterface $subscribe
      * @param UnsubscribeInterface $unsubscribe
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
@@ -41,6 +44,7 @@ class RatesController extends ActiveController
         $module,
         private readonly SubscribeInterface $subscribe,
         private readonly UnsubscribeInterface $unsubscribe,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -89,6 +93,20 @@ class RatesController extends ActiveController
         return $behaviors;
     }
 
+    /**
+     * @param float $start
+     * @param int $statusCode
+     * @return void
+     * @throws InvalidConfigException
+     */
+    private function trackHttpCalls(float $start, int $statusCode): void
+    {
+        $endpoint = Yii::$app->request->getUrl();
+        $method = Yii::$app->request->getMethod();
+
+        $this->metricService->trackHttRequest($method, $endpoint, $statusCode);
+        $this->metricService->trackHttpRequestDurations($method, $endpoint, round((float)microtime(true) - $start));
+    }
 
     /**
      * @param Throwable $e
@@ -108,7 +126,7 @@ class RatesController extends ActiveController
             default => BadRequestHttpException::class
         };
 
-        throw new $exceptionClass($e->getMessage(), (int)$e->getCode(), $e);
+        return new $exceptionClass($e->getMessage(), (int)$e->getCode(), $e);
     }
 
     /**
@@ -182,18 +200,29 @@ class RatesController extends ActiveController
     )]
     public function actionSubscribe()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $this->subscribe->execute(new SubscribeForm($bodyParams['email'] ?? null));
+            $this->trackHttpCalls($requestStart, 200);
+
             return null;
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result = $this->processException($e);
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw $e;
         }
     }
 
 
     /**
-     * @return void
+     * @return array|null
+     * @throws InvalidConfigException
+     * @throws Throwable
      */
     #[OA\Delete(
         path: "/unsubscribe",
@@ -255,12 +284,21 @@ class RatesController extends ActiveController
     )]
     public function actionUnsubscribe()
     {
+        $requestStart = (float)microtime(true);
         try {
             $bodyParams = Yii::$app->request->getBodyParams();
             $this->unsubscribe->execute(new UnsubscribeForm($bodyParams['email'] ?? null));
+            $this->trackHttpCalls($requestStart, 200);
+
             return null;
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result = $this->processException($e);
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw $e;
         }
     }
 }

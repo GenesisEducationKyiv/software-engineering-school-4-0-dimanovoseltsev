@@ -3,6 +3,7 @@
 namespace app\application\actions;
 
 use app\application\dto\SaveSubscriptionDto;
+use app\application\services\LogServiceInterface;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Subscription;
 use app\domain\valueObjects\Email;
@@ -12,9 +13,11 @@ class SaveSubscription extends BaseAction implements SaveSubscriptionInterface
 {
     /**
      * @param SubscriptionServiceInterface $subscriptionService
+     * @param LogServiceInterface $logService
      */
     public function __construct(
         private readonly SubscriptionServiceInterface $subscriptionService,
+        private readonly LogServiceInterface $logService,
     ) {
     }
 
@@ -31,6 +34,13 @@ class SaveSubscription extends BaseAction implements SaveSubscriptionInterface
         }
 
         $entity = new Subscription(new Id(null), new Email($dto->getEmail()));
+
+        $this->logService->debug(
+            sprintf(
+                "Save subscription %s",
+                $entity->getEmail()->value(),
+            )
+        );
 
         return $this->subscriptionService->save($entity);
     }

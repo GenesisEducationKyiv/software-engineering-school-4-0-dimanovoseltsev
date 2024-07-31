@@ -89,7 +89,7 @@ abstract class BaseWorker extends Command
      */
     protected function addEventLog(EventForm $form, LogServiceInterface $logService): void
     {
-        $logService->log(
+        $logService->error(
             sprintf("Event %s:%s [%d]", $form->getEventType(), $form->getEventId(), $form->getTimestamp())
         );
     }

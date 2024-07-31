@@ -8,6 +8,7 @@ use app\application\exceptions\NotValidException;
 use app\application\forms\SubscribeForm;
 use app\application\interfaces\ActivityServiceInterface;
 use app\application\mappers\Mapper;
+use app\application\services\LogServiceInterface;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\entities\Subscription;
 use Throwable;
@@ -17,10 +18,12 @@ class Subscribe extends BaseAction implements SubscribeInterface
     /**
      * @param SubscriptionServiceInterface $service
      * @param ActivityServiceInterface $activityService
+     * @param LogServiceInterface $logService
      */
     public function __construct(
         private readonly SubscriptionServiceInterface $service,
         private readonly ActivityServiceInterface $activityService,
+        private readonly LogServiceInterface $logService,
     ) {
     }
 
@@ -46,6 +49,7 @@ class Subscribe extends BaseAction implements SubscribeInterface
         try {
             $transactionResult = $this->activityService->subscribe($form->getEmail());
         } catch (InvalidCallException $e) {
+            $this->logService->debug(sprintf("Error in subscribes %s", $e->getMessage()));
             throw new InvalidCallException(previous: $e);
         } catch (Throwable $e) {
             throw $e;

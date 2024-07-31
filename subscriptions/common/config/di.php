@@ -17,6 +17,7 @@ use app\application\interfaces\ActivityServiceInterface;
 use app\application\services\CustomerService;
 use app\application\services\CustomerServiceInterface;
 use app\application\services\LogServiceInterface;
+use app\application\services\MetricServiceInterface;
 use app\application\services\SubscriptionService;
 use app\application\services\SubscriptionServiceInterface;
 use app\domain\repositories\CustomerRepositoryInterface;
@@ -26,11 +27,14 @@ use app\infrastructure\models\Subscription;
 use app\infrastructure\repositories\CustomerRepository;
 use app\infrastructure\repositories\SubscriptionRepository;
 use app\infrastructure\saga\workflows\SubscriptionWorkflowInterface;
+use app\infrastructure\services\PrometheusMetricService;
 use app\infrastructure\services\TemporalActivityService;
 use app\infrastructure\services\YiiLogger;
 use Carbon\CarbonInterval;
 use GuzzleHttp\Client;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowOptions;
@@ -61,6 +65,17 @@ return [
         );
     },
 
+    MetricServiceInterface::class => function (Container $container) {
+        return new PrometheusMetricService(
+            new CollectorRegistry(new \Prometheus\Storage\Redis([
+                'host' => (string)getenv("REDIS_HOST"),
+                'port' => (string)getenv("REDIS_PORT"),
+            ])),
+            new RenderTextFormat(),
+            'subscriptions'
+        );
+    },
+
     // repositories
     SubscriptionRepositoryInterface::class => function (Container $container) {
         return new SubscriptionRepository(Subscription::find());
@@ -88,6 +103,7 @@ return [
         return new Subscribe(
             $container->get(SubscriptionServiceInterface::class),
             $container->get(ActivityServiceInterface::class),
+            $container->get(LogServiceInterface::class),
         );
     },
     MailSentInterface::class => function (Container $container) {
@@ -105,7 +121,10 @@ return [
         return new CreateCustomer($container->get(CustomerServiceInterface::class));
     },
     DeleteCustomerInterface::class => function (Container $container) {
-        return new DeleteCustomer($container->get(CustomerServiceInterface::class));
+        return new DeleteCustomer(
+            $container->get(CustomerServiceInterface::class),
+            $container->get(LogServiceInterface::class),
+        );
     },
     CreateSubscriptionInterface::class => function (Container $container) {
         return new CreateSubscription(

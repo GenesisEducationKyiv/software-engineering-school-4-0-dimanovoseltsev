@@ -154,7 +154,10 @@ class UnitTestCase extends TestCase
         return $this->getMockBuilder(YiiLogger::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
-                'log',
+                'error',
+                'warn',
+                'info',
+                'debug',
             ])
             ->getMock();
     }

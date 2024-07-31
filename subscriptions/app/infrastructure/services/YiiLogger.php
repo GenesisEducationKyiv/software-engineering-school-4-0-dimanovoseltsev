@@ -9,18 +9,36 @@ class YiiLogger implements LogServiceInterface
 {
     /**
      * @param Logger $logger
+     * @param string $category
      */
-    public function __construct(private readonly Logger $logger)
-    {
+    public function __construct(
+        private readonly Logger $logger,
+        private readonly string $category = 'app'
+    ) {
     }
 
-    /**
-     * @param string $message
-     * @param string $category
-     * @return void
-     */
-    public function log(string $message, string $category = 'app'): void
+    private function log(string $message, int $level): void
     {
-        $this->logger->log($message, Logger::LEVEL_INFO, $category);
+        $this->logger->log($message, $level, $this->category);
+    }
+
+    public function error(string $message): void
+    {
+        $this->log($message, Logger::LEVEL_ERROR);
+    }
+
+    public function info(string $message): void
+    {
+        $this->log($message, Logger::LEVEL_INFO);
+    }
+
+    public function warn(string $message): void
+    {
+        $this->log($message, Logger::LEVEL_WARNING);
+    }
+
+    public function debug(string $message): void
+    {
+        $this->log($message, Logger::LEVEL_TRACE);
     }
 }

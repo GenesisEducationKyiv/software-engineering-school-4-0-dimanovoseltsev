@@ -4,12 +4,17 @@ namespace frontend\controllers;
 
 use app\application\actions\RetrieveCurrencyByCodeInterface;
 use app\application\enums\CurrencyIso;
+use app\application\enums\State;
+use app\application\exceptions\InvalidCallException;
 use app\application\exceptions\NotExistException;
 use app\application\exceptions\NotSupportedException;
 use app\application\exceptions\NotValidException;
+use app\application\services\MetricServiceInterface;
 use OpenApi\Attributes as OA;
+use Prometheus\RenderTextFormat;
 use Throwable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
@@ -31,12 +36,14 @@ class RatesController extends ActiveController
      * @param $id
      * @param $module
      * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
         $id,
         $module,
         private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -103,7 +110,22 @@ class RatesController extends ActiveController
             default => BadRequestHttpException::class
         };
 
-        throw new $exceptionClass($e->getMessage(), (int)$e->getCode(), $e);
+        return new $exceptionClass($e->getMessage(), (int)$e->getCode(), $e);
+    }
+
+    /**
+     * @param float $start
+     * @param int $statusCode
+     * @return void
+     * @throws InvalidConfigException
+     */
+    private function trackHttpCalls(float $start, int $statusCode): void
+    {
+        $endpoint = Yii::$app->request->getUrl();
+        $method = Yii::$app->request->getMethod();
+
+        $this->metricService->trackHttRequest($method, $endpoint, $statusCode);
+        $this->metricService->trackHttpRequestDurations($method, $endpoint, round((float)microtime(true) - $start));
     }
 
 
@@ -152,18 +174,33 @@ class RatesController extends ActiveController
     )]
     public function actionRate(): array
     {
+        $requestStart = (float)microtime(true);
+
         try {
             $code = (string)getenv('IMPORTED_CURRENCY');
-            $entity = $this->retrieveCurrencyByCode->execute(CurrencyIso::from($code));
+            $currency = CurrencyIso::from($code);
+            $entity = $this->retrieveCurrencyByCode->execute($currency);
+            $this->trackHttpCalls($requestStart, 200);
+            $this->metricService->trackCurrencyRateRequestTotal($currency, State::SUCCESSFUL);
+
             return [
                 'iso3' => $code,
                 'rate' => $entity->getRate()->value(),
                 'updatedAt' => $entity->getUpdatedAt()->value(),
             ];
         } catch (NotExistException $e) {
+            $this->trackHttpCalls($requestStart, 400);
+            $this->metricService->trackCurrencyRateRequestTotal($currency, State::FAILURE);
             throw new HttpException(400, 'Invalid status value');
         } catch (Throwable $e) {
-            return $this->processException($e);
+            $result = $this->processException($e);
+            $this->metricService->trackCurrencyRateRequestTotal($currency, State::FAILURE);
+            if (is_array($result)) {
+                $this->trackHttpCalls($requestStart, \Yii::$app->response->getStatusCode());
+                return $result;
+            }
+            $this->trackHttpCalls($requestStart, $e->getCode());
+            throw $e;
         }
     }
 }

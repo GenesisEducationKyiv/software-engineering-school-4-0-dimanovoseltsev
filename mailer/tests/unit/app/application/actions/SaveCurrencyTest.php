@@ -2,13 +2,12 @@
 
 namespace tests\unit\app\application\actions;
 
-use app\application\actions\RetrieveCurrencyByCode;
 use app\application\actions\SaveCurrency;
 use app\application\dto\SaveCurrencyDto;
 use app\application\enums\CurrencyIso;
-use app\application\exceptions\NotExistException;
 use app\application\services\CurrencyService;
 use app\domain\entities\Currency;
+use app\infrastructure\services\YiiLogger;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -17,12 +16,14 @@ SaveCurrencyTest extends UnitTestCase
 {
     private SaveCurrency $action;
     private CurrencyService|MockObject $currencyService;
+    private YiiLogger|MockObject $logger;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->subscriptionService = $this->getCurrencyServiceMock();
-        $this->action = new SaveCurrency($this->subscriptionService);
+        $this->logger = $this->getLogServiceMock();
+        $this->action = new SaveCurrency($this->subscriptionService, $this->logger);
     }
 
     public function testExecute()
@@ -44,6 +45,16 @@ SaveCurrencyTest extends UnitTestCase
             ->method('save')
             ->with($entity)
             ->willReturn($entity);
+
+        $this->logger->expects(self::once())
+            ->method('debug')
+            ->with(
+                sprintf(
+                    "Save currency %s %f",
+                    $dto->getIso3(),
+                    $dto->getRate(),
+                )
+            );
 
         $actual = $this->action->execute($dto);
         self::assertInstanceOf(Currency::class, $actual);
@@ -67,6 +78,16 @@ SaveCurrencyTest extends UnitTestCase
         $this->subscriptionService->expects($this->once())
             ->method('save')
             ->willReturn($entity);
+
+        $this->logger->expects(self::once())
+            ->method('debug')
+            ->with(
+                sprintf(
+                    "Save currency %s %f",
+                    $dto->getIso3(),
+                    $dto->getRate(),
+                )
+            );
 
         $actual = $this->action->execute($dto);
         self::assertInstanceOf(Currency::class, $actual);
