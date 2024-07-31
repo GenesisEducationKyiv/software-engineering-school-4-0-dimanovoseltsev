@@ -5,14 +5,17 @@ namespace app\application\actions;
 use app\application\exceptions\NotValidException;
 use app\application\forms\DeleteCustomerForm;
 use app\application\services\CustomerServiceInterface;
+use app\application\services\LogServiceInterface;
 
 class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
 {
     /**
      * @param CustomerServiceInterface $customerService
+     * @param LogServiceInterface $logService
      */
     public function __construct(
-        private readonly CustomerServiceInterface $customerService
+        private readonly CustomerServiceInterface $customerService,
+        private readonly LogServiceInterface $logService,
     ) {
     }
 
@@ -27,6 +30,10 @@ class DeleteCustomer extends BaseAction implements DeleteCustomerInterface
             throw new NotValidException($form->getErrors());
         }
 
-        return $this->customerService->delete($form->getEmail());
+        $deleted = $this->customerService->delete($form->getEmail());
+
+        $this->logService->info(sprintf("Deleted %d records by email %s", $deleted, $form->getEmail()));
+
+        return $deleted;
     }
 }

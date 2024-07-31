@@ -18,8 +18,8 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
         zlib1g-dev \
         libsqlite3-dev \
         libbz2-dev \
-        && pecl install memcached \
-        && docker-php-ext-enable memcached \
+        && pecl install memcached redis \
+        && docker-php-ext-enable memcached redis \
         && rm -rf /var/lib/apt/lists/*
 
 # Install Composer globally

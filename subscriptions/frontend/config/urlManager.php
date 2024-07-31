@@ -8,10 +8,12 @@ return [
     'enablePrettyUrl' => true,
     'showScriptName' => false,
     'rules' => [
-        'POST /subscribe' => 'rates/subscribe',
-        'POST /unsubscribe' => 'rates/unsubscribe',
+        'POST /subscribe' => 'subscriptions/subscribe',
+        'POST /unsubscribe' => 'subscriptions/unsubscribe',
 
-        'OPTIONS <opts:(.*)>' => 'rates/options',
+        'GET /metrics' => 'metrics/index',
+
+        'OPTIONS <opts:(.*)>' => 'subscriptions/options',
         '' => 'rates/options',
         [
             'class' => 'yii\web\UrlRule',

@@ -7,8 +7,9 @@ use app\application\actions\RetrieveSubscriptionByEmailInterface;
 use app\application\actions\SendEmailInterface;
 use app\application\dto\MailSendDto;
 use app\application\enums\CurrencyIso;
+use app\application\enums\State;
 use app\application\exceptions\NotExistException;
-use app\application\services\LogServiceInterface;
+use app\application\services\MetricServiceInterface;
 use Throwable;
 use Yii;
 
@@ -20,7 +21,7 @@ class MailWorker extends BaseWorker
      * @param SendEmailInterface $sendEmail
      * @param RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode
      * @param RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail
-     * @param LogServiceInterface $logService
+     * @param MetricServiceInterface $metricService
      * @param array $config
      */
     public function __construct(
@@ -29,7 +30,7 @@ class MailWorker extends BaseWorker
         private readonly SendEmailInterface $sendEmail,
         private readonly RetrieveCurrencyByCodeInterface $retrieveCurrencyByCode,
         private readonly RetrieveSubscriptionByEmailInterface $retrieveSubscriptionByEmail,
-        private readonly LogServiceInterface $logService,
+        private readonly MetricServiceInterface $metricService,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -45,6 +46,9 @@ class MailWorker extends BaseWorker
      */
     public function processMessage($id, $body, $ttr, $attempt): bool
     {
+        $command = 'worker:mail';
+        $start = (float)microtime(true);
+
         $data = (array)json_decode($body, true);
         $email = $data['email'] ?? null;
         $currency = $data['currency'] ?? null;
@@ -54,15 +58,23 @@ class MailWorker extends BaseWorker
         }
 
         try {
-            return $this->sendEmail->execute(
+            $currencyIso = CurrencyIso::from((string)$currency);
+
+            $state = $this->sendEmail->execute(
                 new MailSendDto(
-                    $this->retrieveCurrencyByCode->execute(CurrencyIso::from((string)$currency)),
+                    $this->retrieveCurrencyByCode->execute($currencyIso),
                     $this->retrieveSubscriptionByEmail->execute((string)$email),
                 )
             );
+            $this->metricService->trackCommands($command, State::SUCCESSFUL);
+            $this->metricService->trackSendEmailTotal($currencyIso);
+
+            return $state;
         } catch (NotExistException $e) {
+            $this->metricService->trackCommands($command, State::SUCCESSFUL);
             return true;
         } catch (Throwable $e) {
+            $this->metricService->trackCommands($command, State::FAILURE);
             return $this->moveToFailQueue(
                 Yii::$app->sendEmailFailQueue,
                 $this->appendError((array)$data, $e),

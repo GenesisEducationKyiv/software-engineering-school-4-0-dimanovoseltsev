@@ -9,6 +9,7 @@ return [
     'showScriptName' => false,
     'rules' => [
         'GET /rate' => 'rates/rate',
+        'GET /metrics' => 'metrics/index',
 
         'OPTIONS <opts:(.*)>' => 'rates/options',
         '' => 'rates/options',

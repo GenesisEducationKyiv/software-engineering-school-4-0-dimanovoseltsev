@@ -7,6 +7,7 @@ use app\application\exceptions\AlreadyException;
 use app\application\exceptions\NotValidException;
 use app\application\forms\DeleteCustomerForm;
 use app\application\services\SubscriptionService;
+use app\infrastructure\services\YiiLogger;
 use PHPUnit\Framework\MockObject\MockObject;
 use tests\unit\UnitTestCase;
 
@@ -14,12 +15,14 @@ class DeleteCustomerTest extends UnitTestCase
 {
     private DeleteCustomer $action;
     private SubscriptionService|MockObject $service;
+    private YiiLogger|MockObject $logger;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->getCustomerServiceMock();
-        $this->action = new DeleteCustomer($this->service);
+        $this->logger = $this->getLogServiceMock();
+        $this->action = new DeleteCustomer($this->service, $this->logger);
     }
 
     /**
@@ -35,6 +38,10 @@ class DeleteCustomerTest extends UnitTestCase
             ->method('delete')
             ->with($form->getEmail())
             ->willReturn(1);
+
+        $this->logger->expects(self::once())
+            ->method('info')
+        ->with(sprintf("Deleted %d customers by email %s", 1, $form->getEmail()));
 
         $actual = $this->action->execute($form);
         self::assertTrue($actual);

@@ -18,8 +18,8 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
         zlib1g-dev \
         libsqlite3-dev \
         libbz2-dev \
-        && pecl install memcached \
-        && docker-php-ext-enable memcached \
+        && pecl install memcached redis \
+        && docker-php-ext-enable memcached redis \
         && rm -rf /var/lib/apt/lists/*
 
 # Install Composer globally
@@ -48,7 +48,7 @@ RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdeb
 
 # Copy custom php.ini and opcache.ini files
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+#COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Expose the port Nginx will use (usually 9000 is for PHP-FPM, Nginx typically uses 80)
 EXPOSE 9000
